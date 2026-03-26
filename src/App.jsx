@@ -14,8 +14,8 @@ const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: ${BG}; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body { background: ${BG}; color: #e2e8f0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
   .grid-bg {
     background-color: ${BG};
@@ -125,6 +125,17 @@ const globalStyles = `
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #0f172a; }
   ::-webkit-scrollbar-thumb { background: rgba(45,212,191,0.3); border-radius: 3px; }
+
+  /* 📱 MOBILE FIXES - ADDED FOR AHMED */
+  @media (max-width: 768px) {
+    .hide-mobile { display: none !important; }
+    .nav-links-desktop { display: none !important; }
+    .hero-title { font-size: 2.3rem !important; }
+    .section-padding { padding: 3rem 0 !important; }
+    .responsive-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    .stats-grid-mobile { grid-template-columns: 1fr 1fr !important; gap: 1rem !important; }
+    .footer-grid-mobile { grid-template-columns: 1fr !important; gap: 3rem !important; }
+  }
 `;
 
 /* ─── Helpers ─────────────────────────────────────────────── */
@@ -145,7 +156,7 @@ function useReveal() {
 }
 
 function Section({ children, id, style = {} }) {
-  return <section id={id} style={{ padding: "3.5rem 0", ...style }}>{children}</section>;
+  return <section id={id} className="section-padding" style={{ padding: "3.5rem 0", ...style }}>{children}</section>;
 }
 
 function Tag({ children }) {
@@ -182,7 +193,7 @@ function Navbar() {
         <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>
           Sondar <span style={{ color: CYAN }}>Logic AI</span>
         </div>
-        <div style={{ display: "flex", gap: "2rem" }}>
+        <div className="nav-links-desktop" style={{ display: "flex", gap: "2rem" }}>
           {[
             { label: "Features",     id: "features" },
             { label: "How it Works", id: "how-it-works" },
@@ -212,7 +223,7 @@ function Hero() {
         <div className="animate-fade-up" style={{ display: "flex", justifyContent: "center" }}>
           <Tag>AI REBATE ENGINE · NEXT-GEN</Tag>
         </div>
-        <h1 className="animate-fade-up delay-100" style={{ fontSize: "clamp(2.4rem, 5vw, 3.75rem)", fontWeight: 800, lineHeight: 1.12, letterSpacing: "-0.035em", marginBottom: "1.25rem" }}>
+        <h1 className="hero-title animate-fade-up delay-100" style={{ fontSize: "clamp(2.4rem, 5vw, 3.75rem)", fontWeight: 800, lineHeight: 1.12, letterSpacing: "-0.035em", marginBottom: "1.25rem" }}>
           <span style={{ color: "#fff", display: "block" }}>Enterprise Rebate Processing.</span>
           <span className="gradient-text">As low as $0.35 per claim.</span>
         </h1>
@@ -225,7 +236,7 @@ function Hero() {
         <div className="animate-fade-up delay-400" style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "4rem" }}>
           <a href="https://calendly.com/ahmed_sondarlogic" target="_blank" rel="noopener noreferrer" className="btn-cyan">Book a Demo <ArrowRight size={16} /></a>
         </div>
-        <div className="animate-fade-up delay-500" style={{
+        <div className="stats-grid-mobile animate-fade-up delay-500" style={{
           background: "rgba(15,23,42,0.6)",
           border: "1px solid rgba(45,212,191,0.12)",
           borderRadius: "1rem",
@@ -262,7 +273,7 @@ function CostAnalysis() {
             <span style={{ color: "#334155" }}>"Cheap" Processing</span>
           </h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+        <div className="responsive-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
           {/* Legacy card */}
           <div className="reveal reveal-delay-1" style={{ background: "rgba(15,23,42,0.5)", border: "1px solid rgba(100,116,139,0.25)", borderRadius: "1.25rem", padding: "2.25rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.65rem", marginBottom: "1.75rem" }}>
@@ -337,7 +348,7 @@ function ThreeSystems() {
             <span style={{ color: "#334155" }}>95% AI confidence failsafe.</span>
           </h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1.5rem" }}>
+        <div className="responsive-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1.5rem" }}>
           {cards.map((c, i) => (
             <div key={i} className={`feature-card reveal reveal-delay-${i + 1}`}>
               <div style={{ width: 50, height: 50, borderRadius: "0.75rem", background: "rgba(45,212,191,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.25rem", border: "1px solid rgba(45,212,191,0.2)" }}>
@@ -366,7 +377,7 @@ function CommandCenter() {
   return (
     <Section>
       <div ref={ref} style={{ maxWidth: 1200, margin: "0 auto", padding: "0 2rem" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "center" }}>
+        <div className="responsive-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "center" }}>
           {/* Left text */}
           <div>
             <div className="reveal"><Tag>COMMAND CENTER</Tag></div>
@@ -391,7 +402,7 @@ function CommandCenter() {
           </div>
 
           {/* Right dashboard mockup */}
-          <div className="reveal reveal-delay-2" style={{ background: "rgba(8,15,32,0.9)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: "1.25rem", padding: "1.75rem", boxShadow: "0 0 60px rgba(45,212,191,0.07), 0 40px 80px rgba(0,0,0,0.5)" }}>
+          <div className="hide-mobile reveal reveal-delay-2" style={{ background: "rgba(8,15,32,0.9)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: "1.25rem", padding: "1.75rem", boxShadow: "0 0 60px rgba(45,212,191,0.07), 0 40px 80px rgba(0,0,0,0.5)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
               <span style={{ color: CYAN, fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em" }}>SONDAR DASHBOARD</span>
               <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
@@ -576,7 +587,7 @@ function Workflow() {
 
         <div className="reveal reveal-delay-1" style={{ position: "relative" }}>
           {/* Connector line behind cards */}
-          <div style={{
+          <div className="hide-mobile" style={{
             position: "absolute", top: 37,
             left: "calc(12.5% + 0.75rem)", right: "calc(12.5% + 0.75rem)",
             height: 1,
@@ -584,7 +595,7 @@ function Workflow() {
             pointerEvents: "none"
           }} />
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.25rem" }}>
+          <div className="responsive-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.25rem" }}>
             {steps.map((s, i) => (
               <div key={i}
                 style={{ background: "rgba(10,20,40,0.7)", border: "1px solid rgba(45,212,191,0.13)", borderRadius: "1.125rem", padding: "1.75rem 1.5rem", display: "flex", flexDirection: "column", gap: "1rem", transition: "border-color 0.3s, transform 0.3s", cursor: "default" }}
@@ -739,7 +750,7 @@ function Footer({ setActiveView }) {
         <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "#fff", marginBottom: "3rem", letterSpacing: "-0.02em" }}>
           Sondar <span style={{ color: CYAN }}>Logic AI</span>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "3rem", marginBottom: "3rem" }}>
+        <div className="footer-grid-mobile" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "3rem", marginBottom: "3rem" }}>
           {navCols.map((col, i) => (
             <div key={i}>
               <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#475569", letterSpacing: "0.15em", marginBottom: "1.25rem" }}>{col.heading}</div>
