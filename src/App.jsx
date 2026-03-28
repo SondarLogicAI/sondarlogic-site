@@ -86,14 +86,25 @@ const G = `
     .h-mobile { display:none !important; }
     .nav-d    { display:none !important; }
     .g2       { grid-template-columns:1fr !important; gap:2rem !important; }
-    .g4       { grid-template-columns:1fr 1fr !important; }
-    .zrow     { grid-template-columns:1fr !important; gap:2.5rem !important; }
+    .g4       { grid-template-columns:1fr 1fr !important; gap:.875rem !important; }
+    .zrow     { grid-template-columns:1fr !important; gap:2rem !important; }
+    /* Z-pattern: always text first, visual second on mobile */
+    .zrow-text  { order:1 !important; }
+    .zrow-visual { order:2 !important; }
     .pcols    { grid-template-columns:1fr !important; }
-    .pr-col   { order:1 !important; border-left:none !important; border-top:1px solid #1e293b !important; }
+    .pr-col   { order:1 !important; border-left:none !important; border-top:1px solid rgba(255,255,255,.07) !important; }
     .pl-col   { order:2 !important; }
     .rg       { grid-template-columns:1fr !important; gap:.75rem !important; }
-    .ctcols   { grid-template-columns:1fr 85px 95px !important; }
-    .hero-h1  { font-size:2.4rem !important; line-height:1.1 !important; }
+    .ctcols   { grid-template-columns:1fr 72px 82px !important; }
+    .hero-h1  { font-size:2.2rem !important; line-height:1.08 !important; }
+    /* Pricing tier row: stack label above rate on very small screens */
+    .tier-row { flex-direction:column !important; align-items:flex-start !important; gap:.25rem !important; padding:.75rem !important; }
+    .tier-rate { font-size:.85rem !important; }
+  }
+  @media (max-width: 480px) {
+    .g4 { grid-template-columns:1fr !important; }
+    .wf-card { flex-direction:row !important; gap:1rem !important; align-items:flex-start !important; }
+    .wf-icon-row { flex-direction:column !important; align-items:flex-start !important; }
   }
 `;
 
@@ -199,10 +210,10 @@ function Hero() {
           <span className="grad-text">As low as $0.35 per claim.</span>
         </h1>
 
-        <p className="fu d2" style={{ color: "rgba(255,255,255,.5)", fontSize: "1.08rem",
-          lineHeight: 1.75, maxWidth: 580, margin: "0 auto 2.5rem" }}>
-          Enterprise Level Vision AI validates claims instantly, extracts full basket intelligence,
-          and maps retailer performance across Canada — zero setup fees, zero hidden costs.
+        <p className="fu d2" style={{ color: "rgba(255,255,255,.5)", fontSize: "1.05rem",
+          lineHeight: 1.75, maxWidth: 560, margin: "0 auto 2.5rem" }}>
+          Our Vision AI validates claims instantly, extracts full basket intelligence,
+          and maps retailer performance across Canada. Zero setup fees. Zero hidden costs.
         </p>
 
         <div className="fu d3" style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
@@ -242,24 +253,24 @@ function Workflow() {
   const ref = useReveal();
   const steps = [
     {
-      icon: <Upload size={26} strokeWidth={1.75} color={CYAN_D} />,
+      icon: <Upload size={22} strokeWidth={1.75} color={CYAN_D} />,
       num: "01", title: "Instant Ingestion",
-      body: "Receipts are uploaded and immediately queued for processing. Our infrastructure handles any volume surge without delay or backlog.",
+      body: "Receipts queue instantly. Our infrastructure handles any volume surge without delay.",
     },
     {
-      icon: <ScanSearch size={26} strokeWidth={1.75} color={CYAN_D} />,
+      icon: <ScanSearch size={22} strokeWidth={1.75} color={CYAN_D} />,
       num: "02", title: "Confidence Filter",
-      body: "Enterprise Level Vision AI extracts the data and assigns a definitive accuracy score to every receipt. Photoshop edits, Canva templates, and duplicate submissions are flagged before any payout is triggered.",
+      body: "Our Vision AI extracts the data and assigns a definitive accuracy score to every receipt. Photoshop edits, Canva templates, and duplicates are flagged before any payout fires.",
     },
     {
-      icon: <ShoppingCart size={26} strokeWidth={1.75} color={CYAN_D} />,
+      icon: <ShoppingCart size={22} strokeWidth={1.75} color={CYAN_D} />,
       num: "03", title: "Basket Extraction",
-      body: "Validated scans extract competitor brands and complementary basket items at no extra cost, giving you a complete picture of every purchase.",
+      body: "Validated scans extract competitor brands and complementary basket items — no extra cost, no extra setup.",
     },
     {
-      icon: <Banknote size={26} strokeWidth={1.75} color={CYAN_D} />,
+      icon: <Banknote size={22} strokeWidth={1.75} color={CYAN_D} />,
       num: "04", title: "Payout Execution",
-      body: "Validated claims instantly trigger API routing for CAD disbursement via Virtual Visa or direct e-Transfer. Flexible payout schedules on your exact cadence.",
+      body: "Approved claims trigger instant CAD disbursement via Virtual Visa or e-Transfer. Flexible payout schedules on your exact cadence.",
     },
   ];
 
@@ -281,22 +292,22 @@ function Workflow() {
           {steps.map((s, i) => (
             <div key={i} style={{ position: "relative" }}>
               {i < 3 && (
-                <div className="h-mobile" style={{ position: "absolute", top: "2.55rem",
+                <div className="h-mobile" style={{ position: "absolute", top: "2.4rem",
                   right: "-.625rem", width: "1.25rem", height: 1, background: "#e2e8f0", zIndex: 1 }} />
               )}
-              <div className="cw" style={{ height: "100%", display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div style={{ width: 50, height: 50, borderRadius: ".75rem",
+              <div className="cw wf-card" style={{ height: "100%", display: "flex", flexDirection: "column", gap: ".875rem" }}>
+                <div className="wf-icon-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div style={{ width: 44, height: 44, borderRadius: ".625rem", flexShrink: 0,
                     background: "rgba(13,148,136,.07)", display: "flex",
                     alignItems: "center", justifyContent: "center",
                     border: "1px solid rgba(13,148,136,.15)" }}>{s.icon}</div>
-                  <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#f1f5f9",
+                  <span style={{ fontSize: "1.35rem", fontWeight: 800, color: "#f1f5f9",
                     letterSpacing: "-.05em" }}>{s.num}</span>
                 </div>
                 <div>
-                  <h3 style={{ fontSize: ".97rem", fontWeight: 700, color: S900,
-                    marginBottom: ".4rem", letterSpacing: "-.02em" }}>{s.title}</h3>
-                  <p style={{ fontSize: ".84rem", color: "#64748b", lineHeight: 1.7 }}>{s.body}</p>
+                  <h3 style={{ fontSize: ".93rem", fontWeight: 700, color: S900,
+                    marginBottom: ".3rem", letterSpacing: "-.02em" }}>{s.title}</h3>
+                  <p style={{ fontSize: ".82rem", color: "#64748b", lineHeight: 1.65 }}>{s.body}</p>
                 </div>
               </div>
             </div>
@@ -437,99 +448,118 @@ function FraudMockup() {
   );
 }
 
-/* Abstract map UI for Market Intelligence */
+/* Provincial Heatmap — grid-based with SVG Canada outline */
 function MapMockup() {
-  const hotspots = [
-    { top: "32%", left: "12%",  label: "BC",   v: "$41K",  size: 18 },
-    { top: "30%", left: "28%",  label: "AB",   v: "$29K",  size: 14 },
-    { top: "44%", left: "58%",  label: "ON",   v: "$94K",  size: 26 },
-    { top: "38%", left: "70%",  label: "QC",   v: "$67K",  size: 20 },
-    { top: "55%", left: "80%",  label: "NB",   v: "$12K",  size: 10 },
-    { top: "42%", left: "88%",  label: "NS",   v: "$11K",  size: 10 },
-    { top: "35%", left: "42%",  label: "SK",   v: "$18K",  size: 11 },
-    { top: "37%", left: "50%",  label: "MB",   v: "$22K",  size: 12 },
+  // Provinces with relative positions on a simplified Canada grid
+  // Grid is 10 cols × 5 rows; col/row are 0-indexed
+  const provinces = [
+    { id: "YT",  col: 1, row: 0, heat: 0.15, v: "$4K"   },
+    { id: "NT",  col: 2, row: 0, heat: 0.20, v: "$6K"   },
+    { id: "NU",  col: 4, row: 0, heat: 0.10, v: "$3K"   },
+    { id: "BC",  col: 1, row: 1, heat: 0.72, v: "$41K"  },
+    { id: "AB",  col: 2, row: 1, heat: 0.55, v: "$29K"  },
+    { id: "SK",  col: 3, row: 1, heat: 0.38, v: "$18K"  },
+    { id: "MB",  col: 4, row: 1, heat: 0.42, v: "$22K"  },
+    { id: "ON",  col: 5, row: 1, heat: 1.00, v: "$94K"  },
+    { id: "QC",  col: 6, row: 1, heat: 0.78, v: "$67K"  },
+    { id: "NB",  col: 7, row: 2, heat: 0.28, v: "$12K"  },
+    { id: "NS",  col: 8, row: 2, heat: 0.26, v: "$11K"  },
+    { id: "PE",  col: 9, row: 2, heat: 0.14, v: "$5K"   },
+    { id: "NL",  col: 8, row: 1, heat: 0.22, v: "$9K"   },
   ];
 
+  function heatColor(h) {
+    // 0 = dark slate, 1 = bright cyan
+    const r = Math.round(13 + h * (45 - 13));
+    const g = Math.round(148 + h * (212 - 148));
+    const b = Math.round(136 + h * (191 - 136));
+    return `rgba(${r},${g},${b},${0.15 + h * 0.75})`;
+  }
+
+  const CELL = 38; // px per cell
+  const COLS = 10;
+  const ROWS = 4;
+
   return (
-    <div style={{ background: S900, borderRadius: "1.125rem", padding: "1.5rem",
-      border: "1px solid rgba(255,255,255,.07)",
-      boxShadow: "0 24px 64px rgba(0,0,0,.28)" }}>
+    <div style={{ background: S900, borderRadius: "1.125rem", padding: "1.25rem",
+      border: "1px solid rgba(255,255,255,.07)", boxShadow: "0 24px 64px rgba(0,0,0,.28)" }}>
       <div style={{ display: "flex", justifyContent: "space-between",
-        alignItems: "center", marginBottom: "1rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
-          <MapPin size={15} color={CYAN} />
-          <span style={{ fontSize: ".68rem", fontWeight: 700,
-            color: CYAN, letterSpacing: ".1em" }}>PROVINCIAL RETAILER VOLUME</span>
-        </div>
+        alignItems: "center", marginBottom: ".875rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: ".4rem" }}>
-          <div style={{ width: 6, height: 6, borderRadius: "50%",
-            background: "#22c55e", animation: "pdot 2s infinite" }} />
-          <span style={{ fontSize: ".6rem", color: "#22c55e", fontWeight: 600 }}>LIVE</span>
+          <MapPin size={13} color={CYAN} />
+          <span style={{ fontSize: ".65rem", fontWeight: 700, color: CYAN, letterSpacing: ".1em" }}>
+            PROVINCIAL PAYOUT HEATMAP
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: ".35rem" }}>
+          <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", animation: "pdot 2s infinite" }} />
+          <span style={{ fontSize: ".58rem", color: "#22c55e", fontWeight: 600 }}>LIVE</span>
         </div>
       </div>
 
-      {/* Abstract map canvas */}
-      <div style={{ position: "relative", height: 180, background: S800,
-        borderRadius: ".75rem", border: "1px solid rgba(255,255,255,.05)",
-        marginBottom: "1rem", overflow: "hidden" }}>
-        {/* Subtle lat/long lines */}
-        {[30, 50, 70].map(y => (
-          <div key={y} style={{ position: "absolute", top: `${y}%`, left: 0, right: 0,
-            height: 1, background: "rgba(255,255,255,.04)" }} />
-        ))}
-        {[25, 50, 75].map(x => (
-          <div key={x} style={{ position: "absolute", left: `${x}%`, top: 0, bottom: 0,
-            width: 1, background: "rgba(255,255,255,.04)" }} />
-        ))}
-        {/* Canada outline suggestion — simple polygon */}
-        <svg viewBox="0 0 400 160" style={{ position: "absolute", inset: 0,
-          width: "100%", height: "100%", opacity: .12 }}>
-          <polyline fill="none" stroke={CYAN} strokeWidth="1.5"
-            points="20,80 40,60 80,55 120,50 160,48 200,52 240,55 280,58 320,55 360,58 390,70 390,110 360,120 320,125 280,128 240,130 200,128 160,125 120,128 80,130 40,120 20,110 20,80" />
-        </svg>
-        {/* Hotspots */}
-        {hotspots.map((h, i) => (
-          <div key={i} style={{ position: "absolute", top: h.top, left: h.left,
-            transform: "translate(-50%,-50%)" }}>
-            {/* Glow ring */}
-            <div style={{ position: "absolute", top: "50%", left: "50%",
-              transform: "translate(-50%,-50%)",
-              width: h.size * 2.2, height: h.size * 2.2, borderRadius: "50%",
-              background: `radial-gradient(circle, rgba(45,212,191,.18) 0%, transparent 70%)` }} />
-            {/* Dot */}
-            <div style={{ width: h.size, height: h.size, borderRadius: "50%",
-              background: CYAN_D, opacity: .9,
-              boxShadow: `0 0 ${h.size}px rgba(13,148,136,.6)` }} />
-            {/* Label */}
-            <div style={{ position: "absolute", top: "50%", left: "120%",
-              transform: "translateY(-50%)",
-              background: "rgba(15,23,42,.85)", border: "1px solid rgba(45,212,191,.2)",
-              borderRadius: ".3rem", padding: ".1rem .35rem",
-              whiteSpace: "nowrap" }}>
-              <span style={{ fontSize: ".52rem", color: CYAN, fontWeight: 700 }}>{h.label}</span>
-              <span style={{ fontSize: ".52rem", color: "#94a3b8", marginLeft: ".2rem" }}>{h.v}</span>
-            </div>
+      {/* Heatmap grid */}
+      <div style={{ position: "relative", height: ROWS * CELL + 8,
+        marginBottom: ".875rem", overflowX: "auto" }}>
+        {/* Grid background cells */}
+        {Array.from({ length: ROWS }, (_, row) =>
+          Array.from({ length: COLS }, (_, col) => (
+            <div key={`${row}-${col}`} style={{
+              position: "absolute",
+              left: col * CELL, top: row * CELL,
+              width: CELL - 2, height: CELL - 2,
+              borderRadius: "4px",
+              background: "rgba(255,255,255,.02)",
+              border: "1px solid rgba(255,255,255,.03)",
+            }} />
+          ))
+        )}
+        {/* Province heat cells */}
+        {provinces.map((p, i) => (
+          <div key={i} style={{
+            position: "absolute",
+            left: p.col * CELL, top: p.row * CELL,
+            width: CELL - 2, height: CELL - 2,
+            borderRadius: "4px",
+            background: heatColor(p.heat),
+            border: `1px solid rgba(45,212,191,${p.heat * 0.4 + 0.08})`,
+            display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center", gap: "1px",
+            cursor: "default",
+            boxShadow: p.heat > 0.7 ? `0 0 ${Math.round(p.heat * 14)}px rgba(45,212,191,${p.heat * 0.35})` : "none",
+            transition: "box-shadow .2s",
+          }}>
+            <span style={{ fontSize: ".5rem", fontWeight: 800, color: "#fff",
+              letterSpacing: ".02em", textShadow: "0 1px 2px rgba(0,0,0,.5)" }}>{p.id}</span>
+            <span style={{ fontSize: ".42rem", color: "rgba(255,255,255,.6)",
+              fontWeight: 600 }}>{p.v}</span>
           </div>
         ))}
       </div>
 
-      {/* Retailer callouts */}
+      {/* Legend */}
+      <div style={{ display: "flex", alignItems: "center", gap: ".5rem", marginBottom: ".875rem" }}>
+        <span style={{ fontSize: ".6rem", color: "#475569" }}>Low</span>
+        <div style={{ flex: 1, height: 4, borderRadius: 2,
+          background: `linear-gradient(90deg, rgba(13,148,136,.2), ${CYAN_D}, ${CYAN})` }} />
+        <span style={{ fontSize: ".6rem", color: "#475569" }}>High</span>
+      </div>
+
+      {/* Top retailer callouts */}
       {[
-        { name: "Canadian Tire — National",  v: "$214K", trend: "+8.4%" },
-        { name: "NAPA Auto — Western",       v: "$98K",  trend: "+12%" },
-        { name: "Costco — Ontario & QC",     v: "$187K", trend: "+6.1%" },
+        { name: "Canadian Tire", region: "National",     v: "$214K", trend: "+8.4%" },
+        { name: "NAPA Auto",     region: "Western",      v: "$98K",  trend: "+12%" },
+        { name: "Costco",        region: "ON & QC",      v: "$187K", trend: "+6.1%" },
       ].map((r, i) => (
         <div key={i} style={{ display: "flex", justifyContent: "space-between",
-          alignItems: "center", padding: ".5rem 0",
+          alignItems: "center", padding: ".45rem 0",
           borderTop: "1px solid rgba(255,255,255,.04)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
-            <div style={{ width: 6, height: 6, borderRadius: "50%",
-              background: CYAN_D, flexShrink: 0 }} />
-            <span style={{ fontSize: ".72rem", color: "#94a3b8" }}>{r.name}</span>
+          <div>
+            <span style={{ fontSize: ".75rem", color: "#e2e8f0", fontWeight: 600 }}>{r.name}</span>
+            <span style={{ fontSize: ".68rem", color: "#475569", marginLeft: ".35rem" }}>{r.region}</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
             <span style={{ fontSize: ".78rem", fontWeight: 700, color: "#fff" }}>{r.v}</span>
-            <span style={{ fontSize: ".65rem", color: "#22c55e", fontWeight: 600 }}>{r.trend}</span>
+            <span style={{ fontSize: ".62rem", color: "#22c55e", fontWeight: 600 }}>{r.trend}</span>
           </div>
         </div>
       ))}
@@ -546,11 +576,10 @@ function CommandCenter() {
       textLeft: true,
       pill: "DEEP BASKET EXTRACTION",
       title: "See every item in the cart, not just yours.",
-      body: "Enterprise Level Vision AI reads the entire receipt. Every validated claim returns a full breakdown of competitor brands, complementary products, and total basket spend — included at no extra charge.",
       bullets: [
-        "Competitor brand presence extracted per claim",
-        "Basket spend totals and SKU level detail",
-        "No extra configuration. No extra fee.",
+        "Our Vision AI reads the full receipt — competitor brands, SKUs, and basket totals extracted per claim",
+        "No extra configuration and no added charge — included in your base platform fee",
+        "Understand what else your customers buy alongside your product at time of purchase",
       ],
       visual: <BasketMockup />,
     },
@@ -558,23 +587,21 @@ function CommandCenter() {
       textLeft: false,
       pill: "FRAUD INTELLIGENCE",
       title: "Every deceptive submission blocked before payout.",
-      body: "Enterprise Level Vision AI detects Photoshop edits, Canva templates, screenshot fraud, and duplicate submissions in real time. Built into every processed claim — not billed as an add-on.",
       bullets: [
-        "AI detection of manipulated receipt images",
-        "Duplicate claim fingerprinting across campaigns",
-        "$0 exception fees on rejected claims",
+        "Our Vision AI detects Photoshop edits, Canva templates, and screenshot fraud in real time",
+        "Duplicate claim fingerprinting runs across your entire campaign history automatically",
+        "$0 exception fees on rejected or flagged claims — fraud costs you nothing extra",
       ],
       visual: <FraudMockup />,
     },
     {
       textLeft: true,
-      pill: "MARKET INTELLIGENCE & RETAILER MAPPING",
+      pill: "MARKET INTELLIGENCE AND RETAILER MAPPING",
       title: "Know exactly where your product is selling.",
-      body: "Track claim volume from British Columbia through Ontario and Quebec all the way to Newfoundland — with postal code precision. See which independent shops or big box retailers are moving your product, updated live.",
       bullets: [
-        "Volume tiered pricing that scales automatically",
-        "Dealer and retailer performance tracked live",
-        "Canada based secure payment partner for all disbursements",
+        "Track claim volume from British Columbia to Newfoundland with postal code precision",
+        "See which independent shops and big box retailers are moving your product, updated live",
+        "Canada based secure payment partner handles all CAD disbursements and GST/HST compliance",
       ],
       visual: <MapMockup />,
     },
@@ -599,24 +626,23 @@ function CommandCenter() {
           {zRows.map((row, i) => (
             <div key={i} className={`rv td${i + 1} zrow`}
               style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
-              <div style={{ order: row.textLeft ? 1 : 2 }}>
+              <div className="zrow-text" style={{ order: row.textLeft ? 1 : 2 }}>
                 <Pill>{row.pill}</Pill>
                 <h3 style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)", fontWeight: 800,
-                  letterSpacing: "-.03em", color: S900, marginBottom: ".875rem", lineHeight: 1.2 }}>
+                  letterSpacing: "-.03em", color: S900, marginBottom: "1.25rem", lineHeight: 1.2 }}>
                   {row.title}
                 </h3>
-                <p style={{ color: "#64748b", fontSize: ".96rem",
-                  lineHeight: 1.75, marginBottom: "1.5rem" }}>{row.body}</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: ".6rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: ".875rem" }}>
                   {row.bullets.map((b, j) => (
-                    <div key={j} style={{ display: "flex", gap: ".55rem", alignItems: "flex-start" }}>
-                      <Check size={14} color={CYAN_D} style={{ flexShrink: 0, marginTop: 3 }} />
-                      <span style={{ fontSize: ".87rem", color: "#334155", lineHeight: 1.5 }}>{b}</span>
+                    <div key={j} style={{ display: "flex", gap: ".65rem", alignItems: "flex-start" }}>
+                      <div style={{ width: 6, height: 6, borderRadius: "50%",
+                        background: CYAN_D, flexShrink: 0, marginTop: 7 }} />
+                      <span style={{ fontSize: ".93rem", color: "#475569", lineHeight: 1.65 }}>{b}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              <div style={{ order: row.textLeft ? 2 : 1 }}>{row.visual}</div>
+              <div className="zrow-visual" style={{ order: row.textLeft ? 2 : 1 }}>{row.visual}</div>
             </div>
           ))}
         </div>
@@ -682,7 +708,7 @@ function Pricing() {
                   <div style={{ fontSize: ".6rem", color: "#475569", fontWeight: 700,
                     letterSpacing: ".1em", marginBottom: ".5rem" }}>PLATFORM LICENSE</div>
                   <div style={{ display: "flex", alignItems: "baseline", gap: ".4rem" }}>
-                    <span style={{ fontSize: "2.75rem", fontWeight: 900,
+                    <span style={{ fontSize: "clamp(2rem, 5vw, 2.75rem)", fontWeight: 900,
                       color: "#fff", letterSpacing: "-.06em", lineHeight: 1 }}>$499</span>
                     <span style={{ fontSize: ".9rem", color: "#475569" }}>/mo</span>
                   </div>
@@ -697,28 +723,29 @@ function Pricing() {
                   <div style={{ border: "1px solid rgba(255,255,255,.07)",
                     borderRadius: ".75rem", overflow: "hidden" }}>
                     {[
-                      { l: "First 10,000 claims",    r: "$0.55 / claim", best: false },
-                      { l: "Claims 10,001 – 50,000", r: "$0.45 / claim", best: false },
-                      { l: "Claims 50,001+",          r: "$0.35 / claim", best: true  },
+                      { l: "First 10,000 claims",    r: "$0.55", best: false },
+                      { l: "Claims 10,001–50,000",   r: "$0.45", best: false },
+                      { l: "Claims 50,001+",          r: "$0.35", best: true  },
                     ].map((t, i) => (
-                      <div key={i} style={{
+                      <div key={i} className="tier-row" style={{
                         display: "flex", justifyContent: "space-between", alignItems: "center",
-                        padding: ".7rem 1rem",
+                        padding: ".65rem 1rem",
                         background: t.best ? "rgba(45,212,191,.07)" : "transparent",
                         borderBottom: i < 2 ? "1px solid rgba(255,255,255,.05)" : "none",
                       }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
-                          <span style={{ fontSize: ".84rem",
-                            color: t.best ? "#e2e8f0" : "#64748b" }}>{t.l}</span>
+                        <span style={{ fontSize: ".82rem", color: t.best ? "#e2e8f0" : "#64748b",
+                          whiteSpace: "nowrap" }}>{t.l}</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: ".5rem", flexShrink: 0 }}>
                           {t.best && (
-                            <span style={{ fontSize: ".56rem", fontWeight: 700,
-                              color: S950, background: CYAN, padding: ".1rem .45rem",
-                              borderRadius: "2rem", letterSpacing: ".06em" }}>BEST RATE</span>
+                            <span style={{ fontSize: ".52rem", fontWeight: 700,
+                              color: S950, background: CYAN, padding: ".1rem .4rem",
+                              borderRadius: "2rem", letterSpacing: ".05em",
+                              whiteSpace: "nowrap" }}>BEST</span>
                           )}
+                          <span className="tier-rate" style={{ fontSize: ".88rem", fontWeight: 700,
+                            color: t.best ? CYAN : "#475569", letterSpacing: "-.02em",
+                            whiteSpace: "nowrap" }}>{t.r}/claim</span>
                         </div>
-                        <span style={{ fontSize: ".9rem", fontWeight: 700,
-                          color: t.best ? CYAN : "#475569",
-                          letterSpacing: "-.02em" }}>{t.r}</span>
                       </div>
                     ))}
                   </div>
