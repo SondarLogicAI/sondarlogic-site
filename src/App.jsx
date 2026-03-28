@@ -1,174 +1,99 @@
 import { useState, useEffect, useRef } from "react";
 import {
-  Check, ArrowRight,
-  Upload, Brain, GitBranch, Banknote,
+  Check, ArrowRight, Upload, ScanSearch, ShoppingCart,
+  Banknote, Shield, Mail, MapPin, TrendingUp, BarChart3,
 } from "lucide-react";
 
-/* ─── Palette ─────────────────────────────────────────────── */
-const CYAN = "#2DD4BF";
-const BLUE = "#0EA5E9";
-const BG   = "#050505";
+/* ─── Constants ───────────────────────────────────────────── */
+const CYAN    = "#2DD4BF";
+const CYAN_D  = "#0d9488";
+const BLUE    = "#0EA5E9";
+const S950    = "#020617";
+const S900    = "#0f172a";
+const S800    = "#1e293b";
 const CALENDLY = "https://calendly.com/ahmed_sondarlogic";
 const EMAIL    = "partnership@sondarlogic.com";
 
-const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
+/* ─── Global CSS ──────────────────────────────────────────── */
+const G = `
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; overflow-x: hidden; }
-  body { background: ${BG}; color: #e2e8f0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+  body { background: #fff; color: #0f172a; font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-  .grid-bg {
-    background-color: ${BG};
-    background-image:
-      linear-gradient(rgba(45,212,191,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(45,212,191,0.04) 1px, transparent 1px);
-    background-size: 64px 64px;
-  }
-
-  .cyan-glow { box-shadow: 0 0 30px rgba(45,212,191,0.25), 0 0 60px rgba(45,212,191,0.1); }
-  .cyan-text-glow { text-shadow: 0 0 20px rgba(45,212,191,0.5); }
-
-  .gradient-text {
+  .grad-text {
     background: linear-gradient(135deg, ${CYAN} 0%, ${BLUE} 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .grad-text-d {
+    background: linear-gradient(135deg, ${CYAN_D} 0%, ${BLUE} 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(32px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes pulse-ring {
-    0%   { box-shadow: 0 0 0 0 rgba(45,212,191,0.4); }
-    70%  { box-shadow: 0 0 0 12px rgba(45,212,191,0); }
-    100% { box-shadow: 0 0 0 0 rgba(45,212,191,0); }
-  }
-  .animate-fade-up { animation: fadeUp 0.7s ease both; }
-  .delay-100 { animation-delay: 0.1s; }
-  .delay-200 { animation-delay: 0.2s; }
-  .delay-300 { animation-delay: 0.3s; }
-  .delay-400 { animation-delay: 0.4s; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pdot   { 0%,100% { opacity:1; } 50% { opacity:.35; } }
 
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-  .reveal-delay-4 { transition-delay: 0.4s; }
+  .fu  { animation: fadeUp 0.7s ease both; }
+  .d1  { animation-delay:.1s; } .d2 { animation-delay:.2s; }
+  .d3  { animation-delay:.3s; } .d4 { animation-delay:.4s; }
 
-  .btn-cyan {
-    background: ${CYAN};
-    color: #020617;
-    font-weight: 600;
-    padding: 0.75rem 1.75rem;
-    border-radius: 0.5rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.95rem;
-    white-space: nowrap;
-  }
-  .btn-cyan:hover {
-    background: #5eead4;
-    box-shadow: 0 0 24px rgba(45,212,191,0.5);
-    transform: translateY(-1px);
-  }
+  .rv  { opacity:0; transform:translateY(22px); transition: opacity .6s ease, transform .6s ease; }
+  .rv.on { opacity:1; transform:translateY(0); }
+  .td1 { transition-delay:.1s; } .td2 { transition-delay:.2s; } .td3 { transition-delay:.3s; }
 
-  .btn-ghost {
-    border: 1px solid rgba(45,212,191,0.45);
-    color: ${CYAN};
-    background: transparent;
-    font-weight: 600;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    white-space: nowrap;
-  }
-  .btn-ghost:hover {
-    background: rgba(45,212,191,0.08);
-    border-color: ${CYAN};
-    box-shadow: 0 0 16px rgba(45,212,191,0.2);
-    transform: translateY(-1px);
-  }
+  /* Buttons */
+  .bp { background:${CYAN_D}; color:#fff; font-weight:700; padding:.75rem 1.75rem; border-radius:.5rem;
+        display:inline-flex; align-items:center; gap:.4rem; text-decoration:none;
+        font-family:'Inter',sans-serif; font-size:.95rem; white-space:nowrap;
+        border:none; cursor:pointer; transition: background .2s, box-shadow .2s, transform .2s; }
+  .bp:hover { background:#0f766e; box-shadow:0 0 24px rgba(13,148,136,.4); transform:translateY(-1px); }
 
-  .nav-link {
-    color: #94a3b8;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.2s;
-    font-family: 'Inter', sans-serif;
-  }
-  .nav-link:hover { color: #fff; }
+  .bo-dark { border:1.5px solid rgba(255,255,255,.22); color:#fff; background:transparent;
+             font-weight:600; padding:.7rem 1.4rem; border-radius:.5rem;
+             display:inline-flex; align-items:center; gap:.4rem; text-decoration:none;
+             font-family:'Inter',sans-serif; font-size:.9rem; white-space:nowrap; cursor:pointer;
+             transition:all .2s; }
+  .bo-dark:hover { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.5); }
 
-  .feature-card {
-    background: rgba(15,23,42,0.7);
-    border: 1px solid rgba(45,212,191,0.12);
-    border-radius: 1rem;
-    padding: 2rem;
-    transition: all 0.3s ease;
-  }
-  .feature-card:hover {
-    border-color: rgba(45,212,191,0.35);
-    box-shadow: 0 0 40px rgba(45,212,191,0.08);
-    transform: translateY(-4px);
-  }
+  .bo-light { border:1.5px solid #e2e8f0; color:#0f172a; background:transparent;
+              font-weight:600; padding:.7rem 1.4rem; border-radius:.5rem;
+              display:inline-flex; align-items:center; gap:.4rem; text-decoration:none;
+              font-family:'Inter',sans-serif; font-size:.9rem; white-space:nowrap; cursor:pointer;
+              transition:all .2s; }
+  .bo-light:hover { border-color:${CYAN_D}; color:${CYAN_D}; }
+
+  /* Cards */
+  .cw { background:#fff; border:1px solid #e2e8f0; border-radius:1rem; padding:1.75rem;
+        transition: border-color .25s, box-shadow .25s, transform .25s; }
+  .cw:hover { border-color:rgba(13,148,136,.3); box-shadow:0 8px 32px rgba(13,148,136,.07); transform:translateY(-3px); }
+  .cd { background:${S800}; border:1px solid rgba(255,255,255,.07); border-radius:1rem; padding:1.75rem;
+        transition: border-color .25s, transform .25s; }
+  .cd:hover { border-color:rgba(45,212,191,.28); transform:translateY(-3px); }
 
   /* ROI slider */
-  .roi-slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 4px;
-    border-radius: 2px;
-    background: rgba(45,212,191,0.2);
-    outline: none;
-  }
-  .roi-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: ${CYAN};
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(45,212,191,0.5);
-    transition: box-shadow 0.2s;
-  }
-  .roi-slider::-webkit-slider-thumb:hover {
-    box-shadow: 0 0 18px rgba(45,212,191,0.8);
-  }
-  .roi-slider::-moz-range-thumb {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: ${CYAN};
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 0 10px rgba(45,212,191,0.5);
-  }
+  .rs { -webkit-appearance:none; width:100%; height:4px; border-radius:2px; background:#e2e8f0; outline:none; }
+  .rs::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%;
+    background:${CYAN_D}; cursor:pointer; box-shadow:0 0 0 3px rgba(13,148,136,.2); transition:box-shadow .2s; }
+  .rs::-webkit-slider-thumb:hover { box-shadow:0 0 0 6px rgba(13,148,136,.2); }
+  .rs::-moz-range-thumb { width:22px; height:22px; border-radius:50%; background:${CYAN_D}; cursor:pointer; border:none; }
 
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #0f172a; }
-  ::-webkit-scrollbar-thumb { background: rgba(45,212,191,0.3); border-radius: 3px; }
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:#f1f5f9; }
+  ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:3px; }
 
+  /* Responsive */
   @media (max-width: 768px) {
-    .hide-mobile { display: none !important; }
-    .nav-links-desktop { display: none !important; }
-    .hero-title { font-size: 2.3rem !important; }
-    .section-padding { padding: 3rem 0 !important; }
-    .responsive-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
-    .footer-grid-mobile { grid-template-columns: 1fr !important; gap: 3rem !important; }
-    .pricing-inner-grid { grid-template-columns: 1fr !important; }
-    .pricing-price-col  { order: 1 !important; border-right: none !important; border-bottom: 1px solid rgba(45,212,191,0.12) !important; }
-    .pricing-features-col { order: 2 !important; border-right: none !important; }
-    .roi-cols { grid-template-columns: 1fr !important; gap: 1rem !important; }
+    .h-mobile { display:none !important; }
+    .nav-d    { display:none !important; }
+    .g2       { grid-template-columns:1fr !important; gap:2rem !important; }
+    .g4       { grid-template-columns:1fr 1fr !important; }
+    .zrow     { grid-template-columns:1fr !important; gap:2.5rem !important; }
+    .pcols    { grid-template-columns:1fr !important; }
+    .pr-col   { order:1 !important; border-left:none !important; border-top:1px solid #1e293b !important; }
+    .pl-col   { order:2 !important; }
+    .rg       { grid-template-columns:1fr !important; gap:.75rem !important; }
+    .ctcols   { grid-template-columns:1fr 85px 95px !important; }
+    .hero-h1  { font-size:2.4rem !important; line-height:1.1 !important; }
   }
 `;
 
@@ -178,10 +103,10 @@ function useReveal() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const targets = [el, ...el.querySelectorAll('.reveal')];
+    const targets = [el, ...el.querySelectorAll(".rv")];
     const obs = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
-      { threshold: 0.1 }
+      es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add("on"); }),
+      { threshold: 0.07 }
     );
     targets.forEach(t => obs.observe(t));
     return () => obs.disconnect();
@@ -189,465 +114,757 @@ function useReveal() {
   return ref;
 }
 
-function Section({ children, id, style = {} }) {
-  return <section id={id} className="section-padding" style={{ padding: "3.5rem 0", ...style }}>{children}</section>;
-}
-
-function Tag({ children }) {
+function Pill({ children, dark = false }) {
   return (
     <div style={{
-      display: "inline-flex", alignItems: "center", gap: "0.4rem",
-      border: "1px solid rgba(45,212,191,0.3)", borderRadius: "2rem",
-      padding: "0.3rem 1rem", fontSize: "0.7rem", fontWeight: 600,
-      letterSpacing: "0.12em", color: CYAN, marginBottom: "1.25rem"
+      display: "inline-flex", alignItems: "center", gap: ".4rem",
+      padding: ".25rem .9rem", borderRadius: "2rem",
+      fontSize: ".67rem", fontWeight: 700, letterSpacing: ".1em", marginBottom: "1rem",
+      ...(dark
+        ? { background: "rgba(45,212,191,.12)", color: CYAN, border: "1px solid rgba(45,212,191,.25)" }
+        : { background: "rgba(13,148,136,.07)", color: CYAN_D, border: "1px solid rgba(13,148,136,.18)" })
     }}>
-      <span style={{ width: 6, height: 6, borderRadius: "50%", background: CYAN, display: "inline-block", animation: "pulse-ring 2s infinite" }} />
+      <span style={{ width: 5, height: 5, borderRadius: "50%", background: dark ? CYAN : CYAN_D, animation: "pdot 2s infinite" }} />
       {children}
     </div>
   );
 }
 
 /* ─── NAVBAR ──────────────────────────────────────────────── */
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+function Navbar({ dark = false }) {
+  const [sc, setSc] = useState(false);
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 20);
+    const fn = () => setSc(window.scrollY > 24);
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
   }, []);
+  const bg = sc ? (dark ? "rgba(2,6,23,.95)" : "rgba(255,255,255,.96)") : "transparent";
+  const border = sc ? (dark ? "1px solid rgba(255,255,255,.06)" : "1px solid #f1f5f9") : "none";
   return (
-    <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      background: scrolled ? "rgba(3,7,18,0.88)" : "rgba(3,7,18,0.6)",
-      backdropFilter: "blur(20px)",
-      borderBottom: "1px solid rgba(45,212,191,0.08)",
-      transition: "all 0.3s ease"
-    }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 2rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: "4rem" }}>
-        <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>
-          Sondar <span style={{ color: CYAN }}>Logic AI</span>
+    <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
+      background: bg, backdropFilter: "blur(16px)", borderBottom: border, transition: "all .3s" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 2rem",
+        display: "flex", alignItems: "center", justifyContent: "space-between", height: "4rem" }}>
+        <div style={{ fontSize: "1.05rem", fontWeight: 800, letterSpacing: "-.03em", color: dark ? "#fff" : S900 }}>
+          Sondar <span style={{ color: CYAN_D }}>Logic AI</span>
         </div>
-        <div className="nav-links-desktop" style={{ display: "flex", gap: "2rem" }}>
+        <div className="nav-d" style={{ display: "flex", gap: "2rem" }}>
           {[
-            { label: "Features",     id: "features" },
-            { label: "How it Works", id: "how-it-works" },
-            { label: "Pricing",      id: "pricing" },
-            { label: "FAQ",          id: "faq" },
-          ].map(l => (
-            <a key={l.label} href={`#${l.id}`} className="nav-link"
-              onClick={e => { e.preventDefault(); document.getElementById(l.id)?.scrollIntoView({ behavior: 'smooth' }); }}>
-              {l.label}
+            { l: "How it Works", id: "how-it-works" },
+            { l: "Features",     id: "features" },
+            { l: "Pricing",      id: "pricing" },
+            { l: "FAQ",          id: "faq" },
+          ].map(n => (
+            <a key={n.l} href={`#${n.id}`}
+              style={{ color: dark ? "rgba(255,255,255,.6)" : "#64748b", textDecoration: "none",
+                fontSize: ".9rem", fontWeight: 500, transition: "color .2s" }}
+              onClick={e => { e.preventDefault(); document.getElementById(n.id)?.scrollIntoView({ behavior: "smooth" }); }}
+              onMouseEnter={e => e.target.style.color = dark ? "#fff" : S900}
+              onMouseLeave={e => e.target.style.color = dark ? "rgba(255,255,255,.6)" : "#64748b"}>
+              {n.l}
             </a>
           ))}
         </div>
-        <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn-cyan" style={{ padding: "0.5rem 1.25rem", fontSize: "0.85rem" }}>Book a Demo</a>
+        <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
+          style={{ padding: ".5rem 1.2rem", fontSize: ".85rem" }}>Book a Demo</a>
       </div>
     </nav>
   );
 }
 
 /* ─── HERO ────────────────────────────────────────────────── */
-/* Change 1: 4-stat banner removed entirely */
 function Hero() {
   return (
-    <section style={{ paddingTop: "7rem", paddingBottom: "3.5rem", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: 800, height: 500, background: "radial-gradient(ellipse at center, rgba(45,212,191,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
-      <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 2rem", textAlign: "center" }}>
-        <div className="animate-fade-up" style={{ display: "flex", justifyContent: "center" }}>
-          <Tag>AI REBATE ENGINE · NEXT-GEN</Tag>
+    <section style={{ background: S950, paddingTop: "7rem", paddingBottom: "5rem",
+      position: "relative", overflow: "hidden", textAlign: "center" }}>
+      {/* Radial spotlight */}
+      <div style={{ position: "absolute", top: "38%", left: "50%",
+        transform: "translate(-50%,-50%)", width: 720, height: 420,
+        background: "radial-gradient(ellipse, rgba(45,212,191,.18) 0%, transparent 65%)",
+        filter: "blur(72px)", borderRadius: "50%", pointerEvents: "none" }} />
+      {/* Grid texture */}
+      <div style={{ position: "absolute", inset: 0,
+        backgroundImage: "linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px)",
+        backgroundSize: "48px 48px", pointerEvents: "none" }} />
+
+      <div style={{ maxWidth: 840, margin: "0 auto", padding: "0 2rem", position: "relative" }}>
+        <div className="fu" style={{ display: "flex", justifyContent: "center" }}>
+          <Pill dark>ENTERPRISE REBATE PROCESSING · CANADA</Pill>
         </div>
-        <h1 className="hero-title animate-fade-up delay-100" style={{ fontSize: "clamp(2.4rem, 5vw, 3.75rem)", fontWeight: 800, lineHeight: 1.12, letterSpacing: "-0.035em", marginBottom: "1.25rem" }}>
-          <span style={{ color: "#fff", display: "block" }}>Enterprise Rebate Processing.</span>
-          <span className="gradient-text">As low as $0.35 per claim.</span>
+
+        <h1 className="hero-h1 fu d1" style={{
+          fontSize: "clamp(2.6rem, 5.5vw, 4.25rem)", fontWeight: 900,
+          lineHeight: 1.09, letterSpacing: "-.045em", color: "#fff", marginBottom: "1.25rem" }}>
+          Enterprise Rebate Processing.<br />
+          <span className="grad-text">As low as $0.35 per claim.</span>
         </h1>
-        <p className="animate-fade-up delay-200" style={{ color: "#64748b", fontSize: "1.2rem", fontWeight: 500, marginBottom: "0.75rem", letterSpacing: "-0.01em" }}>
-          No fees. No delays. No exceptions.
+
+        <p className="fu d2" style={{ color: "rgba(255,255,255,.5)", fontSize: "1.08rem",
+          lineHeight: 1.75, maxWidth: 580, margin: "0 auto 2.5rem" }}>
+          Enterprise Level Vision AI validates claims instantly, extracts full basket intelligence,
+          and maps retailer performance across Canada — zero setup fees, zero hidden costs.
         </p>
-        <p className="animate-fade-up delay-300" style={{ color: "#94a3b8", fontSize: "1rem", lineHeight: 1.75, maxWidth: 620, margin: "0 auto 2.5rem" }}>
-          Sondar Logic AI validates claims instantly, extracts deep basket intelligence, and maps provincial retailer performance across Canada. Zero setup fees. Zero hidden costs.
-        </p>
-        <div className="animate-fade-up delay-400" style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-          <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn-cyan">Book a Demo <ArrowRight size={16} /></a>
-          <a href={`mailto:${EMAIL}`} className="btn-ghost">Email Us</a>
+
+        <div className="fu d3" style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+          <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
+            style={{ fontSize: "1rem", padding: ".875rem 2rem" }}>
+            Book a Demo <ArrowRight size={17} />
+          </a>
+          <a href={`mailto:${EMAIL}`} className="bo-dark">
+            <Mail size={15} /> Email Us
+          </a>
+        </div>
+
+        {/* Stats bar */}
+        <div className="fu d4" style={{ marginTop: "3.5rem",
+          display: "flex", justifyContent: "center", gap: "3rem", flexWrap: "wrap" }}>
+          {[
+            { v: "$0.35", l: "per claim at 50k+" },
+            { v: "97%+",  l: "audit accuracy" },
+            { v: "$0",    l: "exception fees" },
+            { v: "< 3s",  l: "processing time" },
+          ].map((s, i) => (
+            <div key={i} style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "1.6rem", fontWeight: 800, color: CYAN,
+                letterSpacing: "-.04em", lineHeight: 1 }}>{s.v}</div>
+              <div style={{ fontSize: ".73rem", color: "rgba(255,255,255,.35)",
+                marginTop: ".25rem", letterSpacing: ".04em" }}>{s.l}</div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── WORKFLOW (merged from ThreeSystems + Workflow) ──────── */
-/* Change 2: ThreeSystems deleted; Workflow absorbs its value props */
+/* ─── WORKFLOW ────────────────────────────────────────────── */
 function Workflow() {
   const ref = useReveal();
   const steps = [
     {
-      icon: <Upload size={24} color={CYAN} />,
-      number: "01",
-      title: "Instant Ingestion",
-      text: "Receipts are uploaded and instantly scanned by our vision AI models. The process begins the moment a consumer hits submit.",
+      icon: <Upload size={26} strokeWidth={1.75} color={CYAN_D} />,
+      num: "01", title: "Instant Ingestion",
+      body: "Receipts are uploaded and immediately queued for processing. Our infrastructure handles any volume surge without delay or backlog.",
     },
     {
-      icon: <Brain size={24} color={CYAN} />,
-      number: "02",
-      title: "95% Confidence Filter & Fraud Block",
-      text: "The AI audits every receipt for fraud signals — detecting Photoshop edits, Canva templates, and duplicate submissions — while assigning a mathematical confidence score for each claim.",
+      icon: <ScanSearch size={26} strokeWidth={1.75} color={CYAN_D} />,
+      num: "02", title: "Confidence Filter",
+      body: "Enterprise Level Vision AI extracts the data and assigns a definitive accuracy score to every receipt. Photoshop edits, Canva templates, and duplicate submissions are flagged before any payout is triggered.",
     },
     {
-      icon: <GitBranch size={24} color={CYAN} />,
-      number: "03",
-      title: "Deep Basket Analysis",
-      text: "Validated scans extract competitor brands and complementary basket items at no extra cost.",
+      icon: <ShoppingCart size={26} strokeWidth={1.75} color={CYAN_D} />,
+      num: "03", title: "Basket Extraction",
+      body: "Validated scans extract competitor brands and complementary basket items at no extra cost, giving you a complete picture of every purchase.",
     },
     {
-      icon: <Banknote size={24} color={CYAN} />,
-      number: "04",
-      title: "Payout Execution",
-      text: "Eliminate the 8-week wait. Validated claims instantly trigger API routing for CAD disbursement via Virtual Visa or direct e-Transfer.",
+      icon: <Banknote size={26} strokeWidth={1.75} color={CYAN_D} />,
+      num: "04", title: "Payout Execution",
+      body: "Validated claims instantly trigger API routing for CAD disbursement via Virtual Visa or direct e-Transfer. Flexible payout schedules on your exact cadence.",
     },
   ];
 
   return (
-    <Section id="how-it-works">
+    <section id="how-it-works" style={{ background: "#fff", padding: "5rem 0" }}>
       <div ref={ref} style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
-        <div className="reveal" style={{ textAlign: "center", marginBottom: "3rem" }}>
-          <Tag>THE WORKFLOW</Tag>
-          <h2 style={{ fontSize: "clamp(1.9rem, 4vw, 2.85rem)", fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", marginBottom: "0.6rem" }}>
-            Enterprise scale.{" "}
-            <span style={{ color: "#475569" }}>Human in the loop accuracy.</span>
+        <div className="rv" style={{ textAlign: "center", marginBottom: "3.5rem" }}>
+          <Pill>THE WORKFLOW</Pill>
+          <h2 style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.75rem)", fontWeight: 800,
+            letterSpacing: "-.035em", color: S900, marginBottom: ".75rem" }}>
+            From receipt to payout in under 3 seconds.
           </h2>
+          <p style={{ color: "#64748b", fontSize: "1rem", maxWidth: 500, margin: "0 auto", lineHeight: 1.7 }}>
+            Four automated stages. Zero manual handoffs on compliant claims.
+          </p>
         </div>
 
-        <div className="reveal reveal-delay-1" style={{ position: "relative" }}>
-          <div className="hide-mobile" style={{
-            position: "absolute", top: 37,
-            left: "calc(12.5% + 0.75rem)", right: "calc(12.5% + 0.75rem)",
-            height: 1,
-            background: "linear-gradient(90deg, transparent, rgba(45,212,191,0.2) 15%, rgba(45,212,191,0.2) 85%, transparent)",
-            pointerEvents: "none"
-          }} />
-          <div className="responsive-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.25rem" }}>
-            {steps.map((s, i) => (
-              <div key={i}
-                style={{ background: "rgba(10,20,40,0.7)", border: "1px solid rgba(45,212,191,0.13)", borderRadius: "1.125rem", padding: "1.75rem 1.5rem", display: "flex", flexDirection: "column", gap: "1rem", transition: "border-color 0.3s, transform 0.3s", cursor: "default" }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(45,212,191,0.38)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(45,212,191,0.13)"; e.currentTarget.style.transform = "none"; }}
-              >
+        <div className="rv td1 g4" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "1.25rem" }}>
+          {steps.map((s, i) => (
+            <div key={i} style={{ position: "relative" }}>
+              {i < 3 && (
+                <div className="h-mobile" style={{ position: "absolute", top: "2.55rem",
+                  right: "-.625rem", width: "1.25rem", height: 1, background: "#e2e8f0", zIndex: 1 }} />
+              )}
+              <div className="cw" style={{ height: "100%", display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div style={{ width: 50, height: 50, borderRadius: "0.875rem", background: "rgba(45,212,191,0.1)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(45,212,191,0.2)" }}>
-                    {s.icon}
-                  </div>
-                  <div style={{ fontSize: "1.75rem", fontWeight: 800, color: "rgba(45,212,191,0.1)", letterSpacing: "-0.05em", lineHeight: 1 }}>{s.number}</div>
+                  <div style={{ width: 50, height: 50, borderRadius: ".75rem",
+                    background: "rgba(13,148,136,.07)", display: "flex",
+                    alignItems: "center", justifyContent: "center",
+                    border: "1px solid rgba(13,148,136,.15)" }}>{s.icon}</div>
+                  <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#f1f5f9",
+                    letterSpacing: "-.05em" }}>{s.num}</span>
                 </div>
                 <div>
-                  <h3 style={{ fontSize: "0.97rem", fontWeight: 700, color: "#fff", marginBottom: "0.45rem", letterSpacing: "-0.02em" }}>{s.title}</h3>
-                  <p style={{ color: "#64748b", fontSize: "0.86rem", lineHeight: 1.7 }}>{s.text}</p>
+                  <h3 style={{ fontSize: ".97rem", fontWeight: 700, color: S900,
+                    marginBottom: ".4rem", letterSpacing: "-.02em" }}>{s.title}</h3>
+                  <p style={{ fontSize: ".84rem", color: "#64748b", lineHeight: 1.7 }}>{s.body}</p>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
-        <div className="reveal reveal-delay-2" style={{ marginTop: "2rem", background: "rgba(45,212,191,0.04)", border: "1px solid rgba(45,212,191,0.14)", borderRadius: "0.875rem", padding: "1.1rem 1.75rem", display: "flex", alignItems: "flex-start", gap: "1rem" }}>
-          <div style={{ width: 7, height: 7, borderRadius: "50%", background: CYAN, flexShrink: 0, marginTop: 6, animation: "pulse-ring 2s infinite" }} />
-          <p style={{ color: "#94a3b8", fontSize: "0.86rem", lineHeight: 1.65 }}>
-            <span style={{ color: CYAN, fontWeight: 600 }}>Edge Case Handling: </span>
-            Claims that pass go directly to instant payout. Claims that fall below the threshold are never auto denied — they enter a transparent human review queue with a 3 business day audit SLA and automatic customer follow-up.
+        <div className="rv td2" style={{ marginTop: "2rem",
+          background: "rgba(13,148,136,.05)", border: "1px solid rgba(13,148,136,.15)",
+          borderRadius: ".875rem", padding: "1rem 1.5rem",
+          display: "flex", alignItems: "flex-start", gap: "1rem" }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%",
+            background: CYAN_D, flexShrink: 0, marginTop: 6 }} />
+          <p style={{ color: "#475569", fontSize: ".86rem", lineHeight: 1.65 }}>
+            <span style={{ color: CYAN_D, fontWeight: 700 }}>Edge Case Handling: </span>
+            Claims scoring below the 95% confidence threshold are never auto denied. They enter a
+            secure human review queue with a 3 business day audit SLA and automated customer follow-up.
           </p>
         </div>
       </div>
-    </Section>
+    </section>
   );
 }
 
-/* ─── COMMAND CENTER ──────────────────────────────────────── */
+/* ─── NATIVE UI VISUALS ───────────────────────────────────── */
+
+/* Dashboard mockup for Deep Basket */
+function BasketMockup() {
+  const bars = [85, 62, 40, 55, 100, 78, 30, 45, 22];
+  const provs = ["BC","AB","SK","MB","ON","QC","NB","NS","NL"];
+  return (
+    <div style={{ background: S900, borderRadius: "1.125rem", padding: "1.5rem",
+      border: "1px solid rgba(255,255,255,.07)",
+      boxShadow: "0 24px 64px rgba(0,0,0,.28)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between",
+        alignItems: "center", marginBottom: "1.25rem" }}>
+        <span style={{ fontSize: ".68rem", fontWeight: 700, color: CYAN,
+          letterSpacing: ".1em" }}>COMMAND CENTER</span>
+        <div style={{ display: "flex", alignItems: "center", gap: ".4rem" }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%",
+            background: "#22c55e", animation: "pdot 2s infinite" }} />
+          <span style={{ fontSize: ".62rem", color: "#22c55e", fontWeight: 600 }}>LIVE</span>
+        </div>
+      </div>
+      {/* KPIs */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
+        gap: ".6rem", marginBottom: "1.25rem" }}>
+        {[
+          { l: "Claims Today",  v: "4,217" },
+          { l: "CAD Disbursed", v: "$186K"  },
+          { l: "Fraud Blocked", v: "$31.4K" },
+        ].map((k, i) => (
+          <div key={i} style={{ background: S800, borderRadius: ".6rem",
+            padding: ".75rem", border: "1px solid rgba(255,255,255,.05)" }}>
+            <div style={{ fontSize: ".56rem", color: "#475569",
+              letterSpacing: ".06em", marginBottom: ".3rem" }}>{k.l}</div>
+            <div style={{ fontSize: "1.05rem", fontWeight: 800,
+              color: "#fff", letterSpacing: "-.03em", lineHeight: 1 }}>{k.v}</div>
+          </div>
+        ))}
+      </div>
+      {/* Bar chart */}
+      <div style={{ background: S800, borderRadius: ".6rem", padding: ".875rem",
+        border: "1px solid rgba(255,255,255,.05)", marginBottom: ".75rem" }}>
+        <div style={{ fontSize: ".56rem", color: "#475569",
+          letterSpacing: ".08em", marginBottom: ".6rem" }}>PROVINCIAL PAYOUT VOLUME</div>
+        <div style={{ display: "flex", gap: "3px", alignItems: "flex-end", height: 50 }}>
+          {bars.map((h, i) => (
+            <div key={i} style={{ flex: 1, display: "flex",
+              flexDirection: "column", alignItems: "center", gap: "3px" }}>
+              <div style={{ width: "100%", height: `${h * .5}%`,
+                background: `linear-gradient(to top, ${CYAN_D}, ${BLUE})`,
+                borderRadius: "2px 2px 0 0", opacity: .85 }} />
+              <span style={{ fontSize: ".42rem", color: "#334155" }}>{provs[i]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Competitor basket */}
+      <div style={{ background: S800, borderRadius: ".6rem", padding: ".875rem",
+        border: "1px solid rgba(255,255,255,.05)" }}>
+        <div style={{ fontSize: ".56rem", color: "#475569",
+          letterSpacing: ".08em", marginBottom: ".6rem" }}>COMPETITOR BASKET SHARE</div>
+        {[
+          { b: "Competitor A", pct: 38 },
+          { b: "Competitor B", pct: 24 },
+          { b: "Other",        pct: 18 },
+        ].map((r, i) => (
+          <div key={i} style={{ marginBottom: i < 2 ? ".5rem" : 0 }}>
+            <div style={{ display: "flex", justifyContent: "space-between",
+              marginBottom: ".18rem" }}>
+              <span style={{ fontSize: ".6rem", color: "#94a3b8" }}>{r.b}</span>
+              <span style={{ fontSize: ".6rem", color: "#e2e8f0", fontWeight: 600 }}>{r.pct}%</span>
+            </div>
+            <div style={{ height: 4, background: "#334155", borderRadius: 2 }}>
+              <div style={{ height: "100%", width: `${r.pct}%`,
+                background: `linear-gradient(90deg, ${CYAN_D}, ${BLUE})`, borderRadius: 2 }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* Fraud card mockup */
+function FraudMockup() {
+  return (
+    <div style={{ background: "#fff", border: "1px solid #e2e8f0",
+      borderRadius: "1.125rem", padding: "1.75rem",
+      boxShadow: "0 8px 40px rgba(0,0,0,.06)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: ".5rem", marginBottom: "1.5rem" }}>
+        <Shield size={17} color={CYAN_D} />
+        <span style={{ fontSize: ".68rem", fontWeight: 700, color: CYAN_D,
+          letterSpacing: ".08em" }}>FRAUD INTELLIGENCE LAYER</span>
+      </div>
+      {[
+        { l: "Photoshop / Canva Detection", r: "BLOCKED",  n: "1,204", ok: false },
+        { l: "Duplicate Receipt Flag",      r: "BLOCKED",  n: "842",   ok: false },
+        { l: "Date Manipulation",           r: "FLAGGED",  n: "317",   ok: null  },
+        { l: "Valid — High Confidence",     r: "CLEARED",  n: "41,887",ok: true  },
+      ].map((row, i) => (
+        <div key={i} style={{ display: "flex", justifyContent: "space-between",
+          alignItems: "center", padding: ".65rem 0",
+          borderBottom: i < 3 ? "1px solid #f1f5f9" : "none" }}>
+          <span style={{ fontSize: ".84rem", color: "#475569" }}>{row.l}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }}>
+            <span style={{ fontSize: ".78rem", fontWeight: 700, color: S900 }}>{row.n}</span>
+            <span style={{
+              fontSize: ".58rem", fontWeight: 700, letterSpacing: ".06em",
+              padding: ".14rem .5rem", borderRadius: ".25rem",
+              color: row.ok === true ? "#16a34a" : row.ok === null ? "#d97706" : "#dc2626",
+              background: row.ok === true ? "#f0fdf4" : row.ok === null ? "#fffbeb" : "#fef2f2",
+            }}>{row.r}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* Abstract map UI for Market Intelligence */
+function MapMockup() {
+  const hotspots = [
+    { top: "32%", left: "12%",  label: "BC",   v: "$41K",  size: 18 },
+    { top: "30%", left: "28%",  label: "AB",   v: "$29K",  size: 14 },
+    { top: "44%", left: "58%",  label: "ON",   v: "$94K",  size: 26 },
+    { top: "38%", left: "70%",  label: "QC",   v: "$67K",  size: 20 },
+    { top: "55%", left: "80%",  label: "NB",   v: "$12K",  size: 10 },
+    { top: "42%", left: "88%",  label: "NS",   v: "$11K",  size: 10 },
+    { top: "35%", left: "42%",  label: "SK",   v: "$18K",  size: 11 },
+    { top: "37%", left: "50%",  label: "MB",   v: "$22K",  size: 12 },
+  ];
+
+  return (
+    <div style={{ background: S900, borderRadius: "1.125rem", padding: "1.5rem",
+      border: "1px solid rgba(255,255,255,.07)",
+      boxShadow: "0 24px 64px rgba(0,0,0,.28)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between",
+        alignItems: "center", marginBottom: "1rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
+          <MapPin size={15} color={CYAN} />
+          <span style={{ fontSize: ".68rem", fontWeight: 700,
+            color: CYAN, letterSpacing: ".1em" }}>PROVINCIAL RETAILER VOLUME</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: ".4rem" }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%",
+            background: "#22c55e", animation: "pdot 2s infinite" }} />
+          <span style={{ fontSize: ".6rem", color: "#22c55e", fontWeight: 600 }}>LIVE</span>
+        </div>
+      </div>
+
+      {/* Abstract map canvas */}
+      <div style={{ position: "relative", height: 180, background: S800,
+        borderRadius: ".75rem", border: "1px solid rgba(255,255,255,.05)",
+        marginBottom: "1rem", overflow: "hidden" }}>
+        {/* Subtle lat/long lines */}
+        {[30, 50, 70].map(y => (
+          <div key={y} style={{ position: "absolute", top: `${y}%`, left: 0, right: 0,
+            height: 1, background: "rgba(255,255,255,.04)" }} />
+        ))}
+        {[25, 50, 75].map(x => (
+          <div key={x} style={{ position: "absolute", left: `${x}%`, top: 0, bottom: 0,
+            width: 1, background: "rgba(255,255,255,.04)" }} />
+        ))}
+        {/* Canada outline suggestion — simple polygon */}
+        <svg viewBox="0 0 400 160" style={{ position: "absolute", inset: 0,
+          width: "100%", height: "100%", opacity: .12 }}>
+          <polyline fill="none" stroke={CYAN} strokeWidth="1.5"
+            points="20,80 40,60 80,55 120,50 160,48 200,52 240,55 280,58 320,55 360,58 390,70 390,110 360,120 320,125 280,128 240,130 200,128 160,125 120,128 80,130 40,120 20,110 20,80" />
+        </svg>
+        {/* Hotspots */}
+        {hotspots.map((h, i) => (
+          <div key={i} style={{ position: "absolute", top: h.top, left: h.left,
+            transform: "translate(-50%,-50%)" }}>
+            {/* Glow ring */}
+            <div style={{ position: "absolute", top: "50%", left: "50%",
+              transform: "translate(-50%,-50%)",
+              width: h.size * 2.2, height: h.size * 2.2, borderRadius: "50%",
+              background: `radial-gradient(circle, rgba(45,212,191,.18) 0%, transparent 70%)` }} />
+            {/* Dot */}
+            <div style={{ width: h.size, height: h.size, borderRadius: "50%",
+              background: CYAN_D, opacity: .9,
+              boxShadow: `0 0 ${h.size}px rgba(13,148,136,.6)` }} />
+            {/* Label */}
+            <div style={{ position: "absolute", top: "50%", left: "120%",
+              transform: "translateY(-50%)",
+              background: "rgba(15,23,42,.85)", border: "1px solid rgba(45,212,191,.2)",
+              borderRadius: ".3rem", padding: ".1rem .35rem",
+              whiteSpace: "nowrap" }}>
+              <span style={{ fontSize: ".52rem", color: CYAN, fontWeight: 700 }}>{h.label}</span>
+              <span style={{ fontSize: ".52rem", color: "#94a3b8", marginLeft: ".2rem" }}>{h.v}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Retailer callouts */}
+      {[
+        { name: "Canadian Tire — National",  v: "$214K", trend: "+8.4%" },
+        { name: "NAPA Auto — Western",       v: "$98K",  trend: "+12%" },
+        { name: "Costco — Ontario & QC",     v: "$187K", trend: "+6.1%" },
+      ].map((r, i) => (
+        <div key={i} style={{ display: "flex", justifyContent: "space-between",
+          alignItems: "center", padding: ".5rem 0",
+          borderTop: "1px solid rgba(255,255,255,.04)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
+            <div style={{ width: 6, height: 6, borderRadius: "50%",
+              background: CYAN_D, flexShrink: 0 }} />
+            <span style={{ fontSize: ".72rem", color: "#94a3b8" }}>{r.name}</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }}>
+            <span style={{ fontSize: ".78rem", fontWeight: 700, color: "#fff" }}>{r.v}</span>
+            <span style={{ fontSize: ".65rem", color: "#22c55e", fontWeight: 600 }}>{r.trend}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── COMMAND CENTER (Z-Pattern) ──────────────────────────── */
 function CommandCenter() {
   const ref = useReveal();
-  const features = [
-    { title: "Provincial Heatmaps",         text: "Track volume from British Columbia, through Ontario and Quebec, all the way to Newfoundland — with postal code precision." },
-    { title: "Retailer & Vendor Analytics", text: "See exactly which independent shops or big box retailers are moving your product the fastest, updated live." },
-    { title: "Competitor Basket Share",     text: "Identify exactly what other brands are in the shopper's basket at the time of purchase. Full receipt extraction, no extra charge." },
-    { title: "Live Financial Tracking",     text: "Watch your payout volume, CAD disbursement totals, and exact dollar amount of fraud blocked update by the second." },
-  ];
-  return (
-    <Section id="features">
-      <div ref={ref} style={{ maxWidth: 1200, margin: "0 auto", padding: "0 2rem" }}>
-        <div className="responsive-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "center" }}>
-          <div>
-            <div className="reveal"><Tag>COMMAND CENTER</Tag></div>
-            <h2 className="reveal reveal-delay-1" style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.6rem)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: "1rem" }}>
-              <span style={{ color: "#fff" }}>Your First Party Data, </span>
-              <span style={{ color: CYAN }} className="cyan-text-glow">Live 24/7.</span>
-            </h2>
-            <p className="reveal reveal-delay-2" style={{ color: "#64748b", fontSize: "1rem", marginBottom: "2rem", lineHeight: 1.7 }}>
-              We don't just clear receipts; we map your entire Canadian market.
-            </p>
-            <div className="reveal reveal-delay-3" style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-              {features.map((f, i) => (
-                <div key={i} style={{ display: "flex", gap: "0.875rem", alignItems: "flex-start" }}>
-                  <div style={{ width: 7, height: 7, borderRadius: "50%", background: CYAN, flexShrink: 0, marginTop: 7, boxShadow: `0 0 8px ${CYAN}` }} />
-                  <div>
-                    <span style={{ color: "#e2e8f0", fontWeight: 600, fontSize: "0.92rem" }}>{f.title}: </span>
-                    <span style={{ color: "#64748b", fontSize: "0.92rem" }}>{f.text}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          <div className="hide-mobile reveal reveal-delay-2" style={{ background: "rgba(8,15,32,0.9)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: "1.25rem", padding: "1.75rem", boxShadow: "0 0 60px rgba(45,212,191,0.07), 0 40px 80px rgba(0,0,0,0.5)" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
-              <span style={{ color: CYAN, fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em" }}>SONDAR DASHBOARD</span>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", animation: "pulse-ring 2s infinite" }} />
-                <span style={{ color: "#22c55e", fontSize: "0.67rem", fontWeight: 600 }}>LIVE</span>
-              </div>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "1.25rem" }}>
-              {[
-                { label: "Claims Today",  value: "2,847",  change: "+12.3%" },
-                { label: "CAD Disbursed", value: "$142.4K", change: "+8.1%" },
-                { label: "Fraud Blocked", value: "$23.8K",  change: "—" },
-                { label: "Avg Process",   value: "1.8s",    change: "↓0.3s" },
-              ].map((m, i) => (
-                <div key={i} style={{ background: "rgba(15,23,42,0.8)", borderRadius: "0.75rem", padding: "1rem", border: "1px solid rgba(45,212,191,0.08)" }}>
-                  <div style={{ color: "#475569", fontSize: "0.62rem", letterSpacing: "0.08em", marginBottom: "0.4rem" }}>{m.label}</div>
-                  <div style={{ color: "#fff", fontSize: "1.3rem", fontWeight: 700, letterSpacing: "-0.03em" }}>{m.value}</div>
-                  <div style={{ color: i === 2 ? "#ef4444" : CYAN, fontSize: "0.67rem", marginTop: "0.2rem" }}>{m.change}</div>
-                </div>
-              ))}
-            </div>
-            <div style={{ background: "rgba(15,23,42,0.8)", borderRadius: "0.75rem", padding: "1rem", border: "1px solid rgba(45,212,191,0.08)", marginBottom: "1rem" }}>
-              <div style={{ color: "#475569", fontSize: "0.62rem", letterSpacing: "0.08em", marginBottom: "0.75rem" }}>PROVINCIAL VOLUME</div>
-              <div style={{ display: "flex", gap: "0.4rem", alignItems: "flex-end", height: 60 }}>
-                {[{p:"BC",h:85},{p:"AB",h:65},{p:"SK",h:35},{p:"MB",h:45},{p:"ON",h:100},{p:"QC",h:78},{p:"NB",h:28},{p:"NS",h:32},{p:"NL",h:18}].map((b, i) => (
-                  <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "0.3rem" }}>
-                    <div style={{ width: "100%", background: `linear-gradient(to top, ${CYAN}, ${BLUE})`, borderRadius: "3px 3px 0 0", height: `${b.h * 0.6}%`, opacity: 0.8 }} />
-                    <span style={{ color: "#334155", fontSize: "0.5rem" }}>{b.p}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div style={{ background: "rgba(15,23,42,0.8)", borderRadius: "0.75rem", padding: "1rem", border: "1px solid rgba(45,212,191,0.08)" }}>
-              <div style={{ color: "#475569", fontSize: "0.62rem", letterSpacing: "0.08em", marginBottom: "0.75rem" }}>RECENT CLAIMS</div>
-              {[
-                { id: "#48821", retailer: "Canadian Tire – Burnaby", amt: "$12.50", status: "PAID" },
-                { id: "#48820", retailer: "NAPA – Calgary NW",       amt: "$8.75",  status: "PAID" },
-                { id: "#48819", retailer: "Costco – Mississauga",    amt: "$22.00", status: "FLAGGED" },
-              ].map((r, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.4rem 0", borderBottom: i < 2 ? "1px solid rgba(45,212,191,0.06)" : "none" }}>
-                  <div>
-                    <span style={{ color: "#475569", fontSize: "0.62rem" }}>{r.id} </span>
-                    <span style={{ color: "#94a3b8", fontSize: "0.67rem" }}>{r.retailer}</span>
-                  </div>
-                  <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
-                    <span style={{ color: "#e2e8f0", fontSize: "0.72rem", fontWeight: 600 }}>{r.amt}</span>
-                    <span style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.06em", color: r.status === "PAID" ? "#22c55e" : "#f59e0b", background: r.status === "PAID" ? "rgba(34,197,94,0.1)" : "rgba(245,158,11,0.1)", padding: "0.15rem 0.4rem", borderRadius: "0.25rem" }}>{r.status}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </Section>
-  );
-}
-
-/* ─── PRICING (Change 3: SaaS two-col card + Change 6: email link) ── */
-function Pricing() {
-  const ref = useReveal();
-  const includedFeatures = [
-    "Deep Basket & Competitor Data Extraction",
-    "AI Fraud Blocking — Photoshop, Canva & Dupes",
-    "Instant Digital Payouts (Virtual Visa / e-Transfer)",
-    "$0 Exception Fees, $0 Setup Costs",
-    "97%+ AI Visual Audit on Every Claim",
-    "Looker Studio Dashboard & Dedicated API",
-    "Flexible Payout Scheduling (1, 7, or 30 days)",
-    "Automated Customer Email Handling",
+  const zRows = [
+    {
+      textLeft: true,
+      pill: "DEEP BASKET EXTRACTION",
+      title: "See every item in the cart, not just yours.",
+      body: "Enterprise Level Vision AI reads the entire receipt. Every validated claim returns a full breakdown of competitor brands, complementary products, and total basket spend — included at no extra charge.",
+      bullets: [
+        "Competitor brand presence extracted per claim",
+        "Basket spend totals and SKU level detail",
+        "No extra configuration. No extra fee.",
+      ],
+      visual: <BasketMockup />,
+    },
+    {
+      textLeft: false,
+      pill: "FRAUD INTELLIGENCE",
+      title: "Every deceptive submission blocked before payout.",
+      body: "Enterprise Level Vision AI detects Photoshop edits, Canva templates, screenshot fraud, and duplicate submissions in real time. Built into every processed claim — not billed as an add-on.",
+      bullets: [
+        "AI detection of manipulated receipt images",
+        "Duplicate claim fingerprinting across campaigns",
+        "$0 exception fees on rejected claims",
+      ],
+      visual: <FraudMockup />,
+    },
+    {
+      textLeft: true,
+      pill: "MARKET INTELLIGENCE & RETAILER MAPPING",
+      title: "Know exactly where your product is selling.",
+      body: "Track claim volume from British Columbia through Ontario and Quebec all the way to Newfoundland — with postal code precision. See which independent shops or big box retailers are moving your product, updated live.",
+      bullets: [
+        "Volume tiered pricing that scales automatically",
+        "Dealer and retailer performance tracked live",
+        "Canada based secure payment partner for all disbursements",
+      ],
+      visual: <MapMockup />,
+    },
   ];
 
   return (
-    <Section id="pricing">
-      <div ref={ref} style={{ maxWidth: 960, margin: "0 auto", padding: "0 2rem" }}>
-        <div className="reveal" style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-          <Tag>PRICING</Tag>
-          <h2 style={{ fontSize: "clamp(1.9rem, 4vw, 2.85rem)", fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", marginBottom: "0.75rem" }}>
-            One Engine. Automatic Volume Discounts.
+    <section id="features" style={{ background: "#f8fafc", padding: "5rem 0" }}>
+      <div ref={ref} style={{ maxWidth: 1120, margin: "0 auto", padding: "0 2rem" }}>
+        <div className="rv" style={{ textAlign: "center", marginBottom: "4rem" }}>
+          <Pill>PLATFORM CAPABILITIES</Pill>
+          <h2 style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.75rem)", fontWeight: 800,
+            letterSpacing: "-.035em", color: S900, marginBottom: ".75rem" }}>
+            Built to replace your entire rebate ops stack.
           </h2>
-          <p style={{ color: "#64748b", maxWidth: 560, margin: "0 auto", fontSize: "0.93rem", lineHeight: 1.7 }}>
-            Every partner gets the full stack. Pay one flat license — your per claim rate drops automatically as you scale.
+          <p style={{ color: "#64748b", fontSize: "1rem",
+            maxWidth: 480, margin: "0 auto", lineHeight: 1.7 }}>
+            Three core engines. One flat platform fee.
           </p>
         </div>
 
-        {/* Two-column SaaS card */}
-        <div className="reveal reveal-delay-1 cyan-glow" style={{ background: "rgba(5,15,30,0.9)", border: `1px solid ${CYAN}`, borderRadius: "1.5rem", overflow: "hidden", position: "relative" }}>
-          <div style={{ position: "absolute", top: -60, right: -60, width: 260, height: 260, background: "radial-gradient(circle, rgba(45,212,191,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
-
-          <div className="pricing-inner-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-            {/* LEFT — included features (order:2 on mobile so pricing shows first) */}
-            <div style={{ padding: "2rem", borderRight: "1px solid rgba(45,212,191,0.12)", display: "flex", flexDirection: "column", justifyContent: "center" }} className="pricing-features-col">
-              <div style={{ fontSize: "0.62rem", color: "#475569", fontWeight: 600, letterSpacing: "0.12em", marginBottom: "1rem" }}>INCLUDED IN EVERY PLAN</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
-                {includedFeatures.map((f, i) => (
-                  <div key={i} style={{ display: "flex", gap: "0.55rem", alignItems: "center" }}>
-                    <Check size={14} color={CYAN} style={{ flexShrink: 0 }} />
-                    <span style={{ color: "#94a3b8", fontSize: "0.84rem", lineHeight: 1.35 }}>{f}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* RIGHT — price structure (order:1 on mobile so it appears first) */}
-            <div style={{ padding: "2rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }} className="pricing-price-col">
-              {/* Platform fee */}
-              <div style={{ marginBottom: "1.5rem" }}>
-                <div style={{ fontSize: "0.62rem", color: "#475569", fontWeight: 600, letterSpacing: "0.12em", marginBottom: "0.5rem" }}>PLATFORM LICENSE</div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
-                  <span style={{ fontSize: "2.5rem", fontWeight: 800, color: "#fff", letterSpacing: "-0.05em", lineHeight: 1 }}>$499</span>
-                  <span style={{ fontSize: "0.9rem", color: "#64748b" }}>/mo</span>
-                </div>
-                <div style={{ fontSize: "0.78rem", color: "#475569", marginTop: "0.3rem" }}>Flat infrastructure fee · All features unlocked</div>
-              </div>
-
-              {/* Tiers */}
-              <div style={{ marginBottom: "1.75rem" }}>
-                <div style={{ fontSize: "0.62rem", color: "#475569", fontWeight: 600, letterSpacing: "0.12em", marginBottom: "0.75rem" }}>PER-CLAIM PROCESSING RATE</div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 0, border: "1px solid rgba(45,212,191,0.15)", borderRadius: "0.75rem", overflow: "hidden" }}>
-                  {[
-                    { label: "First 10,000 claims",    rate: "$0.55 / claim", best: false },
-                    { label: "Claims 10,001 – 50,000", rate: "$0.45 / claim", best: false },
-                    { label: "Claims 50,001+",          rate: "$0.35 / claim", best: true  },
-                  ].map((t, i) => (
-                    <div key={i} style={{
-                      display: "flex", justifyContent: "space-between", alignItems: "center",
-                      padding: "0.75rem 1.25rem",
-                      background: t.best ? "rgba(45,212,191,0.07)" : "transparent",
-                      borderBottom: i < 2 ? "1px solid rgba(45,212,191,0.1)" : "none"
-                    }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
-                        <span style={{ color: t.best ? "#e2e8f0" : "#64748b", fontSize: "0.85rem" }}>{t.label}</span>
-                        {t.best && <span style={{ fontSize: "0.58rem", fontWeight: 700, color: "#020617", background: CYAN, padding: "0.1rem 0.5rem", borderRadius: "2rem", letterSpacing: "0.08em" }}>BEST RATE</span>}
-                      </div>
-                      <span style={{ color: t.best ? CYAN : "#94a3b8", fontWeight: 700, fontSize: "0.95rem", letterSpacing: "-0.02em" }}>{t.rate}</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: "5rem" }}>
+          {zRows.map((row, i) => (
+            <div key={i} className={`rv td${i + 1} zrow`}
+              style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
+              <div style={{ order: row.textLeft ? 1 : 2 }}>
+                <Pill>{row.pill}</Pill>
+                <h3 style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)", fontWeight: 800,
+                  letterSpacing: "-.03em", color: S900, marginBottom: ".875rem", lineHeight: 1.2 }}>
+                  {row.title}
+                </h3>
+                <p style={{ color: "#64748b", fontSize: ".96rem",
+                  lineHeight: 1.75, marginBottom: "1.5rem" }}>{row.body}</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: ".6rem" }}>
+                  {row.bullets.map((b, j) => (
+                    <div key={j} style={{ display: "flex", gap: ".55rem", alignItems: "flex-start" }}>
+                      <Check size={14} color={CYAN_D} style={{ flexShrink: 0, marginTop: 3 }} />
+                      <span style={{ fontSize: ".87rem", color: "#334155", lineHeight: 1.5 }}>{b}</span>
                     </div>
                   ))}
                 </div>
               </div>
+              <div style={{ order: row.textLeft ? 2 : 1 }}>{row.visual}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
-              {/* CTA only */}
+/* ─── PRICING ─────────────────────────────────────────────── */
+function Pricing() {
+  const ref = useReveal();
+  const features = [
+    "Enterprise Level Vision AI on every claim",
+    "Deep basket and competitor data extraction",
+    "Fraud detection — Photoshop, Canva & duplicates",
+    "Instant CAD payouts (Virtual Visa / e-Transfer)",
+    "$0 exception fees on rejected or flagged claims",
+    "Provincial heatmaps and retailer performance data",
+    "Looker Studio dashboard and dedicated API routing",
+    "Flexible payout schedules on your exact cadence",
+    "Automated customer email handling",
+  ];
+
+  return (
+    <section id="pricing" style={{ background: S950, padding: "5rem 0" }}>
+      <div ref={ref} style={{ maxWidth: 900, margin: "0 auto", padding: "0 2rem" }}>
+        <div className="rv" style={{ textAlign: "center", marginBottom: "3rem" }}>
+          <Pill dark>PRICING</Pill>
+          <h2 style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.75rem)", fontWeight: 800,
+            letterSpacing: "-.035em", color: "#fff", marginBottom: ".75rem" }}>
+            One engine. Every feature. Volume tiered pricing.
+          </h2>
+          <p style={{ color: "rgba(255,255,255,.45)", fontSize: "1rem",
+            maxWidth: 480, margin: "0 auto", lineHeight: 1.7 }}>
+            Stop paying gated feature fees. Every partner gets the full stack.
+          </p>
+        </div>
+
+        <div className="rv td1" style={{ border: "1px solid rgba(45,212,191,.25)",
+          borderRadius: "1.25rem", overflow: "hidden",
+          boxShadow: "0 0 60px rgba(45,212,191,.07), 0 24px 64px rgba(0,0,0,.5)" }}>
+          <div className="pcols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+            {/* LEFT — features */}
+            <div className="pl-col" style={{ padding: "2rem", background: S900 }}>
+              <div style={{ fontSize: ".6rem", color: "#475569", fontWeight: 700,
+                letterSpacing: ".1em", marginBottom: "1.25rem" }}>INCLUDED IN EVERY PLAN</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: ".6rem" }}>
+                {features.map((f, i) => (
+                  <div key={i} style={{ display: "flex", gap: ".55rem", alignItems: "flex-start" }}>
+                    <Check size={13} color={CYAN} style={{ flexShrink: 0, marginTop: 3 }} />
+                    <span style={{ fontSize: ".83rem", color: "#94a3b8", lineHeight: 1.4 }}>{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* RIGHT — pricing */}
+            <div className="pr-col" style={{ padding: "2rem", borderLeft: "1px solid rgba(255,255,255,.07)",
+              background: S800, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
               <div>
-                <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn-cyan" style={{ display: "flex", justifyContent: "center", width: "100%", fontSize: "0.96rem", padding: "0.875rem" }}>
-                  Start Processing Today <ArrowRight size={17} />
+                <div style={{ marginBottom: "1.75rem", paddingBottom: "1.5rem",
+                  borderBottom: "1px solid rgba(255,255,255,.07)" }}>
+                  <div style={{ fontSize: ".6rem", color: "#475569", fontWeight: 700,
+                    letterSpacing: ".1em", marginBottom: ".5rem" }}>PLATFORM LICENSE</div>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: ".4rem" }}>
+                    <span style={{ fontSize: "2.75rem", fontWeight: 900,
+                      color: "#fff", letterSpacing: "-.06em", lineHeight: 1 }}>$499</span>
+                    <span style={{ fontSize: ".9rem", color: "#475569" }}>/mo</span>
+                  </div>
+                  <div style={{ fontSize: ".74rem", color: "#475569", marginTop: ".3rem" }}>
+                    Flat infrastructure fee · All features unlocked
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: "1.75rem" }}>
+                  <div style={{ fontSize: ".6rem", color: "#475569", fontWeight: 700,
+                    letterSpacing: ".1em", marginBottom: ".875rem" }}>PER CLAIM PROCESSING RATE</div>
+                  <div style={{ border: "1px solid rgba(255,255,255,.07)",
+                    borderRadius: ".75rem", overflow: "hidden" }}>
+                    {[
+                      { l: "First 10,000 claims",    r: "$0.55 / claim", best: false },
+                      { l: "Claims 10,001 – 50,000", r: "$0.45 / claim", best: false },
+                      { l: "Claims 50,001+",          r: "$0.35 / claim", best: true  },
+                    ].map((t, i) => (
+                      <div key={i} style={{
+                        display: "flex", justifyContent: "space-between", alignItems: "center",
+                        padding: ".7rem 1rem",
+                        background: t.best ? "rgba(45,212,191,.07)" : "transparent",
+                        borderBottom: i < 2 ? "1px solid rgba(255,255,255,.05)" : "none",
+                      }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
+                          <span style={{ fontSize: ".84rem",
+                            color: t.best ? "#e2e8f0" : "#64748b" }}>{t.l}</span>
+                          {t.best && (
+                            <span style={{ fontSize: ".56rem", fontWeight: 700,
+                              color: S950, background: CYAN, padding: ".1rem .45rem",
+                              borderRadius: "2rem", letterSpacing: ".06em" }}>BEST RATE</span>
+                          )}
+                        </div>
+                        <span style={{ fontSize: ".9rem", fontWeight: 700,
+                          color: t.best ? CYAN : "#475569",
+                          letterSpacing: "-.02em" }}>{t.r}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
+                  style={{ display: "flex", justifyContent: "center",
+                    width: "100%", padding: ".875rem", fontSize: ".96rem" }}>
+                  Start Processing Today <ArrowRight size={16} />
                 </a>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </Section>
+    </section>
   );
 }
 
-/* ─── CLAIM BREAKDOWN ─────────────────────────────────────── */
+/* ─── ANATOMY OF A CLAIM (dark card) ─────────────────────── */
 function ClaimBreakdown() {
   const ref = useReveal();
 
   const rows = [
-    { label: "Base Verification & Entry",      legacy: "$0.85",  note: null },
-    { label: "Bank Clearing",                   legacy: "$0.35",  note: null },
-    { label: "Email Capture (Data Field)",      legacy: "$0.08",  note: "100% of claims" },
-    { label: "Inquiries / Support Calls",       legacy: "$4.75",  note: "5% frequency" },
-    { label: "Non-Compliance / Rejects",        legacy: "$1.50",  note: "10% frequency" },
-    { label: "Email Lookups",                   legacy: "$2.00",  note: "5% frequency" },
-    { label: "Campaign Admin Fee",              legacy: "$170 flat", note: null },
+    { l: "Base Verification & Entry",         lg: "$0.85",     note: null,
+      s: { v: "INCLUDED", z: false } },
+    { l: "Bank Clearing",                      lg: "$0.35",     note: null,
+      s: { v: "INCLUDED", z: false } },
+    { l: "Data Capture — per field",           lg: "$0.08",
+      note: "Applied to 100% of claims. Additional custom fields cost $0.08 each.",
+      s: { v: "$0.00", z: true } },
+    { l: "Inquiries & Support Calls",          lg: "$4.75",     note: "5% frequency",
+      s: { v: "$0.00", z: true } },
+    { l: "Non-Compliance Rejects",             lg: "$1.50",     note: "10% frequency",
+      s: { v: "$0.00", z: true } },
+    { l: "Manual Email Lookups",               lg: "$2.00",     note: "5% frequency",
+      s: { v: "$0.00", z: true } },
+    { l: "Campaign Admin Fee",                 lg: "$170 flat", note: null,
+      s: { v: "$0.00", z: true } },
   ];
 
-  const sondarRows = [
-    { value: "INCLUDED", highlight: false },
-    { value: "INCLUDED", highlight: false },
-    { value: "$0.00",    highlight: true  },
-    { value: "$0.00",    highlight: true  },
-    { value: "$0.00",    highlight: true  },
-    { value: "$0.00",    highlight: true  },
-    { value: "$0.00",    highlight: true  },
+  const sondarOnly = [
+    { l: "Platform Fee",    v: "$499 /mo" },
+    { l: "Volume Tier Rate", v: "$0.35–$0.55" },
   ];
 
-  const colHead = { fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", paddingBottom: "0.75rem", borderBottom: "1px solid rgba(45,212,191,0.12)" };
-  const rowStyle = { display: "grid", gridTemplateColumns: "1fr 140px 140px", gap: 0, borderBottom: "1px solid rgba(45,212,191,0.07)", padding: "0.65rem 0", alignItems: "center" };
+  const CH = {
+    fontSize: ".58rem", fontWeight: 700, letterSpacing: ".1em",
+    color: "#475569", padding: ".7rem 1rem",
+    background: "rgba(255,255,255,.03)", borderBottom: "1px solid rgba(255,255,255,.06)",
+  };
 
   return (
-    <Section>
-      <div ref={ref} style={{ maxWidth: 820, margin: "0 auto", padding: "0 2rem" }}>
-        <div className="reveal" style={{ textAlign: "center", marginBottom: "2rem" }}>
-          <Tag>COST BREAKDOWN</Tag>
-          <h2 style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", marginBottom: "0.5rem" }}>
+    <section style={{ background: S950, padding: "5rem 0" }}>
+      <div ref={ref} style={{ maxWidth: 840, margin: "0 auto", padding: "0 2rem" }}>
+        <div className="rv" style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+          <Pill dark>COST BREAKDOWN</Pill>
+          <h2 style={{ fontSize: "clamp(1.7rem, 3.5vw, 2.5rem)", fontWeight: 800,
+            letterSpacing: "-.035em", color: "#fff", marginBottom: ".6rem" }}>
             The Anatomy of a Claim
           </h2>
-          <p style={{ color: "#64748b", fontSize: "0.93rem" }}>Where legacy processors hide their fees — and what Sondar replaces with a flat rate.</p>
+          <p style={{ color: "rgba(255,255,255,.4)", fontSize: ".93rem",
+            maxWidth: 460, margin: "0 auto" }}>
+            Where legacy processors hide fees — and what Sondar absorbs in its platform rate.
+          </p>
         </div>
 
-        <div className="reveal reveal-delay-1" style={{ background: "rgba(8,15,32,0.85)", border: "1px solid rgba(45,212,191,0.18)", borderRadius: "1.5rem", overflow: "hidden" }}>
-          {/* Header */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 140px 140px", gap: 0, padding: "1rem 1.5rem 0", background: "rgba(45,212,191,0.03)", borderBottom: "1px solid rgba(45,212,191,0.12)" }}>
-            <div style={{ ...colHead, color: "#475569" }}>COST LINE ITEM</div>
-            <div style={{ ...colHead, color: "#ef4444", textAlign: "center" }}>LEGACY</div>
-            <div style={{ ...colHead, color: CYAN, textAlign: "center" }}>SONDAR</div>
+        <div className="rv td1" style={{ background: S900,
+          border: "1px solid rgba(255,255,255,.07)", borderRadius: "1.125rem",
+          overflow: "hidden", boxShadow: "0 32px 80px rgba(0,0,0,.45)" }}>
+
+          {/* Header row */}
+          <div className="ctcols" style={{ display: "grid",
+            gridTemplateColumns: "1fr 110px 120px" }}>
+            <div style={{ ...CH }}>COST LINE ITEM</div>
+            <div style={{ ...CH, textAlign: "center", color: "#ef4444" }}>LEGACY</div>
+            <div style={{ ...CH, textAlign: "center", color: CYAN }}>SONDAR</div>
           </div>
 
-          {/* Rows */}
-          <div style={{ padding: "0 1.5rem" }}>
-            {rows.map((r, i) => (
-              <div key={i} style={rowStyle}>
-                <div>
-                  <span style={{ color: "#cbd5e1", fontSize: "0.88rem" }}>{r.label}</span>
-                  {r.note && <span style={{ color: "#334155", fontSize: "0.72rem", marginLeft: "0.5rem" }}>({r.note})</span>}
+          {/* Data rows */}
+          {rows.map((r, i) => (
+            <div key={i} className="ctcols" style={{ display: "grid",
+              gridTemplateColumns: "1fr 110px 120px",
+              borderBottom: "1px solid rgba(255,255,255,.04)" }}>
+              <div style={{ padding: ".6rem 1rem" }}>
+                <span style={{ fontSize: ".83rem", color: "#cbd5e1", fontWeight: 500 }}>{r.l}</span>
+                {r.note && (
+                  <div style={{ fontSize: ".65rem", color: "#475569",
+                    marginTop: ".12rem", lineHeight: 1.4 }}>{r.note}</div>
+                )}
+              </div>
+              <div style={{ padding: ".6rem .5rem", display: "flex",
+                alignItems: "center", justifyContent: "center" }}>
+                <span style={{ fontSize: ".85rem", fontWeight: 700,
+                  color: "#ef4444" }}>{r.lg}</span>
+              </div>
+              <div style={{ padding: ".6rem .5rem", display: "flex",
+                alignItems: "center", justifyContent: "center" }}>
+                <span style={{
+                  fontSize: ".8rem", fontWeight: 700,
+                  color: r.s.z ? CYAN : "#475569",
+                  background: r.s.z ? "rgba(45,212,191,.08)" : "rgba(71,85,105,.2)",
+                  border: `1px solid ${r.s.z ? "rgba(45,212,191,.2)" : "rgba(71,85,105,.3)"}`,
+                  padding: ".14rem .48rem", borderRadius: ".3rem", display: "inline-block",
+                }}>{r.s.v}</span>
+              </div>
+            </div>
+          ))}
+
+          {/* Sondar only costs */}
+          <div style={{ background: "rgba(45,212,191,.04)",
+            borderTop: "1px solid rgba(45,212,191,.12)" }}>
+            <div style={{ padding: ".4rem 1rem .2rem" }}>
+              <span style={{ fontSize: ".56rem", fontWeight: 700,
+                color: CYAN, letterSpacing: ".1em" }}>SONDAR ONLY COSTS</span>
+            </div>
+            {sondarOnly.map((r, i) => (
+              <div key={i} className="ctcols" style={{ display: "grid",
+                gridTemplateColumns: "1fr 110px 120px",
+                borderTop: "1px solid rgba(45,212,191,.07)" }}>
+                <div style={{ padding: ".5rem 1rem" }}>
+                  <span style={{ fontSize: ".83rem", color: "#94a3b8" }}>{r.l}</span>
                 </div>
-                <div style={{ textAlign: "center" }}>
-                  <span style={{ color: "#ef4444", fontWeight: 700, fontSize: "0.92rem" }}>{r.legacy}</span>
+                <div style={{ padding: ".5rem .5rem", display: "flex",
+                  alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontSize: ".82rem", color: "#334155" }}>—</span>
                 </div>
-                <div style={{ textAlign: "center" }}>
-                  <span style={{
-                    color: sondarRows[i].highlight ? CYAN : "#475569",
-                    fontWeight: 700, fontSize: "0.88rem",
-                    background: sondarRows[i].highlight ? "rgba(45,212,191,0.08)" : "transparent",
-                    padding: "0.15rem 0.5rem", borderRadius: "0.3rem",
-                    border: sondarRows[i].highlight ? "1px solid rgba(45,212,191,0.2)" : "none",
-                    display: "inline-block"
-                  }}>{sondarRows[i].value}</span>
+                <div style={{ padding: ".5rem .5rem", display: "flex",
+                  alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontSize: ".82rem", fontWeight: 700, color: CYAN }}>{r.v}</span>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Sondar-only costs footer */}
-          <div style={{ padding: "1rem 1.5rem", background: "rgba(45,212,191,0.04)", borderTop: "1px solid rgba(45,212,191,0.12)" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 140px 140px", gap: 0, marginBottom: "0.5rem" }}>
-              <span style={{ color: "#64748b", fontSize: "0.82rem", fontStyle: "italic" }}>Sondar's only costs</span>
-              <span />
-              <span />
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 140px 140px", gap: 0, marginBottom: "0.35rem" }}>
-              <span style={{ color: "#94a3b8", fontSize: "0.85rem" }}>$499 Platform Fee</span>
-              <div style={{ textAlign: "center" }}><span style={{ color: "#334155", fontSize: "0.85rem" }}>—</span></div>
-              <div style={{ textAlign: "center" }}><span style={{ color: CYAN, fontWeight: 700, fontSize: "0.88rem" }}>$499 / mo</span></div>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 140px 140px", gap: 0 }}>
-              <span style={{ color: "#94a3b8", fontSize: "0.85rem" }}>Volume Tier Rate</span>
-              <div style={{ textAlign: "center" }}><span style={{ color: "#334155", fontSize: "0.85rem" }}>—</span></div>
-              <div style={{ textAlign: "center" }}><span style={{ color: CYAN, fontWeight: 700, fontSize: "0.88rem" }}>$0.35–$0.55</span></div>
-            </div>
-          </div>
-
-          {/* Note */}
-          <div style={{ padding: "0.75rem 1.5rem 1rem", borderTop: "1px solid rgba(45,212,191,0.07)" }}>
-            <p style={{ color: "#334155", fontSize: "0.73rem", textAlign: "center" }}>
+          <div style={{ padding: ".6rem 1rem",
+            borderTop: "1px solid rgba(255,255,255,.04)", textAlign: "center" }}>
+            <span style={{ fontSize: ".68rem", color: "#334155" }}>
               Postage and fulfillment costs omitted for a conservative baseline comparison.
-            </p>
+            </span>
           </div>
         </div>
       </div>
-    </Section>
+    </section>
   );
 }
 
@@ -656,133 +873,128 @@ function ROICalculator() {
   const ref = useReveal();
   const [volume, setVolume] = useState(30000);
 
-  // ── Legacy math ──────────────────────────────────────────
   const adminFee      = 170;
   const baseEntry     = volume * 0.85;
   const bankClearing  = volume * 0.35;
-  const emailCapture  = volume * 0.08;                  // 100% of claims
-  const supportCalls  = volume * 0.05 * 4.75;           // 5% exception rate
-  const nonCompliance = volume * 0.10 * 1.50;           // 10% rejection/flag rate
-  const emailLookups  = volume * 0.05 * 2.00;           // 5% need manual email lookups
+  const emailCapture  = volume * 0.08;
+  const supportCalls  = volume * 0.05 * 4.75;
+  const nonCompliance = volume * 0.10 * 1.50;
+  const emailLookups  = volume * 0.05 * 2.00;
   const legacyTotal   = adminFee + baseEntry + bankClearing + emailCapture + supportCalls + nonCompliance + emailLookups;
 
-  // ── Sondar math ───────────────────────────────────────────
-  let sondarVolumeCost = 0;
-  if (volume <= 10000) {
-    sondarVolumeCost = volume * 0.55;
-  } else if (volume <= 50000) {
-    sondarVolumeCost = (10000 * 0.55) + ((volume - 10000) * 0.45);
-  } else {
-    sondarVolumeCost = (10000 * 0.55) + (40000 * 0.45) + ((volume - 50000) * 0.35);
-  }
-  const sondarTotal = 499 + sondarVolumeCost;
-
+  let sv = 0;
+  if (volume <= 10000) sv = volume * 0.55;
+  else if (volume <= 50000) sv = 5500 + (volume - 10000) * 0.45;
+  else sv = 5500 + 18000 + (volume - 50000) * 0.35;
+  const sondarTotal = 499 + sv;
   const savings  = legacyTotal - sondarTotal;
-  const pct      = Math.max(0, ((savings / legacyTotal) * 100)).toFixed(0);
-  const fmt      = (n) => "$" + Math.round(n).toLocaleString();
-  const sliderPct = ((volume - 10000) / (100000 - 10000)) * 100;
+  const pct      = Math.max(0, (savings / legacyTotal) * 100).toFixed(0);
+  const fmt      = n => "$" + Math.round(n).toLocaleString();
+  const sliderW  = `${((volume - 10000) / 90000) * 100}%`;
 
   return (
-    <Section>
-      <div ref={ref} style={{ maxWidth: 820, margin: "0 auto", padding: "0 2rem" }}>
-        <div className="reveal" style={{ textAlign: "center", marginBottom: "2rem" }}>
-          <Tag>ROI CALCULATOR</Tag>
-          <h2 style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", marginBottom: "0.5rem" }}>
+    <section style={{ background: S950, padding: "5rem 0", borderTop: "1px solid rgba(255,255,255,.04)" }}>
+      <div ref={ref} style={{ maxWidth: 780, margin: "0 auto", padding: "0 2rem" }}>
+        <div className="rv" style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+          <Pill dark>ROI CALCULATOR</Pill>
+          <h2 style={{ fontSize: "clamp(1.7rem, 3.5vw, 2.5rem)", fontWeight: 800,
+            letterSpacing: "-.035em", color: "#fff", marginBottom: ".5rem" }}>
             See your savings in real time.
           </h2>
-          <p style={{ color: "#64748b", fontSize: "0.93rem" }}>Drag the slider to match your monthly claim volume.</p>
+          <p style={{ color: "rgba(255,255,255,.4)", fontSize: ".93rem" }}>
+            Drag the slider to match your monthly claim volume.
+          </p>
         </div>
 
-        <div className="reveal reveal-delay-1" style={{ background: "rgba(8,15,32,0.85)", border: "1px solid rgba(45,212,191,0.18)", borderRadius: "1.5rem", padding: "2rem" }}>
-          {/* Claim count display */}
+        <div className="rv td1" style={{ background: S900,
+          border: "1px solid rgba(255,255,255,.07)", borderRadius: "1.25rem", padding: "2rem",
+          boxShadow: "0 32px 80px rgba(0,0,0,.4)" }}>
           <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-            <div style={{ fontSize: "0.65rem", color: "#475569", fontWeight: 600, letterSpacing: "0.12em", marginBottom: "0.4rem" }}>MONTHLY CLAIMS</div>
-            <div style={{ fontSize: "3rem", fontWeight: 800, color: "#fff", letterSpacing: "-0.05em", lineHeight: 1 }}>
+            <div style={{ fontSize: ".58rem", color: "#475569", fontWeight: 700,
+              letterSpacing: ".1em", marginBottom: ".4rem" }}>MONTHLY CLAIMS</div>
+            <div style={{ fontSize: "clamp(2.2rem, 6vw, 3.25rem)", fontWeight: 900,
+              color: "#fff", letterSpacing: "-.06em", lineHeight: 1 }}>
               {volume.toLocaleString()}
             </div>
           </div>
 
-          {/* Slider */}
           <div style={{ marginBottom: "2rem", position: "relative" }}>
-            <div style={{ position: "absolute", top: "50%", left: 0, height: 4, width: `${sliderPct}%`, background: `linear-gradient(90deg, ${CYAN}, ${BLUE})`, borderRadius: 2, transform: "translateY(-50%)", pointerEvents: "none", zIndex: 1 }} />
-            <input
-              type="range" min={10000} max={100000} step={1000}
-              value={volume}
-              onChange={e => setVolume(Number(e.target.value))}
-              className="roi-slider"
-              style={{ position: "relative", zIndex: 2 }}
-            />
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.4rem" }}>
-              <span style={{ color: "#334155", fontSize: "0.72rem" }}>10,000</span>
-              <span style={{ color: "#334155", fontSize: "0.72rem" }}>100,000</span>
+            <div style={{ position: "absolute", top: "50%", left: 0, height: 4,
+              width: sliderW, background: `linear-gradient(90deg, ${CYAN_D}, ${BLUE})`,
+              borderRadius: 2, transform: "translateY(-50%)", pointerEvents: "none", zIndex: 1 }} />
+            <input type="range" min={10000} max={100000} step={1000} value={volume}
+              onChange={e => setVolume(+e.target.value)}
+              className="rs" style={{ position: "relative", zIndex: 2 }} />
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: ".35rem" }}>
+              <span style={{ fontSize: ".7rem", color: "#334155" }}>10,000</span>
+              <span style={{ fontSize: ".7rem", color: "#334155" }}>100,000</span>
             </div>
           </div>
 
-          {/* 3-card comparison */}
-          <div className="roi-cols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
-            <div style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "0.875rem", padding: "1.25rem", textAlign: "center" }}>
-              <div style={{ fontSize: "0.62rem", color: "#ef4444", fontWeight: 600, letterSpacing: "0.1em", marginBottom: "0.5rem" }}>LEGACY COST</div>
-              <div style={{ fontSize: "1.8rem", fontWeight: 800, color: "#ef4444", letterSpacing: "-0.04em" }}>{fmt(legacyTotal)}</div>
-              <div style={{ color: "#475569", fontSize: "0.72rem", marginTop: "0.25rem" }}>est. per month</div>
-            </div>
-            <div style={{ background: "rgba(45,212,191,0.05)", border: "1px solid rgba(45,212,191,0.25)", borderRadius: "0.875rem", padding: "1.25rem", textAlign: "center" }}>
-              <div style={{ fontSize: "0.62rem", color: CYAN, fontWeight: 600, letterSpacing: "0.1em", marginBottom: "0.5rem" }}>SONDAR COST</div>
-              <div className="gradient-text" style={{ fontSize: "1.8rem", fontWeight: 800, letterSpacing: "-0.04em" }}>{fmt(sondarTotal)}</div>
-              <div style={{ color: "#475569", fontSize: "0.72rem", marginTop: "0.25rem" }}>per month</div>
-            </div>
-            <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.25)", borderRadius: "0.875rem", padding: "1.25rem", textAlign: "center" }}>
-              <div style={{ fontSize: "0.62rem", color: "#22c55e", fontWeight: 600, letterSpacing: "0.1em", marginBottom: "0.5rem" }}>YOU SAVE</div>
-              <div style={{ fontSize: "1.8rem", fontWeight: 800, color: "#22c55e", letterSpacing: "-0.04em" }}>{fmt(savings)}</div>
-              <div style={{ color: "#475569", fontSize: "0.72rem", marginTop: "0.25rem" }}>{pct}% reduction</div>
-            </div>
+          <div className="rg" style={{ display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1.25rem" }}>
+            {[
+              { lbl: "LEGACY COST",  val: fmt(legacyTotal), sub: "est. per month",
+                col: "#ef4444", bg: "rgba(239,68,68,.07)", bd: "rgba(239,68,68,.2)" },
+              { lbl: "SONDAR COST",  val: fmt(sondarTotal), sub: "per month",
+                col: CYAN, bg: "rgba(45,212,191,.06)", bd: "rgba(45,212,191,.2)", grad: true },
+              { lbl: "YOU SAVE",     val: fmt(savings),     sub: `${pct}% reduction`,
+                col: "#22c55e", bg: "rgba(34,197,94,.06)", bd: "rgba(34,197,94,.2)" },
+            ].map((c, i) => (
+              <div key={i} style={{ background: c.bg, border: `1px solid ${c.bd}`,
+                borderRadius: ".875rem", padding: "1.1rem", textAlign: "center" }}>
+                <div style={{ fontSize: ".58rem", color: c.col, fontWeight: 700,
+                  letterSpacing: ".08em", marginBottom: ".4rem" }}>{c.lbl}</div>
+                <div style={{ fontSize: "clamp(1.2rem, 3.5vw, 1.7rem)", fontWeight: 900,
+                  color: c.col, letterSpacing: "-.04em", lineHeight: 1 }}>{c.val}</div>
+                <div style={{ fontSize: ".68rem", color: "#475569",
+                  marginTop: ".3rem" }}>{c.sub}</div>
+              </div>
+            ))}
           </div>
 
-          {/* Footnote — plain subtle text, no background */}
-          <p style={{ textAlign: "center", color: "#334155", fontSize: "0.73rem", lineHeight: 1.55 }}>
+          <p style={{ textAlign: "center", color: "#334155", fontSize: ".7rem" }}>
             Calculation omits payout fulfillment costs (postage/e-transfers). Actual legacy costs are typically higher.
           </p>
         </div>
       </div>
-    </Section>
+    </section>
   );
 }
 
 /* ─── FAQ ─────────────────────────────────────────────────── */
 const FAQ_DATA = [
-  {
-    q: "Can we customize the payout timing?",
-    a: "Yes. Through our API routing, payout schedules are completely customizable to your campaign rules. We can trigger instant payouts the second a receipt is validated, or batch them for scheduled weekly or monthly disbursements.",
-  },
-  {
-    q: "What specific retailer and geographical data do we see?",
-    a: "Your dashboard provides real-time mapping of provincial volume (from British Columbia to Newfoundland) and specific dealer performance. You'll see exactly which independent shops or big box retailers are moving your product, right down to the postal code.",
-  },
-  {
-    q: "How do you handle Canadian tax and compliance?",
-    a: "Sondar Logic AI is built for the Canadian market. We handle GST/HST calculations and provide secure payouts in CAD through our BC-based payment partner, ensuring compliance with local regulations.",
-  },
-  {
-    q: "How long does it take to launch a new promotional campaign?",
-    a: "Days, not months. Because our AI is context-aware, it doesn't need to be \"trained\" on new receipt layouts. We can have your custom routing live in under a week.",
-  },
-  {
-    q: "What types of payment can we send to customers?",
-    a: "We offer a variety of digital rewards to match your brand's needs. Most partners choose Virtual Visa Gift Cards because there is no additional charge for fulfillment. We also support CAD e-Transfers and direct bank transfers.",
-  },
+  { q: "Can we customize the payout timing?",
+    a: "Yes. Through our API routing, payout schedules are completely customizable. We can trigger instant payouts the second a receipt is validated, or batch them for flexible payout schedules on your exact cadence — weekly, monthly, or custom." },
+  { q: "What retailer and geographical data do we see?",
+    a: "Your dashboard provides real-time mapping of provincial volume from British Columbia to Newfoundland and specific dealer performance data. You will see exactly which independent shops or big box retailers are moving your product, right down to the postal code." },
+  { q: "How do you handle Canadian tax and compliance?",
+    a: "Sondar Logic AI is built for the Canadian market. We handle GST/HST calculations and provide secure payouts in CAD through our Canada based secure payment partner, ensuring compliance with local regulations." },
+  { q: "How long does it take to launch a new promotional campaign?",
+    a: "Days, not months. Because our Enterprise Level Vision AI is context-aware, it does not need to be retrained on new receipt layouts for every retailer. We can have your custom routing and dashboard live in under a week." },
+  { q: "What types of payment can we send to customers?",
+    a: "Most partners choose Virtual Visa Gift Cards — there is no additional fulfillment charge. We also support CAD e-Transfers and direct bank transfers through our Canada based secure payment partner." },
 ];
 
 function FAQItem({ q, a, open, toggle }) {
   return (
-    <div style={{ borderBottom: "1px solid rgba(45,212,191,0.1)" }}>
-      <button
-        onClick={toggle}
-        style={{ width: "100%", background: "none", border: "none", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1.4rem 0", textAlign: "left", gap: "1rem" }}
-      >
-        <span style={{ color: open ? "#fff" : "#94a3b8", fontSize: "0.97rem", fontWeight: 600, transition: "color 0.2s", letterSpacing: "-0.01em", fontFamily: "'Inter', sans-serif" }}>{q}</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={CYAN} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, transform: open ? "rotate(180deg)" : "none", transition: "transform 0.3s" }}><polyline points="6 9 12 15 18 9"/></svg>
+    <div style={{ borderBottom: "1px solid #f1f5f9" }}>
+      <button onClick={toggle} style={{ width: "100%", background: "none", border: "none",
+        cursor: "pointer", display: "flex", justifyContent: "space-between",
+        alignItems: "center", padding: "1.2rem 0", textAlign: "left", gap: "1rem" }}>
+        <span style={{ fontSize: ".97rem", fontWeight: 600,
+          color: open ? S900 : "#475569", transition: "color .2s",
+          letterSpacing: "-.01em", fontFamily: "'Inter',sans-serif" }}>{q}</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke={CYAN_D} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          style={{ flexShrink: 0, transform: open ? "rotate(180deg)" : "none", transition: "transform .3s" }}>
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
       </button>
-      <div style={{ overflow: "hidden", transition: "max-height 0.4s ease, opacity 0.3s ease", maxHeight: open ? "300px" : "0", opacity: open ? 1 : 0 }}>
-        <p style={{ color: "#64748b", lineHeight: 1.75, paddingBottom: "1.4rem", fontSize: "0.93rem" }}>{a}</p>
+      <div style={{ overflow: "hidden", maxHeight: open ? "280px" : 0,
+        opacity: open ? 1 : 0, transition: "max-height .4s ease, opacity .3s ease" }}>
+        <p style={{ color: "#64748b", fontSize: ".92rem",
+          lineHeight: 1.75, paddingBottom: "1.2rem" }}>{a}</p>
       </div>
     </div>
   );
@@ -792,154 +1004,200 @@ function FAQ() {
   const [openIdx, setOpenIdx] = useState(null);
   const ref = useReveal();
   return (
-    <Section id="faq">
-      <div ref={ref} style={{ maxWidth: 760, margin: "0 auto", padding: "0 2rem" }}>
-        <div className="reveal" style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-          <Tag>FAQ</Tag>
-          <h2 style={{ fontSize: "clamp(1.9rem, 4vw, 2.85rem)", fontWeight: 800, letterSpacing: "-0.03em", color: "#fff" }}>
-            Operational Transparency
+    <section id="faq" style={{ background: "#fff", padding: "5rem 0" }}>
+      <div ref={ref} style={{ maxWidth: 720, margin: "0 auto", padding: "0 2rem" }}>
+        <div className="rv" style={{ textAlign: "center", marginBottom: "3rem" }}>
+          <Pill>FAQ</Pill>
+          <h2 style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.5rem)", fontWeight: 800,
+            letterSpacing: "-.035em", color: S900 }}>
+            Operational transparency.
           </h2>
         </div>
-        <div className="reveal reveal-delay-1">
+        <div className="rv td1">
           {FAQ_DATA.map((item, i) => (
-            <FAQItem key={i} q={item.q} a={item.a} open={openIdx === i} toggle={() => setOpenIdx(openIdx === i ? null : i)} />
+            <FAQItem key={i} q={item.q} a={item.a}
+              open={openIdx === i}
+              toggle={() => setOpenIdx(openIdx === i ? null : i)} />
           ))}
         </div>
       </div>
-    </Section>
+    </section>
   );
 }
 
-/* ─── FINAL CTA (Change 5: shorter headline + Change 6: email) */
+/* ─── FINAL CTA ───────────────────────────────────────────── */
 function FinalCTA() {
   const ref = useReveal();
   return (
-    <Section>
-      <div ref={ref} style={{ maxWidth: 760, margin: "0 auto", padding: "0 2rem", textAlign: "center" }}>
-        <div style={{ position: "relative", background: "rgba(5,15,30,0.8)", border: "1px solid rgba(45,212,191,0.15)", borderRadius: "2rem", padding: "3.5rem 2.5rem", overflow: "hidden" }}>
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 500, height: 320, background: "radial-gradient(ellipse, rgba(45,212,191,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
-          <div className="reveal"><Tag>GET STARTED</Tag></div>
-          <h2 className="reveal reveal-delay-1" style={{ fontSize: "clamp(1.9rem, 5vw, 3rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: "1rem" }}>
-            <span style={{ color: "#fff" }}>Stop throwing away your basket data.</span>
-          </h2>
-          <p className="reveal reveal-delay-1" style={{ color: "#64748b", fontSize: "1rem", marginBottom: "2.5rem", lineHeight: 1.65, maxWidth: 520, margin: "0 auto 2.5rem" }}>
-            Put 65% of your admin budget back into marketing with Sondar Logic AI.
-          </p>
-          <div className="reveal reveal-delay-2" style={{ display: "flex", gap: "2.5rem", justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap" }}>
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="btn-cyan" style={{ fontSize: "1rem", padding: "0.9rem 2.25rem" }}>
-              Book a Demo <ArrowRight size={18} />
+    <section style={{ background: S950, padding: "5rem 0",
+      position: "relative", overflow: "hidden", textAlign: "center" }}>
+      <div style={{ position: "absolute", top: "50%", left: "50%",
+        transform: "translate(-50%,-50%)", width: 600, height: 350,
+        background: "radial-gradient(ellipse, rgba(45,212,191,.14) 0%, transparent 65%)",
+        filter: "blur(48px)", pointerEvents: "none" }} />
+      <div ref={ref} style={{ maxWidth: 680, margin: "0 auto", padding: "0 2rem", position: "relative" }}>
+        <div className="rv" style={{ display: "flex", justifyContent: "center" }}>
+          <Pill dark>GET STARTED</Pill>
+        </div>
+        <h2 className="rv td1" style={{ fontSize: "clamp(2rem, 5vw, 3.25rem)", fontWeight: 900,
+          letterSpacing: "-.045em", color: "#fff", lineHeight: 1.08, marginBottom: "1rem" }}>
+          Stop throwing away your basket data.
+        </h2>
+        <p className="rv td2" style={{ color: "rgba(255,255,255,.45)", fontSize: "1rem",
+          lineHeight: 1.7, marginBottom: "2.5rem" }}>
+          Put 65% of your admin budget back into marketing with Sondar Logic AI.
+        </p>
+        <div className="rv td3" style={{ display: "flex", gap: "2.5rem",
+          justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap" }}>
+          <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
+            style={{ fontSize: "1rem", padding: ".9rem 2.25rem" }}>
+            Book a Demo <ArrowRight size={17} />
+          </a>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: ".3rem" }}>
+            <span style={{ fontSize: ".58rem", fontWeight: 700,
+              letterSpacing: ".14em", color: "rgba(255,255,255,.28)" }}>DIRECT OUTREACH</span>
+            <a href={`mailto:${EMAIL}`} style={{ color: CYAN, fontSize: ".93rem",
+              fontWeight: 500, textDecoration: "none",
+              borderBottom: "1px solid rgba(45,212,191,.35)", paddingBottom: "1px",
+              transition: "border-color .2s" }}
+              onMouseEnter={e => e.target.style.borderColor = CYAN}
+              onMouseLeave={e => e.target.style.borderColor = "rgba(45,212,191,.35)"}>
+              {EMAIL}
             </a>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.35rem" }}>
-              <span style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.14em", color: "#475569" }}>DIRECT OUTREACH</span>
-              <a href={`mailto:${EMAIL}`} style={{ color: CYAN, fontSize: "0.95rem", fontWeight: 500, textDecoration: "none", letterSpacing: "-0.01em", borderBottom: "1px solid rgba(45,212,191,0.35)", paddingBottom: "1px", transition: "border-color 0.2s" }}
-                onMouseEnter={e => e.target.style.borderColor = CYAN}
-                onMouseLeave={e => e.target.style.borderColor = "rgba(45,212,191,0.35)"}>
-                {EMAIL}
-              </a>
-            </div>
           </div>
         </div>
       </div>
-    </Section>
+    </section>
   );
 }
 
 /* ─── FOOTER ──────────────────────────────────────────────── */
 function Footer({ setActiveView }) {
-  const navCols = [
-    { heading: "PRODUCT", links: [
-      { label: "Features",     id: "features" },
-      { label: "How it Works", id: "how-it-works" },
-      { label: "Pricing",      id: "pricing" },
-      { label: "FAQ",          id: "faq" },
+  const cols = [
+    { h: "PRODUCT", links: [
+      { l: "How it Works",  id: "how-it-works" },
+      { l: "Features",      id: "features" },
+      { l: "Pricing",       id: "pricing" },
+      { l: "FAQ",           id: "faq" },
     ]},
-    { heading: "INDUSTRY SOLUTIONS", links: [
-      { label: "Automotive Rebates" },
-      { label: "CPG Promotions" },
-      { label: "Appliance Claims" },
+    { h: "SOLUTIONS", links: [
+      { l: "Automotive Rebates" }, { l: "CPG Promotions" }, { l: "Appliance Claims" },
     ]},
-    { heading: "SUPPORT & OPERATIONS", links: [
-      { label: "API Documentation" },
-      { label: "Manual Review Portal" },
-      { label: "Contact Sales: partnerships@sondarlogic.com", href: "mailto:partnerships@sondarlogic.com" },
+    { h: "SUPPORT", links: [
+      { l: "API Documentation" }, { l: "Manual Review Portal" },
+      { l: "Contact Sales", href: "mailto:partnerships@sondarlogic.com" },
     ]},
-    { heading: "LEGAL & TRUST", links: [
-      { label: "Privacy Policy",   action: "privacy" },
-      { label: "Terms of Service", action: "terms" },
-      { label: "PIPEDA Compliance" },
-      { label: "Security (SOC 2)" },
+    { h: "LEGAL", links: [
+      { l: "Privacy Policy",   action: "privacy" },
+      { l: "Terms of Service", action: "terms" },
+      { l: "PIPEDA Compliance" }, { l: "Security (SOC 2)" },
     ]},
   ];
+  const lkBase = { color: "#475569", textDecoration: "none", fontSize: ".84rem",
+    display: "block", marginBottom: ".6rem", transition: "color .2s",
+    fontFamily: "'Inter', sans-serif" };
 
   return (
-    <footer style={{ borderTop: "1px solid rgba(45,212,191,0.08)", paddingTop: "2.5rem" }}>
+    <footer style={{ background: S950, borderTop: "1px solid rgba(255,255,255,.05)",
+      paddingTop: "3rem", paddingBottom: "2rem" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 2rem" }}>
-        <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "#fff", marginBottom: "3rem", letterSpacing: "-0.02em" }}>
-          Sondar <span style={{ color: CYAN }}>Logic AI</span>
-        </div>
-        <div className="footer-grid-mobile" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "3rem", marginBottom: "3rem" }}>
-          {navCols.map((col, i) => (
-            <div key={i}>
-              <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#475569", letterSpacing: "0.15em", marginBottom: "1.25rem" }}>{col.heading}</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                {col.links.map((l, j) => (
-                  l.action
-                    ? <button key={j} onClick={() => { setActiveView(l.action); window.scrollTo(0,0); }}
-                        style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "#64748b", fontSize: "0.875rem", transition: "color 0.2s", textAlign: "left", fontFamily: "'Inter', sans-serif" }}
+        <div style={{ display: "flex", justifyContent: "space-between",
+          alignItems: "flex-start", flexWrap: "wrap", gap: "2rem", marginBottom: "3rem" }}>
+          <div style={{ maxWidth: 340 }}>
+            <div style={{ fontSize: "1.05rem", fontWeight: 800,
+              color: "#fff", letterSpacing: "-.03em", marginBottom: ".75rem" }}>
+              Sondar <span style={{ color: CYAN_D }}>Logic AI</span>
+            </div>
+            <p style={{ fontSize: ".875rem", color: "rgba(255,255,255,.35)", lineHeight: 1.7, marginBottom: "1.25rem" }}>
+              Stop throwing away your basket data — and put 65% of your admin budget back into marketing.
+            </p>
+            <div>
+              <div style={{ fontSize: ".57rem", fontWeight: 700,
+                color: "rgba(255,255,255,.25)", letterSpacing: ".12em", marginBottom: ".35rem" }}>
+                DIRECT OUTREACH
+              </div>
+              <a href={`mailto:${EMAIL}`} style={{ color: CYAN, fontSize: ".875rem",
+                fontWeight: 500, textDecoration: "none" }}
+                onMouseEnter={e => e.target.style.opacity = ".75"}
+                onMouseLeave={e => e.target.style.opacity = "1"}>
+                {EMAIL}
+              </a>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", gap: "3rem", flexWrap: "wrap" }}>
+            {cols.map((col, i) => (
+              <div key={i}>
+                <div style={{ fontSize: ".58rem", fontWeight: 700,
+                  color: "rgba(255,255,255,.22)", letterSpacing: ".14em",
+                  marginBottom: "1rem" }}>{col.h}</div>
+                {col.links.map((lnk, j) => (
+                  lnk.action
+                    ? <button key={j} onClick={() => { setActiveView(lnk.action); window.scrollTo(0, 0); }}
+                        style={{ ...lkBase, background: "none", border: "none", cursor: "pointer", padding: 0 }}
                         onMouseEnter={e => e.target.style.color = "#e2e8f0"}
-                        onMouseLeave={e => e.target.style.color = "#64748b"}>
-                        {l.label}
+                        onMouseLeave={e => e.target.style.color = "#475569"}>
+                        {lnk.l}
                       </button>
-                    : l.id
-                      ? <a key={j} href={`#${l.id}`}
-                          onClick={e => { e.preventDefault(); document.getElementById(l.id)?.scrollIntoView({ behavior: 'smooth' }); }}
-                          style={{ color: "#64748b", textDecoration: "none", fontSize: "0.875rem", transition: "color 0.2s", cursor: "pointer" }}
+                    : lnk.id
+                      ? <a key={j} href={`#${lnk.id}`} style={lkBase}
+                          onClick={e => { e.preventDefault(); document.getElementById(lnk.id)?.scrollIntoView({ behavior: "smooth" }); }}
                           onMouseEnter={e => e.target.style.color = "#e2e8f0"}
-                          onMouseLeave={e => e.target.style.color = "#64748b"}>
-                          {l.label}
+                          onMouseLeave={e => e.target.style.color = "#475569"}>
+                          {lnk.l}
                         </a>
-                      : <a key={j} href={l.href || "#"}
-                          style={{ color: "#64748b", textDecoration: "none", fontSize: "0.875rem", transition: "color 0.2s" }}
+                      : <a key={j} href={lnk.href || "#"} style={lkBase}
                           onMouseEnter={e => e.target.style.color = "#e2e8f0"}
-                          onMouseLeave={e => e.target.style.color = "#64748b"}>
-                          {l.label}
+                          onMouseLeave={e => e.target.style.color = "#475569"}>
+                          {lnk.l}
                         </a>
                 ))}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        <div style={{ borderTop: "1px solid rgba(45,212,191,0.06)", padding: "1.75rem 0", textAlign: "center" }}>
-          <span style={{ color: "#334155", fontSize: "0.8rem" }}>© 2026 Sondar Logic AI. Built in Burlington, Ontario.</span>
+
+        <div style={{ borderTop: "1px solid rgba(255,255,255,.05)",
+          paddingTop: "1.5rem", textAlign: "center" }}>
+          <span style={{ fontSize: ".76rem", color: "rgba(255,255,255,.18)" }}>
+            © 2026 Sondar Logic AI. Built in Burlington, Ontario.
+          </span>
         </div>
       </div>
     </footer>
   );
 }
 
-/* ─── LEGAL PAGES (unchanged) ─────────────────────────────── */
-const legalBodyStyle = { color: "#94a3b8", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "1rem" };
-const legalH2Style  = { fontSize: "1.1rem", fontWeight: 700, color: "#e2e8f0", letterSpacing: "-0.02em", marginBottom: "0.6rem", marginTop: "2.25rem" };
+/* ─── LEGAL PAGES ─────────────────────────────────────────── */
+const lbs = { color: "#64748b", fontSize: ".93rem", lineHeight: 1.8, marginBottom: "1rem" };
+const lh2 = { fontSize: "1.05rem", fontWeight: 700, color: S900,
+  letterSpacing: "-.02em", marginBottom: ".5rem", marginTop: "2rem" };
 
 function LegalPage({ title, effectiveDate, children, onBack }) {
   return (
-    <div style={{ minHeight: "100vh", background: BG }}>
-      <div style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(3,7,18,0.92)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(45,212,191,0.1)", padding: "0.875rem 2rem" }}>
+    <div style={{ minHeight: "100vh", background: "#fff" }}>
+      <div style={{ position: "sticky", top: 0, zIndex: 200,
+        background: "rgba(255,255,255,.96)", backdropFilter: "blur(16px)",
+        borderBottom: "1px solid #f1f5f9", padding: ".875rem 2rem" }}>
         <div style={{ maxWidth: 800, margin: "0 auto" }}>
           <button onClick={onBack}
-            style={{ background: "none", border: "1px solid rgba(45,212,191,0.35)", borderRadius: "0.5rem", padding: "0.45rem 1rem", color: CYAN, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "0.4rem", fontFamily: "'Inter', sans-serif", transition: "all 0.2s" }}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(45,212,191,0.08)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "none"; }}>
+            style={{ background: "none", border: "1px solid #e2e8f0", borderRadius: ".5rem",
+              padding: ".4rem .875rem", color: "#475569", fontSize: ".82rem", fontWeight: 600,
+              cursor: "pointer", fontFamily: "'Inter',sans-serif", transition: "all .2s" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = CYAN_D; e.currentTarget.style.color = CYAN_D; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.color = "#475569"; }}>
             ← Back to Home
           </button>
         </div>
       </div>
       <div style={{ maxWidth: 800, margin: "0 auto", padding: "4rem 2rem 6rem" }}>
-        <div style={{ marginBottom: "0.5rem" }}>
-          <span style={{ fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.12em", color: CYAN, border: "1px solid rgba(45,212,191,0.3)", borderRadius: "2rem", padding: "0.25rem 0.875rem" }}>LEGAL DOCUMENT</span>
-        </div>
-        <h1 style={{ fontSize: "clamp(1.9rem, 4vw, 2.75rem)", fontWeight: 800, letterSpacing: "-0.035em", color: "#fff", marginTop: "1.25rem", marginBottom: "0.5rem" }}>{title}</h1>
-        <p style={{ color: "#475569", fontSize: "0.85rem", marginBottom: "3rem", borderBottom: "1px solid rgba(45,212,191,0.1)", paddingBottom: "1.5rem" }}>Effective Date: {effectiveDate}</p>
+        <Pill>{title.toUpperCase()}</Pill>
+        <h1 style={{ fontSize: "clamp(1.9rem, 4vw, 2.75rem)", fontWeight: 800,
+          letterSpacing: "-.035em", color: S900, marginBottom: ".5rem" }}>{title}</h1>
+        <p style={{ color: "#94a3b8", fontSize: ".82rem", marginBottom: "3rem",
+          borderBottom: "1px solid #f1f5f9", paddingBottom: "1.5rem" }}>
+          Effective Date: {effectiveDate}
+        </p>
         {children}
       </div>
     </div>
@@ -949,57 +1207,22 @@ function LegalPage({ title, effectiveDate, children, onBack }) {
 function PrivacyPolicy({ onBack }) {
   return (
     <LegalPage title="Privacy Policy" effectiveDate="March 2026" onBack={onBack}>
-      <h2 style={legalH2Style}>Introduction</h2>
-      <p style={legalBodyStyle}>Sondar Logic AI ("we," "us," or "our"), headquartered in Burlington, Ontario, provides an automated rebate validation and payment processing platform. This Privacy Policy outlines how we collect, use, disclose, and safeguard personal information in compliance with the Personal Information Protection and Electronic Documents Act (PIPEDA) and applicable provincial privacy legislation.</p>
-      <h2 style={legalH2Style}>Information We Collect</h2>
-      <p style={legalBodyStyle}>We act as a Data Processor on behalf of our enterprise clients (the "Brands"). We collect information exclusively to validate rebate claims and process payouts. This includes:</p>
-      <ul style={{ paddingLeft: "1.5rem", marginBottom: "1rem" }}>
-        {[
-          { term: "End-Consumer Data", def: "Names, email addresses, phone numbers (if required for e-Transfers), and geographic location (Forward Sortation Area/Postal Code)." },
-          { term: "Transaction Data", def: "Images of retail receipts uploaded by consumers, which include purchase dates, store locations, specific items purchased (including complementary and competitor items), and transaction totals." },
-          { term: "B2B Client Data", def: "Business contact information, billing details, and platform usage metrics." },
-        ].map((item, i) => (
-          <li key={i} style={{ color: "#94a3b8", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "0.5rem" }}>
-            <strong style={{ color: "#cbd5e1" }}>{item.term}:</strong> {item.def}
-          </li>
-        ))}
-      </ul>
-      <h2 style={legalH2Style}>How We Use Your Information</h2>
-      <p style={legalBodyStyle}>We use the collected information for the following specific business purposes:</p>
-      <ul style={{ paddingLeft: "1.5rem", marginBottom: "1rem" }}>
-        {[
-          { term: "Claim Validation", def: "Utilizing our vision AI models (hosted securely via AWS) to audit receipt images for fraud, duplication, and promotional compliance." },
-          { term: "Digital Payouts", def: "Routing validated consumer information to our authorized digital disbursement partners to issue Virtual Visa cards or direct CAD e-Transfers." },
-          { term: "Business Intelligence", def: "Aggregating anonymized, non-personally identifiable basket data to provide our Brands with high-level provincial heatmaps and retail analytics." },
-          { term: "Customer Support", def: "Sending automated updates regarding claim status (e.g., approvals, rejections, or requests for clearer receipt images)." },
-        ].map((item, i) => (
-          <li key={i} style={{ color: "#94a3b8", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "0.5rem" }}>
-            <strong style={{ color: "#cbd5e1" }}>{item.term}:</strong> {item.def}
-          </li>
-        ))}
-      </ul>
-      <h2 style={legalH2Style}>Data Storage and Localization</h2>
-      <p style={legalBodyStyle}>All receipt data, personally identifiable information (PII), and application databases are securely hosted on localized AWS servers physically located within Canada. We maintain strict data residency protocols to ensure Canadian consumer data does not cross borders unnecessarily.</p>
-      <h2 style={legalH2Style}>Data Sharing and Third-Party Sub-Processors</h2>
-      <p style={legalBodyStyle}>We do not sell, rent, or trade personal data. We only share data with vetted sub-processors essential to our operations, including:</p>
-      <ul style={{ paddingLeft: "1.5rem", marginBottom: "1rem" }}>
-        {[
-          { term: "Cloud Infrastructure", def: "AWS Canada (for secure storage and vision AI processing)." },
-          { term: "Workflow Automation", def: "Enterprise-grade routing infrastructure for secure data transfer between modules." },
-          { term: "Payment Processors", def: "Authorized Canadian disbursement partners (for executing secure, instant digital payouts)." },
-        ].map((item, i) => (
-          <li key={i} style={{ color: "#94a3b8", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "0.5rem" }}>
-            <strong style={{ color: "#cbd5e1" }}>{item.term}:</strong> {item.def}
-          </li>
-        ))}
-      </ul>
-      <p style={legalBodyStyle}>All sub-processors are bound by strict confidentiality and data protection agreements.</p>
-      <h2 style={legalH2Style}>Data Retention and Security</h2>
-      <p style={legalBodyStyle}>We retain end-consumer PII only for as long as necessary to fulfill the promotional campaign, handle customer support inquiries, and satisfy legal or tax obligations. Once a campaign's retention period expires, consumer PII is permanently redacted or destroyed. We employ industry-standard encryption (AES-256 at rest, TLS 1.2+ in transit) and strict access controls to protect data from unauthorized access.</p>
-      <h2 style={legalH2Style}>Individual Rights (Access and Deletion)</h2>
-      <p style={legalBodyStyle}>Under PIPEDA, Canadian consumers have the right to request access to their personal information, request corrections, or withdraw consent. As Sondar Logic AI acts as a processor, end-consumers should direct these requests to the specific Brand running the promotion. We will fully assist our enterprise clients in executing any verified data deletion or access requests within the required legal timeframes.</p>
-      <h2 style={legalH2Style}>Contact Us</h2>
-      <p style={legalBodyStyle}>For inquiries regarding this Privacy Policy or our data practices, please contact our Privacy Officer at: Sondar Logic AI, Burlington, Ontario, Canada. Email: <a href="mailto:hello@sondarlogic.com" style={{ color: CYAN, textDecoration: "none" }}>hello@sondarlogic.com</a></p>
+      <h2 style={lh2}>Introduction</h2>
+      <p style={lbs}>Sondar Logic AI, headquartered in Burlington, Ontario, provides an automated rebate validation and payment processing platform. This Privacy Policy outlines how we collect, use, disclose, and safeguard personal information in compliance with PIPEDA and applicable provincial privacy legislation.</p>
+      <h2 style={lh2}>Information We Collect</h2>
+      <p style={lbs}>We act as a Data Processor on behalf of our enterprise clients. We collect end-consumer data (names, email addresses, geographic location), transaction data (receipt images, purchase details), and B2B client data (billing details, usage metrics).</p>
+      <h2 style={lh2}>How We Use Your Information</h2>
+      <p style={lbs}>We use collected information for claim validation via Enterprise Level Vision AI, digital payout routing, anonymized business intelligence reporting, and automated customer support updates.</p>
+      <h2 style={lh2}>Data Storage and Localization</h2>
+      <p style={lbs}>All receipt data and PII are hosted on AWS servers physically located within Canada. We maintain strict data residency protocols to ensure Canadian consumer data does not cross borders unnecessarily.</p>
+      <h2 style={lh2}>Data Sharing</h2>
+      <p style={lbs}>We do not sell, rent, or trade personal data. Data is only shared with vetted sub-processors essential to operations, all bound by strict confidentiality agreements.</p>
+      <h2 style={lh2}>Data Retention and Security</h2>
+      <p style={lbs}>We retain end-consumer PII only for as long as necessary to fulfill the promotional campaign. We employ AES-256 encryption at rest and TLS 1.2+ in transit.</p>
+      <h2 style={lh2}>Individual Rights</h2>
+      <p style={lbs}>Under PIPEDA, Canadian consumers may request access, corrections, or withdrawal of consent. Direct requests to the specific Brand running the promotion. We assist in executing all verified requests within required legal timeframes.</p>
+      <h2 style={lh2}>Contact Us</h2>
+      <p style={lbs}>Sondar Logic AI, Burlington, Ontario. Email: <a href="mailto:hello@sondarlogic.com" style={{ color: CYAN_D, textDecoration: "none" }}>hello@sondarlogic.com</a></p>
     </LegalPage>
   );
 }
@@ -1007,98 +1230,69 @@ function PrivacyPolicy({ onBack }) {
 function TermsOfService({ onBack }) {
   return (
     <LegalPage title="Terms of Service" effectiveDate="March 2026" onBack={onBack}>
-      <h2 style={legalH2Style}>Acceptance of Terms</h2>
-      <p style={legalBodyStyle}>By accessing or using the Sondar Logic AI platform, API, or dashboard, you (the "Client") agree to be bound by these Terms of Service. If you are entering into these Terms on behalf of an enterprise entity, you represent that you have the authority to bind that entity.</p>
-      <h2 style={legalH2Style}>Service Description</h2>
-      <p style={legalBodyStyle}>Sondar Logic AI provides an automated, AI-driven receipt validation and rebate disbursement engine. The service includes instant visual auditing, fraud detection, deep-basket data extraction, and API routing for digital payouts.</p>
-      <h2 style={legalH2Style}>Accuracy and Manual Review SLA</h2>
-      <p style={legalBodyStyle}>Our vision AI assigns a mathematical confidence score to every processed claim.</p>
-      <ul style={{ paddingLeft: "1.5rem", marginBottom: "1rem" }}>
-        {[
-          { term: "Automated Clearing", def: "Claims scoring 90% or higher are automatically approved and routed for instant payout based on Client campaign rules." },
-          { term: "Manual Review Queue", def: "Claims scoring below the 90% threshold (e.g., blurry images, suspected duplicates, or edge cases) are automatically routed to our manual review queue. Sondar Logic AI commits to a 3-business-day Service Level Agreement (SLA) to manually audit these flagged claims. Clients also retain the option to manually override or review claims via their dedicated portal." },
-        ].map((item, i) => (
-          <li key={i} style={{ color: "#94a3b8", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "0.5rem" }}>
-            <strong style={{ color: "#cbd5e1" }}>{item.term}:</strong> {item.def}
-          </li>
-        ))}
-      </ul>
-      <h2 style={legalH2Style}>Client Obligations and Consent</h2>
-      <p style={legalBodyStyle}>The Client remains the Data Controller. The Client is solely responsible for ensuring that their consumer-facing promotional materials, landing pages, and terms explicitly capture valid, informed consent from end-consumers to collect and share their receipt data and PII with Sondar Logic AI and our sub-processors, in full compliance with PIPEDA and CASL.</p>
-      <h2 style={legalH2Style}>Fees, Invoicing, and Payout Funding</h2>
-      <ul style={{ paddingLeft: "1.5rem", marginBottom: "1rem" }}>
-        {[
-          { term: "Platform and Processing Fees", def: "Clients are billed a flat monthly platform license fee, plus a tiered per-claim processing rate as outlined in their active Service Agreement." },
-          { term: "Exception Fees", def: "Sondar Logic AI does not charge additional penalties or exception fees for claims requiring manual review or claims that are rejected for fraud." },
-          { term: "Payout Funding", def: "Clients must maintain a sufficiently funded balance with our designated payment disbursement partners to facilitate instant consumer payouts. Sondar Logic AI is not responsible for delayed consumer payouts resulting from insufficient Client funding." },
-        ].map((item, i) => (
-          <li key={i} style={{ color: "#94a3b8", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "0.5rem" }}>
-            <strong style={{ color: "#cbd5e1" }}>{item.term}:</strong> {item.def}
-          </li>
-        ))}
-      </ul>
-      <h2 style={legalH2Style}>Proprietary Rights and Data Ownership</h2>
-      <p style={legalBodyStyle}>Sondar Logic AI retains all intellectual property rights to the platform, AI models, routing architecture, and dashboard interfaces. The Client retains all rights to their first-party consumer data and the extracted deep-basket business intelligence provided via the platform.</p>
-      <h2 style={legalH2Style}>Limitation of Liability</h2>
-      <p style={legalBodyStyle}>To the maximum extent permitted by applicable law, Sondar Logic AI shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or business opportunities, arising out of or related to the use of the platform. Our total liability for any claims arising under these terms shall be limited to the amount paid by the Client for the specific services giving rise to the claim in the three (3) months preceding the incident.</p>
-      <h2 style={legalH2Style}>Governing Law</h2>
-      <p style={legalBodyStyle}>These Terms shall be governed by and construed in accordance with the laws of the Province of Ontario and the federal laws of Canada applicable therein.</p>
+      <h2 style={lh2}>Acceptance of Terms</h2>
+      <p style={lbs}>By accessing or using the Sondar Logic AI platform, API, or dashboard, you agree to be bound by these Terms of Service.</p>
+      <h2 style={lh2}>Service Description</h2>
+      <p style={lbs}>Sondar Logic AI provides an automated, AI-driven receipt validation and rebate disbursement engine including Enterprise Level Vision AI, fraud detection, deep basket data extraction, and API routing for digital payouts.</p>
+      <h2 style={lh2}>Accuracy and Manual Review SLA</h2>
+      <p style={lbs}>Claims scoring 95% or higher are automatically approved and routed for instant payout. Claims scoring below the threshold are routed to a human review queue with a 3 business day audit SLA.</p>
+      <h2 style={lh2}>Client Obligations and Consent</h2>
+      <p style={lbs}>The Client remains the Data Controller and is solely responsible for ensuring their promotional materials capture valid informed consent from end-consumers in compliance with PIPEDA and CASL.</p>
+      <h2 style={lh2}>Fees and Payout Funding</h2>
+      <p style={lbs}>Clients are billed a flat monthly platform license fee plus volume tiered pricing per claim. Sondar Logic AI does not charge exception fees on rejected claims. Clients must maintain sufficient payout funding with our Canada based secure payment partner.</p>
+      <h2 style={lh2}>Proprietary Rights and Data Ownership</h2>
+      <p style={lbs}>Sondar Logic AI retains all intellectual property rights to the platform and AI models. The Client retains all rights to their first-party consumer data and the basket intelligence provided via the platform.</p>
+      <h2 style={lh2}>Limitation of Liability</h2>
+      <p style={lbs}>Our total liability for any claims arising under these terms shall be limited to the amount paid by the Client for the specific services in the three months preceding the incident.</p>
+      <h2 style={lh2}>Governing Law</h2>
+      <p style={lbs}>These Terms shall be governed by the laws of the Province of Ontario and the federal laws of Canada applicable therein.</p>
     </LegalPage>
   );
 }
 
 /* ─── ROOT ────────────────────────────────────────────────── */
 export default function SondarLogicAI() {
-  const [activeView, setActiveView] = useState('home');
+  const [activeView, setActiveView] = useState("home");
 
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap";
+    link.href = "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap";
     document.head.appendChild(link);
   }, []);
 
   useEffect(() => {
-    if (activeView !== 'home') return;
+    if (activeView !== "home") return;
     const obs = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); }),
-      { threshold: 0.1 }
+      es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add("on"); }),
+      { threshold: 0.07 }
     );
-    const t = setTimeout(() => {
-      document.querySelectorAll(".reveal").forEach(el => obs.observe(el));
-    }, 50);
+    const t = setTimeout(() => document.querySelectorAll(".rv").forEach(el => obs.observe(el)), 60);
     return () => { clearTimeout(t); obs.disconnect(); };
   }, [activeView]);
 
-  if (activeView === 'privacy') return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: globalStyles }} />
-      <PrivacyPolicy onBack={() => { setActiveView('home'); window.scrollTo(0,0); }} />
-    </>
+  if (activeView === "privacy") return (
+    <><style dangerouslySetInnerHTML={{ __html: G }} />
+      <PrivacyPolicy onBack={() => { setActiveView("home"); window.scrollTo(0, 0); }} /></>
   );
-
-  if (activeView === 'terms') return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: globalStyles }} />
-      <TermsOfService onBack={() => { setActiveView('home'); window.scrollTo(0,0); }} />
-    </>
+  if (activeView === "terms") return (
+    <><style dangerouslySetInnerHTML={{ __html: G }} />
+      <TermsOfService onBack={() => { setActiveView("home"); window.scrollTo(0, 0); }} /></>
   );
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: globalStyles }} />
-      <div className="grid-bg" style={{ minHeight: "100vh" }}>
-        <Navbar />
-        <Hero />
-        <Workflow />
-        <CommandCenter />
-        <Pricing />
-        <ClaimBreakdown />
-        <ROICalculator />
-        <FAQ />
-        <FinalCTA />
-        <Footer setActiveView={setActiveView} />
-      </div>
+      <style dangerouslySetInnerHTML={{ __html: G }} />
+      <Navbar dark />
+      <Hero />
+      <Workflow />
+      <CommandCenter />
+      <Pricing />
+      <ClaimBreakdown />
+      <ROICalculator />
+      <FAQ />
+      <FinalCTA />
+      <Footer setActiveView={setActiveView} />
     </>
   );
 }
