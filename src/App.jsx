@@ -748,16 +748,6 @@ function Pricing() {
                 </div>
               ))}
             </div>
-            <div style={{ padding: "1.5rem 2rem" }}>
-              <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
-                style={{ display: "flex", justifyContent: "center", width: "100%",
-                  padding: ".8rem", fontSize: ".92rem", background: S800,
-                  border: "1px solid rgba(255,255,255,.1)", color: "#e2e8f0" }}
-                onMouseEnter={e => e.currentTarget.style.background = "#334155"}
-                onMouseLeave={e => e.currentTarget.style.background = S800}>
-                Request Pilot Access <ArrowRight size={15} />
-              </a>
-            </div>
           </div>
 
           {/* ── Card 2: Enterprise MSA ── */}
@@ -812,7 +802,7 @@ function Pricing() {
                 </div>
               ))}
             </div>
-            <div style={{ height: 1, background: "rgba(255,255,255,.06)", margin: "0 0 0 0" }} />
+            <div style={{ height: 1, background: "rgba(255,255,255,.06)" }} />
             {/* Features */}
             <div style={{ padding: "1.25rem 2rem", flex: 1, display: "flex", flexDirection: "column", gap: ".75rem" }}>
               {msaFeatures.map((f, i) => (
@@ -822,15 +812,15 @@ function Pricing() {
                 </div>
               ))}
             </div>
-            <div style={{ padding: "1.5rem 2rem" }}>
-              <button onClick={() => document.getElementById("roi-calculator")?.scrollIntoView({ behavior: "smooth" })}
-                className="bp"
-                style={{ display: "flex", justifyContent: "center", width: "100%",
-                  padding: ".8rem", fontSize: ".92rem", cursor: "pointer" }}>
-                Build Your Enterprise MSA <ArrowRight size={15} />
-              </button>
-            </div>
           </div>
+        </div>
+
+        {/* Single centered CTA below both cards */}
+        <div className="rv td2" style={{ textAlign: "center", marginTop: "2rem" }}>
+          <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
+            style={{ fontSize: "1rem", padding: ".875rem 2.5rem", display: "inline-flex" }}>
+            Book a Demo <ArrowRight size={16} />
+          </a>
         </div>
       </div>
     </section>
