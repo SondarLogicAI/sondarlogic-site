@@ -97,6 +97,7 @@ const G = `
     .rg       { grid-template-columns:1fr !important; gap:.75rem !important; }
     .ctcols   { grid-template-columns:1fr 72px 82px !important; }
     .hero-h1  { font-size:2.2rem !important; line-height:1.08 !important; }
+    .assump-grid { grid-template-columns:1fr !important; }
     /* Pricing tier row: stack label above rate on very small screens */
     .tier-row { flex-direction:column !important; align-items:flex-start !important; gap:.25rem !important; padding:.75rem !important; }
     .tier-rate { font-size:.85rem !important; }
@@ -105,6 +106,7 @@ const G = `
     .g4 { grid-template-columns:1fr !important; }
     .wf-card { flex-direction:row !important; gap:1rem !important; align-items:flex-start !important; }
     .wf-icon-row { flex-direction:column !important; align-items:flex-start !important; }
+    .assump-grid { grid-template-columns:1fr !important; }
   }
 `;
 
@@ -142,42 +144,56 @@ function Pill({ children, dark = false }) {
 }
 
 /* ─── NAVBAR ──────────────────────────────────────────────── */
-function Navbar({ dark = false }) {
+function Navbar() {
   const [sc, setSc] = useState(false);
   useEffect(() => {
-    const fn = () => setSc(window.scrollY > 24);
-    window.addEventListener("scroll", fn);
+    const fn = () => setSc(window.scrollY > 64);
+    window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
-  const bg = sc ? (dark ? "rgba(2,6,23,.95)" : "rgba(255,255,255,.96)") : "transparent";
-  const border = sc ? (dark ? "1px solid rgba(255,255,255,.06)" : "1px solid #f1f5f9") : "none";
+
   return (
-    <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
-      background: bg, backdropFilter: "blur(16px)", borderBottom: border, transition: "all .3s" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 2rem",
-        display: "flex", alignItems: "center", justifyContent: "space-between", height: "4rem" }}>
-        <div style={{ fontSize: "1.05rem", fontWeight: 800, letterSpacing: "-.03em", color: dark ? "#fff" : S900 }}>
-          Sondar <span style={{ color: CYAN_D }}>Logic AI</span>
+    <nav style={{
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
+      background: sc ? "rgba(2,6,23,.85)" : "rgba(2,6,23,.6)",
+      backdropFilter: "blur(14px)",
+      WebkitBackdropFilter: "blur(14px)",
+      borderBottom: sc ? "1px solid rgba(255,255,255,.07)" : "1px solid transparent",
+      transition: "background .35s ease, border-color .35s ease",
+    }}>
+      <div style={{
+        maxWidth: 1200, margin: "0 auto", padding: "0 2rem",
+        display: "flex", alignItems: "center", justifyContent: "space-between", height: "4rem",
+      }}>
+        {/* Logo — always white on the dark bar */}
+        <div style={{ fontSize: "1.05rem", fontWeight: 800, letterSpacing: "-.03em", color: "#fff", flexShrink: 0 }}>
+          Sondar <span style={{ color: CYAN }}>Logic AI</span>
         </div>
+
+        {/* Desktop links */}
         <div className="nav-d" style={{ display: "flex", gap: "2rem" }}>
           {[
             { l: "How it Works", id: "how-it-works" },
-            { l: "Features",     id: "features" },
-            { l: "Pricing",      id: "pricing" },
-            { l: "FAQ",          id: "faq" },
+            { l: "Features",     id: "features"     },
+            { l: "Pricing",      id: "pricing"      },
+            { l: "FAQ",          id: "faq"          },
           ].map(n => (
             <a key={n.l} href={`#${n.id}`}
-              style={{ color: dark ? "rgba(255,255,255,.6)" : "#64748b", textDecoration: "none",
-                fontSize: ".9rem", fontWeight: 500, transition: "color .2s" }}
+              style={{ color: "rgba(255,255,255,.65)", textDecoration: "none",
+                fontSize: ".9rem", fontWeight: 500, transition: "color .2s", whiteSpace: "nowrap" }}
               onClick={e => { e.preventDefault(); document.getElementById(n.id)?.scrollIntoView({ behavior: "smooth" }); }}
-              onMouseEnter={e => e.target.style.color = dark ? "#fff" : S900}
-              onMouseLeave={e => e.target.style.color = dark ? "rgba(255,255,255,.6)" : "#64748b"}>
+              onMouseEnter={e => e.target.style.color = "#fff"}
+              onMouseLeave={e => e.target.style.color = "rgba(255,255,255,.65)"}>
               {n.l}
             </a>
           ))}
         </div>
+
+        {/* CTA */}
         <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
-          style={{ padding: ".5rem 1.2rem", fontSize: ".85rem" }}>Book a Demo</a>
+          style={{ padding: ".5rem 1.2rem", fontSize: ".85rem", flexShrink: 0 }}>
+          Book a Demo
+        </a>
       </div>
     </nav>
   );
@@ -255,22 +271,22 @@ function Workflow() {
     {
       icon: <Upload size={22} strokeWidth={1.75} color={CYAN_D} />,
       num: "01", title: "Instant Ingestion",
-      body: "Receipts queue instantly. Our infrastructure handles any volume surge without delay.",
+      bullets: ["Real-time queueing", "Infinite volume scalability"],
     },
     {
       icon: <ScanSearch size={22} strokeWidth={1.75} color={CYAN_D} />,
       num: "02", title: "Confidence Filter",
-      body: "Our Vision AI extracts the data and assigns a definitive accuracy score to every receipt. Photoshop edits, Canva templates, and duplicates are flagged before any payout fires.",
+      bullets: ["AI accuracy scoring", "Instant fraud & Photoshop detection"],
     },
     {
       icon: <ShoppingCart size={22} strokeWidth={1.75} color={CYAN_D} />,
       num: "03", title: "Basket Extraction",
-      body: "Validated scans extract competitor brands and complementary basket items — no extra cost, no extra setup.",
+      bullets: ["Full competitor brand parsing", "Item-level intelligence"],
     },
     {
       icon: <Banknote size={22} strokeWidth={1.75} color={CYAN_D} />,
       num: "04", title: "Payout Execution",
-      body: "Approved claims trigger instant CAD disbursement via Virtual Visa or e-Transfer. Flexible payout schedules on your exact cadence.",
+      bullets: ["Instant Visa Gift Card disbursements", "Custom payout cadence"],
     },
   ];
 
@@ -306,8 +322,16 @@ function Workflow() {
                 </div>
                 <div>
                   <h3 style={{ fontSize: ".93rem", fontWeight: 700, color: S900,
-                    marginBottom: ".3rem", letterSpacing: "-.02em" }}>{s.title}</h3>
-                  <p style={{ fontSize: ".82rem", color: "#64748b", lineHeight: 1.65 }}>{s.body}</p>
+                    marginBottom: ".5rem", letterSpacing: "-.02em" }}>{s.title}</h3>
+                  <div style={{ display: "flex", flexDirection: "column", gap: ".3rem" }}>
+                    {s.bullets.map((b, j) => (
+                      <div key={j} style={{ display: "flex", gap: ".45rem", alignItems: "center" }}>
+                        <div style={{ width: 4, height: 4, borderRadius: "50%",
+                          background: CYAN_D, flexShrink: 0 }} />
+                        <span style={{ fontSize: ".8rem", color: "#64748b", lineHeight: 1.5 }}>{b}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -322,8 +346,7 @@ function Workflow() {
             background: CYAN_D, flexShrink: 0, marginTop: 6 }} />
           <p style={{ color: "#475569", fontSize: ".86rem", lineHeight: 1.65 }}>
             <span style={{ color: CYAN_D, fontWeight: 700 }}>Edge Case Handling: </span>
-            Claims scoring below the 95% confidence threshold are never auto denied. They enter a
-            secure human review queue with a 3 business day audit SLA and automated customer follow-up.
+            Claims scoring below the required confidence threshold are never auto-denied. They enter a secure human review queue with a 3-business day audit SLA and automated customer follow-up.
           </p>
         </div>
       </div>
@@ -577,9 +600,8 @@ function CommandCenter() {
       pill: "DEEP BASKET EXTRACTION",
       title: "See every item in the cart, not just yours.",
       bullets: [
-        "Our Vision AI reads the full receipt — competitor brands, SKUs, and basket totals extracted per claim",
-        "No extra configuration and no added charge — included in your base platform fee",
-        "Understand what else your customers buy alongside your product at time of purchase",
+        "Our Vision AI reads the full receipt: competitor brands, SKUs, and basket totals extracted per claim",
+        "Understand what else your customers buy alongside your product at no extra cost — it's included in your platform fee",
       ],
       visual: <BasketMockup />,
     },
@@ -588,8 +610,7 @@ function CommandCenter() {
       pill: "FRAUD INTELLIGENCE",
       title: "Every deceptive submission blocked before payout.",
       bullets: [
-        "Our Vision AI detects Photoshop edits, Canva templates, and screenshot fraud in real time",
-        "Duplicate claim fingerprinting runs across your entire campaign history automatically",
+        "Our Vision AI detects Photoshop edits, Canva templates, duplicate receipts, and screenshot fraud in real time",
         "$0 exception fees on rejected or flagged claims — fraud costs you nothing extra",
       ],
       visual: <FraudMockup />,
@@ -599,9 +620,8 @@ function CommandCenter() {
       pill: "MARKET INTELLIGENCE AND RETAILER MAPPING",
       title: "Know exactly where your product is selling.",
       bullets: [
-        "Track claim volume from British Columbia to Newfoundland with postal code precision",
-        "See which independent shops and big box retailers are moving your product, updated live",
-        "Canada based secure payment partner handles all CAD disbursements and GST/HST compliance",
+        "Track claim volume from coast to coast with postal code precision, updated live by retailer",
+        "Canada based secure payment partner handles all CAD disbursements automatically",
       ],
       visual: <MapMockup />,
     },
@@ -654,111 +674,161 @@ function CommandCenter() {
 /* ─── PRICING ─────────────────────────────────────────────── */
 function Pricing() {
   const ref = useReveal();
-  const features = [
-    "Enterprise Level Vision AI on every claim",
-    "Deep basket and competitor data extraction",
-    "Fraud detection — Photoshop, Canva & duplicates",
-    "Instant CAD payouts (Virtual Visa / e-Transfer)",
-    "$0 exception fees on rejected or flagged claims",
-    "Provincial heatmaps and retailer performance data",
-    "Looker Studio dashboard and dedicated API routing",
-    "Flexible payout schedules on your exact cadence",
-    "Automated customer email handling",
+
+  const pilotFeatures = [
+    { text: "No long-term commitment (5k–10k claims)" },
+    { text: "Full SKU + Competitor basket extraction" },
+    { text: "Live Looker Studio geographic heatmaps" },
+    { text: "Automated CAD payouts (Visa/e-Transfer)" },
+    { text: "Zero-risk testing period" },
+  ];
+
+  const msaFeatures = [
+    { text: "Annual MSA & Dedicated Infrastructure" },
+    { text: "Unlimited data extraction (No per field tolls)" },
+    { text: "Custom SLAs & Priority Support" },
+    { text: "Unified data warehouse (ERP/Accounting export)" },
+    { text: "Volume-scaled processing discounts" },
+    { text: "Human in the loop exception handling" },
+  ];
+
+  const tierRows = [
+    { l: "First 10,000 claims",  r: "$0.55", best: false },
+    { l: "Claims 10,001–50,000", r: "$0.45", best: false },
+    { l: "Claims 50,001+",        r: "$0.35", best: true  },
   ];
 
   return (
     <section id="pricing" style={{ background: S950, padding: "5rem 0" }}>
-      <div ref={ref} style={{ maxWidth: 900, margin: "0 auto", padding: "0 2rem" }}>
+      <div ref={ref} style={{ maxWidth: 1060, margin: "0 auto", padding: "0 2rem" }}>
         <div className="rv" style={{ textAlign: "center", marginBottom: "3rem" }}>
           <Pill dark>PRICING</Pill>
           <h2 style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.75rem)", fontWeight: 800,
             letterSpacing: "-.035em", color: "#fff", marginBottom: ".75rem" }}>
-            One engine. Every feature. Volume tiered pricing.
+            Pricing that scales with you. Zero exception penalties.
           </h2>
           <p style={{ color: "rgba(255,255,255,.45)", fontSize: "1rem",
-            maxWidth: 480, margin: "0 auto", lineHeight: 1.7 }}>
-            Stop paying gated feature fees. Every partner gets the full stack.
+            maxWidth: 500, margin: "0 auto", lineHeight: 1.7 }}>
+            Start with a single campaign or go all-in with an enterprise agreement. Either way, you get the full platform.
           </p>
         </div>
 
-        <div className="rv td1" style={{ border: "1px solid rgba(45,212,191,.25)",
-          borderRadius: "1.25rem", overflow: "hidden",
-          boxShadow: "0 0 60px rgba(45,212,191,.07), 0 24px 64px rgba(0,0,0,.5)" }}>
-          <div className="pcols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-            {/* LEFT — features */}
-            <div className="pl-col" style={{ padding: "2rem", background: S900 }}>
+        {/* Two-card grid */}
+        <div className="rv td1 pcols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+
+          {/* ── Card 1: Single Campaign Pilot ── */}
+          <div style={{ border: "1px solid rgba(255,255,255,.1)", borderRadius: "1.25rem",
+            background: S900, display: "flex", flexDirection: "column",
+            boxShadow: "0 16px 48px rgba(0,0,0,.4)", overflow: "hidden" }}>
+            {/* Header */}
+            <div style={{ padding: "2rem 2rem 1.5rem" }}>
               <div style={{ fontSize: ".6rem", color: "#475569", fontWeight: 700,
-                letterSpacing: ".1em", marginBottom: "1.25rem" }}>INCLUDED IN EVERY PLAN</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: ".6rem" }}>
-                {features.map((f, i) => (
-                  <div key={i} style={{ display: "flex", gap: ".55rem", alignItems: "flex-start" }}>
-                    <Check size={13} color={CYAN} style={{ flexShrink: 0, marginTop: 3 }} />
-                    <span style={{ fontSize: ".83rem", color: "#94a3b8", lineHeight: 1.4 }}>{f}</span>
-                  </div>
-                ))}
+                letterSpacing: ".1em", marginBottom: ".75rem" }}>SINGLE CAMPAIGN PILOT</div>
+              <div style={{ display: "flex", alignItems: "baseline", gap: ".35rem", marginBottom: ".3rem" }}>
+                <span style={{ fontSize: "2rem", fontWeight: 900, color: "#fff",
+                  letterSpacing: "-.05em", lineHeight: 1 }}>$0</span>
+                <span style={{ fontSize: ".85rem", color: "#64748b" }}>platform fee</span>
               </div>
+              <div style={{ display: "flex", alignItems: "baseline", gap: ".35rem", marginBottom: ".75rem" }}>
+                <span style={{ fontSize: "1.35rem", fontWeight: 800, color: CYAN,
+                  letterSpacing: "-.04em" }}>$0.65</span>
+                <span style={{ fontSize: ".82rem", color: "#64748b" }}>per processed claim</span>
+              </div>
+              <p style={{ fontSize: ".82rem", color: "#64748b", lineHeight: 1.6 }}>
+                Perfect for testing Sondar Logic alongside your current vendor.
+              </p>
             </div>
+            <div style={{ height: 1, background: "rgba(255,255,255,.06)" }} />
+            {/* Features */}
+            <div style={{ padding: "1.5rem 2rem", flex: 1, display: "flex", flexDirection: "column", gap: ".75rem" }}>
+              {pilotFeatures.map((f, i) => (
+                <div key={i} style={{ display: "flex", gap: ".6rem", alignItems: "flex-start" }}>
+                  <Check size={13} color={CYAN} style={{ flexShrink: 0, marginTop: 3 }} />
+                  <span style={{ fontSize: ".83rem", color: "#94a3b8", lineHeight: 1.5 }}>{f.text}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ padding: "1.5rem 2rem" }}>
+              <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
+                style={{ display: "flex", justifyContent: "center", width: "100%",
+                  padding: ".8rem", fontSize: ".92rem", background: S800,
+                  border: "1px solid rgba(255,255,255,.1)", color: "#e2e8f0" }}
+                onMouseEnter={e => e.currentTarget.style.background = "#334155"}
+                onMouseLeave={e => e.currentTarget.style.background = S800}>
+                Request Pilot Access <ArrowRight size={15} />
+              </a>
+            </div>
+          </div>
 
-            {/* RIGHT — pricing */}
-            <div className="pr-col" style={{ padding: "2rem", borderLeft: "1px solid rgba(255,255,255,.07)",
-              background: S800, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-              <div>
-                <div style={{ marginBottom: "1.75rem", paddingBottom: "1.5rem",
-                  borderBottom: "1px solid rgba(255,255,255,.07)" }}>
-                  <div style={{ fontSize: ".6rem", color: "#475569", fontWeight: 700,
-                    letterSpacing: ".1em", marginBottom: ".5rem" }}>PLATFORM LICENSE</div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: ".4rem" }}>
-                    <span style={{ fontSize: "clamp(2rem, 5vw, 2.75rem)", fontWeight: 900,
-                      color: "#fff", letterSpacing: "-.06em", lineHeight: 1 }}>$499</span>
-                    <span style={{ fontSize: ".9rem", color: "#475569" }}>/mo</span>
-                  </div>
-                  <div style={{ fontSize: ".74rem", color: "#475569", marginTop: ".3rem" }}>
-                    Flat infrastructure fee · All features unlocked
+          {/* ── Card 2: Enterprise MSA ── */}
+          <div style={{ border: `1.5px solid rgba(45,212,191,.35)`, borderRadius: "1.25rem",
+            background: S800, display: "flex", flexDirection: "column",
+            boxShadow: "0 0 60px rgba(45,212,191,.08), 0 24px 64px rgba(0,0,0,.5)", overflow: "hidden",
+            position: "relative" }}>
+            {/* Glow */}
+            <div style={{ position: "absolute", top: -60, right: -60, width: 240, height: 240,
+              background: "radial-gradient(circle, rgba(45,212,191,.1) 0%, transparent 70%)",
+              pointerEvents: "none" }} />
+            {/* Header */}
+            <div style={{ padding: "2rem 2rem 1.5rem" }}>
+              <div style={{ fontSize: ".6rem", color: "rgba(45,212,191,.7)", fontWeight: 700,
+                letterSpacing: ".1em", marginBottom: ".75rem" }}>ENTERPRISE MSA</div>
+              <div style={{ display: "flex", alignItems: "baseline", gap: ".35rem", marginBottom: ".3rem" }}>
+                <span style={{ fontSize: "2rem", fontWeight: 900, color: "#fff",
+                  letterSpacing: "-.05em", lineHeight: 1 }}>$1,500</span>
+                <span style={{ fontSize: ".85rem", color: "#64748b" }}>per month</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: ".5rem", marginBottom: ".75rem" }}>
+                <span style={{ fontSize: ".9rem", fontWeight: 700, color: CYAN }}>
+                  Volume tiered processing
+                </span>
+                <span style={{ fontSize: ".75rem", color: "#475569" }}>as low as $0.35/claim</span>
+              </div>
+              <p style={{ fontSize: ".82rem", color: "#94a3b8", lineHeight: 1.6 }}>
+                Built for national rollouts and constant promotional volume.
+              </p>
+            </div>
+            {/* Tier table */}
+            <div style={{ margin: "0 2rem", border: "1px solid rgba(45,212,191,.15)",
+              borderRadius: ".75rem", overflow: "hidden", marginBottom: "1.25rem" }}>
+              {tierRows.map((t, i) => (
+                <div key={i} className="tier-row" style={{
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  padding: ".6rem .875rem",
+                  background: t.best ? "rgba(45,212,191,.07)" : "transparent",
+                  borderBottom: i < 2 ? "1px solid rgba(45,212,191,.08)" : "none" }}>
+                  <span style={{ fontSize: ".8rem", color: t.best ? "#e2e8f0" : "#64748b",
+                    whiteSpace: "nowrap" }}>{t.l}</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: ".4rem", flexShrink: 0 }}>
+                    {t.best && (
+                      <span style={{ fontSize: ".5rem", fontWeight: 700, color: S950,
+                        background: CYAN, padding: ".1rem .38rem",
+                        borderRadius: "2rem", letterSpacing: ".05em", whiteSpace: "nowrap" }}>BEST</span>
+                    )}
+                    <span className="tier-rate" style={{ fontSize: ".85rem", fontWeight: 700,
+                      color: t.best ? CYAN : "#475569",
+                      letterSpacing: "-.02em", whiteSpace: "nowrap" }}>{t.r}/claim</span>
                   </div>
                 </div>
-
-                <div style={{ marginBottom: "1.75rem" }}>
-                  <div style={{ fontSize: ".6rem", color: "#475569", fontWeight: 700,
-                    letterSpacing: ".1em", marginBottom: ".875rem" }}>PER CLAIM PROCESSING RATE</div>
-                  <div style={{ border: "1px solid rgba(255,255,255,.07)",
-                    borderRadius: ".75rem", overflow: "hidden" }}>
-                    {[
-                      { l: "First 10,000 claims",    r: "$0.55", best: false },
-                      { l: "Claims 10,001–50,000",   r: "$0.45", best: false },
-                      { l: "Claims 50,001+",          r: "$0.35", best: true  },
-                    ].map((t, i) => (
-                      <div key={i} className="tier-row" style={{
-                        display: "flex", justifyContent: "space-between", alignItems: "center",
-                        padding: ".65rem 1rem",
-                        background: t.best ? "rgba(45,212,191,.07)" : "transparent",
-                        borderBottom: i < 2 ? "1px solid rgba(255,255,255,.05)" : "none",
-                      }}>
-                        <span style={{ fontSize: ".82rem", color: t.best ? "#e2e8f0" : "#64748b",
-                          whiteSpace: "nowrap" }}>{t.l}</span>
-                        <div style={{ display: "flex", alignItems: "center", gap: ".5rem", flexShrink: 0 }}>
-                          {t.best && (
-                            <span style={{ fontSize: ".52rem", fontWeight: 700,
-                              color: S950, background: CYAN, padding: ".1rem .4rem",
-                              borderRadius: "2rem", letterSpacing: ".05em",
-                              whiteSpace: "nowrap" }}>BEST</span>
-                          )}
-                          <span className="tier-rate" style={{ fontSize: ".88rem", fontWeight: 700,
-                            color: t.best ? CYAN : "#475569", letterSpacing: "-.02em",
-                            whiteSpace: "nowrap" }}>{t.r}/claim</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+              ))}
+            </div>
+            <div style={{ height: 1, background: "rgba(255,255,255,.06)", margin: "0 0 0 0" }} />
+            {/* Features */}
+            <div style={{ padding: "1.25rem 2rem", flex: 1, display: "flex", flexDirection: "column", gap: ".75rem" }}>
+              {msaFeatures.map((f, i) => (
+                <div key={i} style={{ display: "flex", gap: ".6rem", alignItems: "flex-start" }}>
+                  <Check size={13} color={CYAN} style={{ flexShrink: 0, marginTop: 3 }} />
+                  <span style={{ fontSize: ".83rem", color: "#94a3b8", lineHeight: 1.5 }}>{f.text}</span>
                 </div>
-              </div>
-
-              <div>
-                <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
-                  style={{ display: "flex", justifyContent: "center",
-                    width: "100%", padding: ".875rem", fontSize: ".96rem" }}>
-                  Start Processing Today <ArrowRight size={16} />
-                </a>
-              </div>
+              ))}
+            </div>
+            <div style={{ padding: "1.5rem 2rem" }}>
+              <button onClick={() => document.getElementById("roi-calculator")?.scrollIntoView({ behavior: "smooth" })}
+                className="bp"
+                style={{ display: "flex", justifyContent: "center", width: "100%",
+                  padding: ".8rem", fontSize: ".92rem", cursor: "pointer" }}>
+                Build Your Enterprise MSA <ArrowRight size={15} />
+              </button>
             </div>
           </div>
         </div>
@@ -772,27 +842,28 @@ function ClaimBreakdown() {
   const ref = useReveal();
 
   const rows = [
-    { l: "Base Verification & Entry",         lg: "$0.85",     note: null,
-      s: { v: "INCLUDED", z: false } },
-    { l: "Bank Clearing",                      lg: "$0.35",     note: null,
-      s: { v: "INCLUDED", z: false } },
-    { l: "Data Capture — per field",           lg: "$0.08",
-      note: "Applied to 100% of claims. Additional custom fields cost $0.08 each.",
-      s: { v: "$0.00", z: true } },
-    { l: "Inquiries & Support Calls",          lg: "$4.75",     note: "5% frequency",
-      s: { v: "$0.00", z: true } },
-    { l: "Non-Compliance Rejects",             lg: "$1.50",     note: "10% frequency",
-      s: { v: "$0.00", z: true } },
-    { l: "Manual Email Lookups",               lg: "$2.00",     note: "5% frequency",
-      s: { v: "$0.00", z: true } },
-    { l: "Campaign Admin Fee",                 lg: "$170 flat", note: null,
-      s: { v: "$0.00", z: true } },
+    { l: "Base Verification & Entry",  lg: "$0.85",     s: { v: "INCLUDED" } },
+    { l: "Bank Clearing",              lg: "$0.35",     s: { v: "INCLUDED" } },
+    { l: "Data Capture",               lg: "$0.08",     s: { v: "INCLUDED" } },
+    { l: "Inquiries & Support Calls",  lg: "$4.75",     s: { v: "INCLUDED" } },
+    { l: "Non-Compliance Rejects",     lg: "$1.50",     s: { v: "INCLUDED" } },
+    { l: "Manual Email Lookups",       lg: "$2.00",     s: { v: "INCLUDED" } },
+    { l: "Campaign Admin Fee",         lg: "$170 flat", s: { v: "INCLUDED" } },
   ];
 
   const sondarOnly = [
-    { l: "Platform Fee",    v: "$499 /mo" },
-    { l: "Volume Tier Rate", v: "$0.35–$0.55" },
+    { l: "Platform Fee (Enterprise MSA)", v: "$1,500 /mo" },
+    { l: "Volume Tier Rate",               v: "$0.35–$0.55" },
   ];
+
+  // Unified green style for all Sondar column values
+  const sondarPill = {
+    fontSize: ".8rem", fontWeight: 700,
+    color: "#20B2AA",
+    background: "rgba(32,178,170,.09)",
+    border: "1px solid rgba(32,178,170,.28)",
+    padding: ".14rem .48rem", borderRadius: ".3rem", display: "inline-block",
+  };
 
   const CH = {
     fontSize: ".58rem", fontWeight: 700, letterSpacing: ".1em",
@@ -834,10 +905,6 @@ function ClaimBreakdown() {
               borderBottom: "1px solid rgba(255,255,255,.04)" }}>
               <div style={{ padding: ".6rem 1rem" }}>
                 <span style={{ fontSize: ".83rem", color: "#cbd5e1", fontWeight: 500 }}>{r.l}</span>
-                {r.note && (
-                  <div style={{ fontSize: ".65rem", color: "#475569",
-                    marginTop: ".12rem", lineHeight: 1.4 }}>{r.note}</div>
-                )}
               </div>
               <div style={{ padding: ".6rem .5rem", display: "flex",
                 alignItems: "center", justifyContent: "center" }}>
@@ -846,13 +913,7 @@ function ClaimBreakdown() {
               </div>
               <div style={{ padding: ".6rem .5rem", display: "flex",
                 alignItems: "center", justifyContent: "center" }}>
-                <span style={{
-                  fontSize: ".8rem", fontWeight: 700,
-                  color: r.s.z ? CYAN : "#475569",
-                  background: r.s.z ? "rgba(45,212,191,.08)" : "rgba(71,85,105,.2)",
-                  border: `1px solid ${r.s.z ? "rgba(45,212,191,.2)" : "rgba(71,85,105,.3)"}`,
-                  padding: ".14rem .48rem", borderRadius: ".3rem", display: "inline-block",
-                }}>{r.s.v}</span>
+                <span style={sondarPill}>{r.s.v}</span>
               </div>
             </div>
           ))}
@@ -877,7 +938,7 @@ function ClaimBreakdown() {
                 </div>
                 <div style={{ padding: ".5rem .5rem", display: "flex",
                   alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontSize: ".82rem", fontWeight: 700, color: CYAN }}>{r.v}</span>
+                  <span style={sondarPill}>{r.v}</span>
                 </div>
               </div>
             ))}
@@ -899,28 +960,43 @@ function ClaimBreakdown() {
 function ROICalculator() {
   const ref = useReveal();
   const [volume, setVolume] = useState(30000);
+  const [assumOpen, setAssumOpen] = useState(false);
+  const [tipVisible, setTipVisible] = useState(false);
 
+  // Legacy math
   const adminFee      = 170;
   const baseEntry     = volume * 0.85;
   const bankClearing  = volume * 0.35;
-  const emailCapture  = volume * 0.08;
+  const fieldCapture  = volume * 0.08;           // 100% of claims, 1 custom field
   const supportCalls  = volume * 0.05 * 4.75;
   const nonCompliance = volume * 0.10 * 1.50;
   const emailLookups  = volume * 0.05 * 2.00;
-  const legacyTotal   = adminFee + baseEntry + bankClearing + emailCapture + supportCalls + nonCompliance + emailLookups;
+  const legacyTotal   = adminFee + baseEntry + bankClearing + fieldCapture + supportCalls + nonCompliance + emailLookups;
 
+  // Sondar math — Enterprise MSA: $1,500 base + volume tiers
   let sv = 0;
   if (volume <= 10000) sv = volume * 0.55;
   else if (volume <= 50000) sv = 5500 + (volume - 10000) * 0.45;
   else sv = 5500 + 18000 + (volume - 50000) * 0.35;
-  const sondarTotal = 499 + sv;
+  const sondarTotal = 1500 + sv;
+
   const savings  = legacyTotal - sondarTotal;
   const pct      = Math.max(0, (savings / legacyTotal) * 100).toFixed(0);
   const fmt      = n => "$" + Math.round(n).toLocaleString();
   const sliderW  = `${((volume - 10000) / 90000) * 100}%`;
 
+  const assumptions = [
+    { l: "Base Verification",                          r: "$0.85 per claim" },
+    { l: "Bank Clearing",                              r: "$0.35 per claim" },
+    { l: "Data Capture ($0.08 x 1 custom field per claim)", r: "$0.08 per claim" },
+    { l: "Inquiries & Support",                        r: "5% of volume × $4.75" },
+    { l: "Non-Compliance Rejects",                     r: "10% of volume × $1.50" },
+    { l: "Manual Email Lookups",                       r: "5% of volume × $2.00" },
+    { l: "Campaign Admin Fee",                         r: "$170 flat / month" },
+  ];
+
   return (
-    <section style={{ background: S950, padding: "5rem 0", borderTop: "1px solid rgba(255,255,255,.04)" }}>
+    <section id="roi-calculator" style={{ background: S950, padding: "5rem 0", borderTop: "1px solid rgba(255,255,255,.04)" }}>
       <div ref={ref} style={{ maxWidth: 780, margin: "0 auto", padding: "0 2rem" }}>
         <div className="rv" style={{ textAlign: "center", marginBottom: "2.5rem" }}>
           <Pill dark>ROI CALCULATOR</Pill>
@@ -928,14 +1004,16 @@ function ROICalculator() {
             letterSpacing: "-.035em", color: "#fff", marginBottom: ".5rem" }}>
             See your savings in real time.
           </h2>
-          <p style={{ color: "rgba(255,255,255,.4)", fontSize: ".93rem" }}>
-            Drag the slider to match your monthly claim volume.
+          <p style={{ color: "#94a3b8", fontSize: ".93rem" }}>
+            Drag the slider to match your monthly claim volume. Reflects Enterprise MSA pricing.
           </p>
         </div>
 
         <div className="rv td1" style={{ background: S900,
           border: "1px solid rgba(255,255,255,.07)", borderRadius: "1.25rem", padding: "2rem",
           boxShadow: "0 32px 80px rgba(0,0,0,.4)" }}>
+
+          {/* Volume display */}
           <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
             <div style={{ fontSize: ".58rem", color: "#475569", fontWeight: 700,
               letterSpacing: ".1em", marginBottom: ".4rem" }}>MONTHLY CLAIMS</div>
@@ -945,6 +1023,7 @@ function ROICalculator() {
             </div>
           </div>
 
+          {/* Slider */}
           <div style={{ marginBottom: "2rem", position: "relative" }}>
             <div style={{ position: "absolute", top: "50%", left: 0, height: 4,
               width: sliderW, background: `linear-gradient(90deg, ${CYAN_D}, ${BLUE})`,
@@ -953,98 +1032,171 @@ function ROICalculator() {
               onChange={e => setVolume(+e.target.value)}
               className="rs" style={{ position: "relative", zIndex: 2 }} />
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: ".35rem" }}>
-              <span style={{ fontSize: ".7rem", color: "#334155" }}>10,000</span>
-              <span style={{ fontSize: ".7rem", color: "#334155" }}>100,000</span>
+              <span style={{ fontSize: ".7rem", color: "#475569" }}>10,000</span>
+              <span style={{ fontSize: ".7rem", color: "#475569" }}>100,000</span>
             </div>
           </div>
 
+          {/* Result cards */}
           <div className="rg" style={{ display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1.25rem" }}>
+            gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
             {[
               { lbl: "LEGACY COST",  val: fmt(legacyTotal), sub: "est. per month",
-                col: "#ef4444", bg: "rgba(239,68,68,.07)", bd: "rgba(239,68,68,.2)" },
-              { lbl: "SONDAR COST",  val: fmt(sondarTotal), sub: "per month",
-                col: CYAN, bg: "rgba(45,212,191,.06)", bd: "rgba(45,212,191,.2)", grad: true },
+                col: "#ef4444", bg: "rgba(239,68,68,.07)", bd: "rgba(239,68,68,.2)", info: true },
+              { lbl: "SONDAR COST",  val: fmt(sondarTotal), sub: "Enterprise MSA",
+                col: CYAN, bg: "rgba(45,212,191,.06)", bd: "rgba(45,212,191,.2)", info: false },
               { lbl: "YOU SAVE",     val: fmt(savings),     sub: `${pct}% reduction`,
-                col: "#22c55e", bg: "rgba(34,197,94,.06)", bd: "rgba(34,197,94,.2)" },
+                col: "#22c55e", bg: "rgba(34,197,94,.06)", bd: "rgba(34,197,94,.2)", info: false },
             ].map((c, i) => (
               <div key={i} style={{ background: c.bg, border: `1px solid ${c.bd}`,
                 borderRadius: ".875rem", padding: "1.1rem", textAlign: "center" }}>
-                <div style={{ fontSize: ".58rem", color: c.col, fontWeight: 700,
-                  letterSpacing: ".08em", marginBottom: ".4rem" }}>{c.lbl}</div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: ".35rem", marginBottom: ".4rem" }}>
+                  <span style={{ fontSize: ".58rem", color: c.col, fontWeight: 700, letterSpacing: ".08em" }}>{c.lbl}</span>
+                  {c.info && (
+                    <div style={{ position: "relative", display: "inline-flex" }}
+                      onMouseEnter={() => setTipVisible(true)}
+                      onMouseLeave={() => setTipVisible(false)}>
+                      <span style={{ width: 14, height: 14, borderRadius: "50%",
+                        border: `1px solid ${c.col}`, color: c.col, fontSize: ".52rem",
+                        fontWeight: 700, display: "inline-flex", alignItems: "center",
+                        justifyContent: "center", cursor: "default", opacity: .75,
+                        lineHeight: 1 }}>i</span>
+                      {tipVisible && (
+                        <div style={{ position: "absolute", bottom: "calc(100% + 8px)", left: "50%",
+                          transform: "translateX(-50%)", width: 220,
+                          background: S800, border: "1px solid rgba(255,255,255,.1)",
+                          borderRadius: ".5rem", padding: ".6rem .75rem",
+                          fontSize: ".72rem", color: "#94a3b8", lineHeight: 1.5,
+                          whiteSpace: "normal", zIndex: 10, textAlign: "left",
+                          boxShadow: "0 8px 24px rgba(0,0,0,.4)" }}>
+                          Legacy costs represent industry standard manual processing fees, bank clearing, and support overhead.
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
                 <div style={{ fontSize: "clamp(1.2rem, 3.5vw, 1.7rem)", fontWeight: 900,
                   color: c.col, letterSpacing: "-.04em", lineHeight: 1 }}>{c.val}</div>
-                <div style={{ fontSize: ".68rem", color: "#475569",
-                  marginTop: ".3rem" }}>{c.sub}</div>
+                <div style={{ fontSize: ".68rem", color: "#94a3b8", marginTop: ".3rem" }}>{c.sub}</div>
               </div>
             ))}
           </div>
 
-          <p style={{ textAlign: "center", color: "#334155", fontSize: ".7rem" }}>
-            Calculation omits payout fulfillment costs (postage/e-transfers). Actual legacy costs are typically higher.
+          {/* Disclaimer */}
+          <p style={{ textAlign: "center", color: "#94a3b8", fontSize: ".7rem", marginBottom: "1.25rem" }}>
+            Calculation omits payout fulfillment costs (postage/e-transfers) and assumes 1 custom data field. Actual legacy costs are typically higher depending on campaign complexity.
           </p>
+
+          {/* Legacy Cost Assumptions accordion */}
+          <div style={{ border: "1px solid rgba(255,255,255,.07)", borderRadius: ".75rem", overflow: "hidden" }}>
+            <button onClick={() => setAssumOpen(!assumOpen)} style={{
+              width: "100%", background: "rgba(255,255,255,.03)", border: "none",
+              cursor: "pointer", display: "flex", justifyContent: "space-between",
+              alignItems: "center", padding: ".875rem 1.25rem", gap: "1rem" }}>
+              <span style={{ fontSize: ".78rem", fontWeight: 700, color: "#94a3b8",
+                letterSpacing: ".04em", fontFamily: "'Inter',sans-serif" }}>
+                LEGACY COST ASSUMPTIONS
+              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="#475569" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                style={{ flexShrink: 0, transform: assumOpen ? "rotate(180deg)" : "none", transition: "transform .3s" }}>
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div style={{ overflow: "hidden", maxHeight: assumOpen ? "600px" : 0,
+              opacity: assumOpen ? 1 : 0, transition: "max-height .4s ease, opacity .3s ease" }}>
+              <div style={{ padding: ".75rem 1.25rem 1.25rem" }}>
+                <p style={{ fontSize: ".72rem", color: "#94a3b8", marginBottom: "1rem", lineHeight: 1.5 }}>
+                  The legacy cost estimate applies the following rates to your selected monthly volume.
+                </p>
+                {/* Two-column grid — collapses to single col on mobile via inline style + assumpGrid class */}
+                <div className="assump-grid" style={{ display: "grid",
+                  gridTemplateColumns: "1fr 1fr", gap: ".375rem 2rem" }}>
+                  {assumptions.map((a, i) => (
+                    <div key={i} style={{ display: "flex", flexDirection: "column", gap: ".1rem",
+                      padding: ".45rem 0",
+                      borderBottom: "1px solid rgba(255,255,255,.04)" }}>
+                      <span style={{ fontSize: ".75rem", color: "#64748b", lineHeight: 1.4 }}>{a.l}</span>
+                      <span style={{ fontSize: ".78rem", color: "#e2e8f0", fontWeight: 500,
+                        fontFamily: "monospace" }}>{a.r}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── FAQ ─────────────────────────────────────────────────── */
-const FAQ_DATA = [
-  { q: "Can we customize the payout timing?",
+/* ─── ENTERPRISE FAQ ──────────────────────────────────────── */
+const ENT_FAQ = [
+  { q: "Do you offer a Master Service Agreement (MSA)?",
+    a: "Yes. We have a standard, pre-vetted MSA designed to streamline onboarding for enterprise brands, allowing for a single legal review." },
+  { q: "Where is data stored and processed?",
+    a: "All PII and receipt images are processed and stored exclusively in Canada." },
+  { q: "Is SondarLogic SOC2 Compliant?",
+    a: "We operate on SOC2 Type II compliant infrastructure and follow industry-standard encryption (AES-256) for all data at rest and in transit." },
+  { q: "Can we customize payout timing and branding?",
     a: "Yes. Through our API routing, payout schedules are completely customizable. We can trigger instant payouts the second a receipt is validated, or batch them for flexible payout schedules on your exact cadence — weekly, monthly, or custom." },
-  { q: "What retailer and geographical data do we see?",
-    a: "Your dashboard provides real-time mapping of provincial volume from British Columbia to Newfoundland and specific dealer performance data. You will see exactly which independent shops or big box retailers are moving your product, right down to the postal code." },
-  { q: "How do you handle Canadian tax and compliance?",
-    a: "Sondar Logic AI is built for the Canadian market. We handle GST/HST calculations and provide secure payouts in CAD through our Canada based secure payment partner, ensuring compliance with local regulations." },
-  { q: "How long does it take to launch a new promotional campaign?",
-    a: "Days, not months. Because our Enterprise Level Vision AI is context-aware, it does not need to be retrained on new receipt layouts for every retailer. We can have your custom routing and dashboard live in under a week." },
-  { q: "What types of payment can we send to customers?",
-    a: "Most partners choose Virtual Visa Gift Cards — there is no additional fulfillment charge. We also support CAD e-Transfers and direct bank transfers through our Canada based secure payment partner." },
+  { q: "How fast can we launch a new promotional campaign?",
+    a: "Once the Pilot Agreement is signed, we typically go live within 7–10 business days. For Enterprise MSA clients, our Vision AI is context-aware and does not require retraining on new receipt layouts for each retailer." },
+  { q: "Do you offer an MSA?",
+    a: "Yes, we provide standard MSAs and custom SLAs for our enterprise partners." },
+  { q: "How do you handle unclaimed funds?",
+    a: "We recapture expired promotional rewards after 90 days and credit 50% back to your next campaign budget." },
+  { q: "Can you handle 100k+ claims in a day?",
+    a: "Our serverless infrastructure scales instantly to handle massive promotional spikes without processing delays." },
+  { q: "What if a customer uploads a blurry receipt?",
+    a: "We don't auto-deny. Our system sends a branded, automated re-upload link to ensure a positive customer experience while preventing fraud." },
+  { q: "What data do I get besides my own SKU?",
+    a: "You get full line-item extraction, including competitor brands and basket totals, included in your platform fee." },
+  { q: "Is the portal white-labeled?",
+    a: "Yes. The entire journey from upload to the Visa Gift Card delivery email is 100% branded to your guidelines." },
 ];
 
-function FAQItem({ q, a, open, toggle }) {
-  return (
-    <div style={{ borderBottom: "1px solid #f1f5f9" }}>
-      <button onClick={toggle} style={{ width: "100%", background: "none", border: "none",
-        cursor: "pointer", display: "flex", justifyContent: "space-between",
-        alignItems: "center", padding: "1.2rem 0", textAlign: "left", gap: "1rem" }}>
-        <span style={{ fontSize: ".97rem", fontWeight: 600,
-          color: open ? S900 : "#475569", transition: "color .2s",
-          letterSpacing: "-.01em", fontFamily: "'Inter',sans-serif" }}>{q}</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-          stroke={CYAN_D} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-          style={{ flexShrink: 0, transform: open ? "rotate(180deg)" : "none", transition: "transform .3s" }}>
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-      </button>
-      <div style={{ overflow: "hidden", maxHeight: open ? "280px" : 0,
-        opacity: open ? 1 : 0, transition: "max-height .4s ease, opacity .3s ease" }}>
-        <p style={{ color: "#64748b", fontSize: ".92rem",
-          lineHeight: 1.75, paddingBottom: "1.2rem" }}>{a}</p>
-      </div>
-    </div>
-  );
-}
-
-function FAQ() {
+function EnterpriseFAQ() {
   const [openIdx, setOpenIdx] = useState(null);
   const ref = useReveal();
   return (
     <section id="faq" style={{ background: "#fff", padding: "5rem 0" }}>
       <div ref={ref} style={{ maxWidth: 720, margin: "0 auto", padding: "0 2rem" }}>
         <div className="rv" style={{ textAlign: "center", marginBottom: "3rem" }}>
-          <Pill>FAQ</Pill>
+          <Pill>ENTERPRISE FAQ</Pill>
           <h2 style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.5rem)", fontWeight: 800,
-            letterSpacing: "-.035em", color: S900 }}>
-            Operational transparency.
+            letterSpacing: "-.035em", color: S900, marginBottom: ".6rem" }}>
+            Engineered for Enterprise Partnerships.
           </h2>
+          <p style={{ color: "#64748b", fontSize: ".95rem", maxWidth: 520,
+            margin: "0 auto", lineHeight: 1.65 }}>
+            Rigorous security, Canadian data residency, and automated budget recovery for Tier-1 brands.
+          </p>
         </div>
         <div className="rv td1">
-          {FAQ_DATA.map((item, i) => (
-            <FAQItem key={i} q={item.q} a={item.a}
-              open={openIdx === i}
-              toggle={() => setOpenIdx(openIdx === i ? null : i)} />
+          {ENT_FAQ.map((item, i) => (
+            <div key={i} style={{ borderBottom: "1px solid #f1f5f9" }}>
+              <button onClick={() => setOpenIdx(openIdx === i ? null : i)} style={{
+                width: "100%", background: "none", border: "none", cursor: "pointer",
+                display: "flex", justifyContent: "space-between", alignItems: "center",
+                padding: "1.2rem 0", textAlign: "left", gap: "1rem" }}>
+                <span style={{ fontSize: ".97rem", fontWeight: 600,
+                  color: openIdx === i ? S900 : "#475569",
+                  transition: "color .2s", letterSpacing: "-.01em",
+                  fontFamily: "'Inter',sans-serif" }}>{item.q}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke={CYAN_D} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                  style={{ flexShrink: 0, transform: openIdx === i ? "rotate(180deg)" : "none", transition: "transform .3s" }}>
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              <div style={{ overflow: "hidden", maxHeight: openIdx === i ? "280px" : 0,
+                opacity: openIdx === i ? 1 : 0, transition: "max-height .4s ease, opacity .3s ease" }}>
+                <p style={{ color: "#64748b", fontSize: ".92rem",
+                  lineHeight: 1.75, paddingBottom: "1.2rem" }}>{item.a}</p>
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -1184,12 +1336,19 @@ function Footer({ setActiveView }) {
           </div>
         </div>
 
+        {/* Copyright */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,.05)",
-          paddingTop: "1.5rem", textAlign: "center" }}>
+          paddingTop: "1.25rem", textAlign: "center", marginBottom: ".6rem" }}>
           <span style={{ fontSize: ".76rem", color: "rgba(255,255,255,.18)" }}>
             © 2026 Sondar Logic AI. Built in Burlington, Ontario.
           </span>
         </div>
+
+        {/* Legal disclaimer – small print */}
+        <p style={{ textAlign: "center", fontSize: ".65rem", color: "#64748b",
+          lineHeight: 1.6, maxWidth: 860, margin: "0 auto" }}>
+          <span style={{ fontWeight: 600 }}>Promotional Reward Policy:</span> All rebates issued via SondarLogic are classified as Promotional Rewards. These non-purchased incentives carry a standard 90-day claim period. Unclaimed funds are recaptured for promotional budget reallocation.
+        </p>
       </div>
     </footer>
   );
@@ -1310,14 +1469,14 @@ export default function SondarLogicAI() {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: G }} />
-      <Navbar dark />
+      <Navbar />
       <Hero />
       <Workflow />
       <CommandCenter />
       <Pricing />
       <ClaimBreakdown />
       <ROICalculator />
-      <FAQ />
+      <EnterpriseFAQ />
       <FinalCTA />
       <Footer setActiveView={setActiveView} />
     </>
