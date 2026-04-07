@@ -868,11 +868,11 @@ function ClaimBreakdown() {
           <Pill dark>COST BREAKDOWN</Pill>
           <h2 style={{ fontSize: "clamp(1.7rem, 3.5vw, 2.5rem)", fontWeight: 800,
             letterSpacing: "-.035em", color: "#fff", marginBottom: ".6rem" }}>
-            The Anatomy of a Claim
+            Consistent Pricing. No Per-Task Surcharges.
           </h2>
           <p style={{ color: "rgba(255,255,255,.4)", fontSize: ".93rem",
-            maxWidth: 460, margin: "0 auto" }}>
-            Where legacy processors hide fees — and what Sondar absorbs in its platform rate.
+            maxWidth: 520, margin: "0 auto" }}>
+            We've automated the manual tasks that drive up your monthly invoices, resulting in a 65% lower total cost per claim.
           </p>
         </div>
 
