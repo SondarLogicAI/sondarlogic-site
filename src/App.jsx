@@ -1142,7 +1142,7 @@ const ENT_FAQ = [
   { q: "What if a customer uploads a blurry receipt?",
     a: "We don't auto-deny. Our system sends a branded, automated re-upload link to ensure a positive customer experience while preventing fraud." },
   { q: "What data do I get besides my own SKU?",
-    a: "You get full line-item extraction, including competitor brands and basket totals, included in your platform fee." },
+    a: "You get full line-item extraction included in your platform fee, which feeds directly into a fully customizable dashboard. This gives you instant access to total receipt amounts, provincial heat maps, top volume retailers, and deep basket insights into both top competitive and complimentary products." },
   { q: "Is the portal white-labeled?",
     a: "Yes. The entire journey from upload to the Visa Gift Card delivery email is 100% branded to your guidelines." },
 ];
