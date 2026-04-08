@@ -1437,6 +1437,21 @@ export default function SondarLogicAI() {
     document.head.appendChild(link);
   }, []);
 
+  // ── Google Analytics GA4 ──────────────────────────────────
+  useEffect(() => {
+    const GA_ID = "G-KRCG9CCSJG";
+    const script = document.createElement("script");
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+    script.async = true;
+    document.head.appendChild(script);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag("js", new Date());
+    gtag("config", GA_ID);
+  }, []);
+
   // ── Lead tracker: fires once per session when ?viewer= is present ──
   useEffect(() => {
     try {
