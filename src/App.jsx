@@ -1437,6 +1437,41 @@ export default function SondarLogicAI() {
     document.head.appendChild(link);
   }, []);
 
+  // ── Lead tracker: fires once per session when ?viewer= is present ──
+  useEffect(() => {
+    try {
+      const SESSION_KEY = "sl_lead_fired";
+      if (sessionStorage.getItem(SESSION_KEY)) return; // already fired this session
+
+      const params = new URLSearchParams(window.location.search);
+      const viewer = params.get("viewer");
+      if (!viewer) return; // no tracking param — do nothing
+
+      sessionStorage.setItem(SESSION_KEY, "1"); // mark as fired before the async call
+
+      // Build EST timestamp
+      const estTime = new Date().toLocaleString("en-US", {
+        timeZone: "America/New_York",
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit", second: "2-digit",
+        hour12: false,
+      });
+
+      // Fire non-blocking POST — errors are caught silently so the page always loads
+      fetch("https://hook.us2.make.com/ptrjonu1yma9t174qbtsvjobblrsswk7", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          visitor:   viewer,
+          timestamp: estTime,
+          page:      window.location.pathname,
+        }),
+      }).catch(() => {}); // swallow network errors — never block the UI
+    } catch (_) {
+      // sessionStorage unavailable (private browsing edge case) — do nothing
+    }
+  }, []);
+
   useEffect(() => {
     if (activeView !== "home") return;
     const obs = new IntersectionObserver(
