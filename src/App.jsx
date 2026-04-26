@@ -672,59 +672,58 @@ function CommandCenter() {
 function Pricing() {
   const ref = useReveal();
 
-  // Shared sub-components
   const SL = ({ children }) => (
-    <div style={{ fontSize: ".56rem", fontWeight: 700, color: "#475569",
-      letterSpacing: ".1em", marginTop: ".875rem", marginBottom: ".5rem" }}>
+    <div style={{ fontSize: ".52rem", fontWeight: 700, color: "#475569",
+      letterSpacing: ".1em", marginTop: ".55rem", marginBottom: ".3rem" }}>
       {children}
     </div>
   );
   const SSL = ({ children }) => (
-    <div style={{ fontSize: ".54rem", fontWeight: 700, color: "#334155",
-      letterSpacing: ".08em", marginTop: ".625rem", marginBottom: ".35rem" }}>
+    <div style={{ fontSize: ".5rem", fontWeight: 700, color: "#334155",
+      letterSpacing: ".08em", marginTop: ".4rem", marginBottom: ".2rem" }}>
       {children}
     </div>
   );
   const CI = ({ children }) => (
-    <div style={{ display: "flex", gap: ".45rem", alignItems: "flex-start", marginBottom: ".3rem" }}>
-      <span style={{ color: CYAN, fontSize: ".72rem", lineHeight: 1.4, flexShrink: 0 }}>✓</span>
-      <span style={{ fontSize: ".81rem", color: "#94a3b8", lineHeight: 1.45 }}>{children}</span>
+    <div style={{ display: "flex", gap: ".4rem", alignItems: "flex-start", marginBottom: ".18rem" }}>
+      <span style={{ color: CYAN, fontSize: ".68rem", lineHeight: 1.35, flexShrink: 0 }}>✓</span>
+      <span style={{ fontSize: ".76rem", color: "#94a3b8", lineHeight: 1.35 }}>{children}</span>
     </div>
   );
   const Div = () => (
-    <div style={{ height: "0.5px", background: "rgba(255,255,255,.08)", margin: ".875rem 0" }} />
+    <div style={{ height: "0.5px", background: "rgba(255,255,255,.08)", margin: ".5rem 0" }} />
   );
-  const twoCol = { display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".75rem 1.25rem" };
+  const twoCol = { display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".4rem .875rem" };
 
   return (
-    <section id="pricing" style={{ background: S950, padding: "5rem 0" }}>
+    <section id="pricing" style={{ background: S950, padding: "3.5rem 0" }}>
       <div ref={ref} style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
 
-        <div className="rv" style={{ textAlign: "center", marginBottom: "3rem" }}>
+        <div className="rv" style={{ textAlign: "center", marginBottom: "2rem" }}>
           <Pill dark>PRICING</Pill>
-          <h2 style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.75rem)", fontWeight: 800,
-            letterSpacing: "-.035em", color: "#fff", marginBottom: ".75rem" }}>
+          <h2 style={{ fontSize: "clamp(1.7rem, 3.5vw, 2.5rem)", fontWeight: 800,
+            letterSpacing: "-.035em", color: "#fff", marginBottom: ".6rem" }}>
             Simple Pricing, Built in Intelligence.
           </h2>
-          <p style={{ color: "rgba(255,255,255,.45)", fontSize: "1rem",
-            maxWidth: 460, margin: "0 auto", lineHeight: 1.7 }}>
+          <p style={{ color: "rgba(255,255,255,.45)", fontSize: ".93rem",
+            maxWidth: 440, margin: "0 auto", lineHeight: 1.6 }}>
             One flat rate. No exception fees. No surprises.
           </p>
         </div>
 
-        <div className="rv td1 pcols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
+        <div className="rv td1 pcols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem", marginBottom: "1.25rem" }}>
 
           {/* ── SINGLE CAMPAIGN PILOT ── */}
           <div style={{ border: "1px solid rgba(255,255,255,.1)", borderRadius: "1.25rem",
-            background: S900, padding: "1.75rem 2rem",
+            background: S900, padding: "1.25rem 1.5rem",
             boxShadow: "0 16px 48px rgba(0,0,0,.4)" }}>
 
-            <div style={{ fontSize: ".6rem", fontWeight: 700, color: "#475569",
-              letterSpacing: ".12em", marginBottom: ".875rem" }}>SINGLE CAMPAIGN PILOT</div>
+            <div style={{ fontSize: ".56rem", fontWeight: 700, color: "#475569",
+              letterSpacing: ".12em", marginBottom: ".625rem" }}>SINGLE CAMPAIGN PILOT</div>
 
-            <div style={{ fontSize: "1.75rem", fontWeight: 900, color: CYAN,
-              letterSpacing: "-.04em", lineHeight: 1, marginBottom: ".3rem" }}>$0 Platform Fee</div>
-            <div style={{ fontSize: ".88rem", color: "#64748b", marginBottom: ".25rem" }}>$0.65 per processed claim</div>
+            <div style={{ fontSize: "1.5rem", fontWeight: 900, color: CYAN,
+              letterSpacing: "-.04em", lineHeight: 1, marginBottom: ".2rem" }}>$0 Platform Fee</div>
+            <div style={{ fontSize: ".82rem", color: "#64748b" }}>$0.65 per processed claim</div>
 
             <Div />
 
@@ -773,7 +772,7 @@ function Pricing() {
                 <CI>Submission timeline</CI>
               </div>
             </div>
-            <div style={{ ...twoCol, marginTop: ".625rem" }}>
+            <div style={{ ...twoCol, marginTop: ".4rem" }}>
               <div>
                 <SSL>GEOGRAPHIC & RETAIL</SSL>
                 <CI>Top retail locations</CI>
@@ -788,27 +787,26 @@ function Pricing() {
 
           {/* ── ENTERPRISE MULTI CAMPAIGN ── */}
           <div style={{ border: `1.5px solid rgba(45,212,191,.35)`, borderRadius: "1.25rem",
-            background: S800, padding: "1.75rem 2rem", position: "relative", overflow: "hidden",
+            background: S800, padding: "1.25rem 1.5rem", position: "relative", overflow: "hidden",
             boxShadow: "0 0 60px rgba(45,212,191,.08), 0 24px 64px rgba(0,0,0,.5)" }}>
-            <div style={{ position: "absolute", top: -50, right: -50, width: 220, height: 220,
+            <div style={{ position: "absolute", top: -50, right: -50, width: 200, height: 200,
               background: "radial-gradient(circle, rgba(45,212,191,.08) 0%, transparent 70%)",
               pointerEvents: "none" }} />
 
-            <div style={{ fontSize: ".6rem", fontWeight: 700, color: "rgba(45,212,191,.7)",
-              letterSpacing: ".12em", marginBottom: ".875rem" }}>ENTERPRISE MULTI CAMPAIGN</div>
+            <div style={{ fontSize: ".56rem", fontWeight: 700, color: "rgba(45,212,191,.7)",
+              letterSpacing: ".12em", marginBottom: ".625rem" }}>ENTERPRISE MULTI CAMPAIGN</div>
 
-            <div style={{ fontSize: "1.75rem", fontWeight: 900, color: CYAN,
-              letterSpacing: "-.04em", lineHeight: 1, marginBottom: ".3rem" }}>$1,500 Platform Fee</div>
-            <div style={{ fontSize: ".88rem", color: "#64748b", marginBottom: ".25rem" }}>$0.35 – $0.55 per processed claim (based on volume)</div>
+            <div style={{ fontSize: "1.5rem", fontWeight: 900, color: CYAN,
+              letterSpacing: "-.04em", lineHeight: 1, marginBottom: ".2rem" }}>$1,500 Platform Fee</div>
+            <div style={{ fontSize: ".82rem", color: "#64748b" }}>$0.35 – $0.55 per processed claim (based on volume)</div>
 
             <Div />
 
-            {/* Plus callout */}
             <div style={{ background: "rgba(45,212,191,.07)", border: "1px solid rgba(45,212,191,.18)",
-              borderRadius: ".5rem", padding: ".6rem .875rem", marginBottom: ".125rem" }}>
-              <span style={{ fontSize: ".8rem", color: CYAN, fontWeight: 600 }}>All Pilot features included </span>
-              <span style={{ fontSize: ".8rem", color: "#fff", fontWeight: 800 }}>PLUS</span>
-              <span style={{ fontSize: ".8rem", color: CYAN, fontWeight: 600 }}> the following:</span>
+              borderRadius: ".5rem", padding: ".45rem .75rem", marginBottom: ".125rem" }}>
+              <span style={{ fontSize: ".76rem", color: CYAN, fontWeight: 600 }}>All Pilot features included </span>
+              <span style={{ fontSize: ".76rem", color: "#fff", fontWeight: 800 }}>PLUS</span>
+              <span style={{ fontSize: ".76rem", color: CYAN, fontWeight: 600 }}> the following:</span>
             </div>
 
             <SL>VOLUME TIER PRICING</SL>
@@ -840,17 +838,15 @@ function Pricing() {
           </div>
         </div>
 
-        {/* CTA */}
-        <div className="rv td2" style={{ textAlign: "center", marginBottom: "1.25rem" }}>
+        <div className="rv td2" style={{ textAlign: "center", marginBottom: "1rem" }}>
           <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
             style={{ fontSize: "1rem", padding: ".875rem 2.5rem", display: "inline-flex" }}>
             Book a Demo <ArrowRight size={16} />
           </a>
         </div>
 
-        {/* Footer note */}
         <div className="rv td3" style={{ textAlign: "center" }}>
-          <p style={{ fontSize: ".8rem", color: "#475569" }}>
+          <p style={{ fontSize: ".78rem", color: "#475569" }}>
             All plans include Canadian data residency and PIPEDA compliance.
           </p>
         </div>
