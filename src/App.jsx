@@ -672,153 +672,189 @@ function CommandCenter() {
 function Pricing() {
   const ref = useReveal();
 
-  const pilotFeatures = [
-    { text: "No long-term commitment (5k–10k claims)" },
-    { text: "Full SKU + Competitor basket extraction" },
-    { text: "Live Looker Studio geographic heatmaps" },
-    { text: "Automated CAD payouts (Visa/e-Transfer)" },
-    { text: "Zero-risk testing period" },
-  ];
-
-  const msaFeatures = [
-    { text: "Annual MSA & Dedicated Infrastructure" },
-    { text: "Unlimited data extraction (No per field tolls)" },
-    { text: "Custom SLAs & Priority Support" },
-    { text: "Unified data warehouse (ERP/Accounting export)" },
-    { text: "Volume-scaled processing discounts" },
-    { text: "Human in the loop exception handling" },
-  ];
-
-  const tierRows = [
-    { l: "First 10,000 claims",  r: "$0.55", best: false },
-    { l: "Claims 10,001–50,000", r: "$0.45", best: false },
-    { l: "Claims 50,001+",        r: "$0.35", best: true  },
-  ];
+  // Shared sub-components
+  const SL = ({ children }) => (
+    <div style={{ fontSize: ".56rem", fontWeight: 700, color: "#475569",
+      letterSpacing: ".1em", marginTop: ".875rem", marginBottom: ".5rem" }}>
+      {children}
+    </div>
+  );
+  const SSL = ({ children }) => (
+    <div style={{ fontSize: ".54rem", fontWeight: 700, color: "#334155",
+      letterSpacing: ".08em", marginTop: ".625rem", marginBottom: ".35rem" }}>
+      {children}
+    </div>
+  );
+  const CI = ({ children }) => (
+    <div style={{ display: "flex", gap: ".45rem", alignItems: "flex-start", marginBottom: ".3rem" }}>
+      <span style={{ color: CYAN, fontSize: ".72rem", lineHeight: 1.4, flexShrink: 0 }}>✓</span>
+      <span style={{ fontSize: ".81rem", color: "#94a3b8", lineHeight: 1.45 }}>{children}</span>
+    </div>
+  );
+  const Div = () => (
+    <div style={{ height: "0.5px", background: "rgba(255,255,255,.08)", margin: ".875rem 0" }} />
+  );
+  const twoCol = { display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".75rem 1.25rem" };
 
   return (
     <section id="pricing" style={{ background: S950, padding: "5rem 0" }}>
-      <div ref={ref} style={{ maxWidth: 1060, margin: "0 auto", padding: "0 2rem" }}>
+      <div ref={ref} style={{ maxWidth: 1100, margin: "0 auto", padding: "0 2rem" }}>
+
         <div className="rv" style={{ textAlign: "center", marginBottom: "3rem" }}>
           <Pill dark>PRICING</Pill>
           <h2 style={{ fontSize: "clamp(1.9rem, 3.5vw, 2.75rem)", fontWeight: 800,
             letterSpacing: "-.035em", color: "#fff", marginBottom: ".75rem" }}>
-            Pricing that scales with you. Zero exception penalties.
+            Simple Pricing, Built in Intelligence.
           </h2>
           <p style={{ color: "rgba(255,255,255,.45)", fontSize: "1rem",
-            maxWidth: 500, margin: "0 auto", lineHeight: 1.7 }}>
-            Start with a single campaign or go all-in with an enterprise agreement. Either way, you get the full platform.
+            maxWidth: 460, margin: "0 auto", lineHeight: 1.7 }}>
+            One flat rate. No exception fees. No surprises.
           </p>
         </div>
 
-        {/* Two-card grid */}
-        <div className="rv td1 pcols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+        <div className="rv td1 pcols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
 
-          {/* ── Card 1: Single Campaign Pilot ── */}
+          {/* ── SINGLE CAMPAIGN PILOT ── */}
           <div style={{ border: "1px solid rgba(255,255,255,.1)", borderRadius: "1.25rem",
-            background: S900, display: "flex", flexDirection: "column",
-            boxShadow: "0 16px 48px rgba(0,0,0,.4)", overflow: "hidden" }}>
-            {/* Header */}
-            <div style={{ padding: "2rem 2rem 1.5rem" }}>
-              <div style={{ fontSize: ".6rem", color: "#475569", fontWeight: 700,
-                letterSpacing: ".1em", marginBottom: ".75rem" }}>SINGLE CAMPAIGN PILOT</div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: ".35rem", marginBottom: ".3rem" }}>
-                <span style={{ fontSize: "2rem", fontWeight: 900, color: "#fff",
-                  letterSpacing: "-.05em", lineHeight: 1 }}>$0</span>
-                <span style={{ fontSize: ".85rem", color: "#64748b" }}>platform fee</span>
+            background: S900, padding: "1.75rem 2rem",
+            boxShadow: "0 16px 48px rgba(0,0,0,.4)" }}>
+
+            <div style={{ fontSize: ".6rem", fontWeight: 700, color: "#475569",
+              letterSpacing: ".12em", marginBottom: ".875rem" }}>SINGLE CAMPAIGN PILOT</div>
+
+            <div style={{ fontSize: "1.75rem", fontWeight: 900, color: CYAN,
+              letterSpacing: "-.04em", lineHeight: 1, marginBottom: ".3rem" }}>$0 Platform Fee</div>
+            <div style={{ fontSize: ".88rem", color: "#64748b", marginBottom: ".25rem" }}>$0.65 per processed claim</div>
+
+            <Div />
+
+            <SL>SUBMISSION</SL>
+            <CI>One campaign</CI>
+            <CI>One consumer submission form</CI>
+
+            <Div />
+
+            <div style={twoCol}>
+              <div>
+                <SL>PROCESSING</SL>
+                <CI>Receipt validation</CI>
+                <CI>Full SKU extraction</CI>
+                <CI>Basket analysis — all line items</CI>
+                <CI>Competitor product detection</CI>
               </div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: ".35rem", marginBottom: ".75rem" }}>
-                <span style={{ fontSize: "1.35rem", fontWeight: 800, color: CYAN,
-                  letterSpacing: "-.04em" }}>$0.65</span>
-                <span style={{ fontSize: ".82rem", color: "#64748b" }}>per processed claim</span>
+              <div>
+                <SL>FRAUD & QUALITY</SL>
+                <CI>Duplicate and fraud detection</CI>
+                <CI>Automated re-upload request email</CI>
+                <CI>Manual review on all rejected claims</CI>
               </div>
-              <p style={{ fontSize: ".82rem", color: "#64748b", lineHeight: 1.6 }}>
-                Perfect for testing Sondar Logic alongside your current vendor.
-              </p>
             </div>
-            <div style={{ height: 1, background: "rgba(255,255,255,.06)" }} />
-            {/* Features */}
-            <div style={{ padding: "1.5rem 2rem", flex: 1, display: "flex", flexDirection: "column", gap: ".75rem" }}>
-              {pilotFeatures.map((f, i) => (
-                <div key={i} style={{ display: "flex", gap: ".6rem", alignItems: "flex-start" }}>
-                  <Check size={13} color={CYAN} style={{ flexShrink: 0, marginTop: 3 }} />
-                  <span style={{ fontSize: ".83rem", color: "#94a3b8", lineHeight: 1.5 }}>{f.text}</span>
-                </div>
-              ))}
+
+            <Div />
+
+            <SL>PAYOUT</SL>
+            <CI>Instant Reward — Visa Gift Card</CI>
+
+            <Div />
+
+            <SL>STANDARD DASHBOARD</SL>
+            <div style={twoCol}>
+              <div>
+                <SSL>PERFORMANCE</SSL>
+                <CI>Rebates processed</CI>
+                <CI>Total rebate value</CI>
+                <CI>Approval rate %</CI>
+                <CI>Campaign breakdown</CI>
+              </div>
+              <div>
+                <SSL>CLAIMS INTELLIGENCE</SSL>
+                <CI>Approval status</CI>
+                <CI>Reject category</CI>
+                <CI>Submission timeline</CI>
+              </div>
+            </div>
+            <div style={{ ...twoCol, marginTop: ".625rem" }}>
+              <div>
+                <SSL>GEOGRAPHIC & RETAIL</SSL>
+                <CI>Top retail locations</CI>
+                <CI>Top provinces</CI>
+              </div>
+              <div>
+                <SSL>PRODUCT INTELLIGENCE</SSL>
+                <CI>SKU category breakdown</CI>
+              </div>
             </div>
           </div>
 
-          {/* ── Card 2: Enterprise MSA ── */}
+          {/* ── ENTERPRISE MULTI CAMPAIGN ── */}
           <div style={{ border: `1.5px solid rgba(45,212,191,.35)`, borderRadius: "1.25rem",
-            background: S800, display: "flex", flexDirection: "column",
-            boxShadow: "0 0 60px rgba(45,212,191,.08), 0 24px 64px rgba(0,0,0,.5)", overflow: "hidden",
-            position: "relative" }}>
-            {/* Glow */}
-            <div style={{ position: "absolute", top: -60, right: -60, width: 240, height: 240,
-              background: "radial-gradient(circle, rgba(45,212,191,.1) 0%, transparent 70%)",
+            background: S800, padding: "1.75rem 2rem", position: "relative", overflow: "hidden",
+            boxShadow: "0 0 60px rgba(45,212,191,.08), 0 24px 64px rgba(0,0,0,.5)" }}>
+            <div style={{ position: "absolute", top: -50, right: -50, width: 220, height: 220,
+              background: "radial-gradient(circle, rgba(45,212,191,.08) 0%, transparent 70%)",
               pointerEvents: "none" }} />
-            {/* Header */}
-            <div style={{ padding: "2rem 2rem 1.5rem" }}>
-              <div style={{ fontSize: ".6rem", color: "rgba(45,212,191,.7)", fontWeight: 700,
-                letterSpacing: ".1em", marginBottom: ".75rem" }}>ENTERPRISE MSA</div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: ".35rem", marginBottom: ".3rem" }}>
-                <span style={{ fontSize: "2rem", fontWeight: 900, color: "#fff",
-                  letterSpacing: "-.05em", lineHeight: 1 }}>$1,500</span>
-                <span style={{ fontSize: ".85rem", color: "#64748b" }}>per month</span>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: ".5rem", marginBottom: ".75rem" }}>
-                <span style={{ fontSize: ".9rem", fontWeight: 700, color: CYAN }}>
-                  Volume tiered processing
-                </span>
-                <span style={{ fontSize: ".75rem", color: "#475569" }}>as low as $0.35/claim</span>
-              </div>
-              <p style={{ fontSize: ".82rem", color: "#94a3b8", lineHeight: 1.6 }}>
-                Built for national rollouts and constant promotional volume.
-              </p>
+
+            <div style={{ fontSize: ".6rem", fontWeight: 700, color: "rgba(45,212,191,.7)",
+              letterSpacing: ".12em", marginBottom: ".875rem" }}>ENTERPRISE MULTI CAMPAIGN</div>
+
+            <div style={{ fontSize: "1.75rem", fontWeight: 900, color: CYAN,
+              letterSpacing: "-.04em", lineHeight: 1, marginBottom: ".3rem" }}>$1,500 Platform Fee</div>
+            <div style={{ fontSize: ".88rem", color: "#64748b", marginBottom: ".25rem" }}>$0.35 – $0.55 per processed claim (based on volume)</div>
+
+            <Div />
+
+            {/* Plus callout */}
+            <div style={{ background: "rgba(45,212,191,.07)", border: "1px solid rgba(45,212,191,.18)",
+              borderRadius: ".5rem", padding: ".6rem .875rem", marginBottom: ".125rem" }}>
+              <span style={{ fontSize: ".8rem", color: CYAN, fontWeight: 600 }}>All Pilot features included </span>
+              <span style={{ fontSize: ".8rem", color: "#fff", fontWeight: 800 }}>PLUS</span>
+              <span style={{ fontSize: ".8rem", color: CYAN, fontWeight: 600 }}> the following:</span>
             </div>
-            {/* Tier table */}
-            <div style={{ margin: "0 2rem", border: "1px solid rgba(45,212,191,.15)",
-              borderRadius: ".75rem", overflow: "hidden", marginBottom: "1.25rem" }}>
-              {tierRows.map((t, i) => (
-                <div key={i} className="tier-row" style={{
-                  display: "flex", justifyContent: "space-between", alignItems: "center",
-                  padding: ".6rem .875rem",
-                  background: t.best ? "rgba(45,212,191,.07)" : "transparent",
-                  borderBottom: i < 2 ? "1px solid rgba(45,212,191,.08)" : "none" }}>
-                  <span style={{ fontSize: ".8rem", color: t.best ? "#e2e8f0" : "#64748b",
-                    whiteSpace: "nowrap" }}>{t.l}</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: ".4rem", flexShrink: 0 }}>
-                    {t.best && (
-                      <span style={{ fontSize: ".5rem", fontWeight: 700, color: S950,
-                        background: CYAN, padding: ".1rem .38rem",
-                        borderRadius: "2rem", letterSpacing: ".05em", whiteSpace: "nowrap" }}>BEST</span>
-                    )}
-                    <span className="tier-rate" style={{ fontSize: ".85rem", fontWeight: 700,
-                      color: t.best ? CYAN : "#475569",
-                      letterSpacing: "-.02em", whiteSpace: "nowrap" }}>{t.r}/claim</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div style={{ height: 1, background: "rgba(255,255,255,.06)" }} />
-            {/* Features */}
-            <div style={{ padding: "1.25rem 2rem", flex: 1, display: "flex", flexDirection: "column", gap: ".75rem" }}>
-              {msaFeatures.map((f, i) => (
-                <div key={i} style={{ display: "flex", gap: ".6rem", alignItems: "flex-start" }}>
-                  <Check size={13} color={CYAN} style={{ flexShrink: 0, marginTop: 3 }} />
-                  <span style={{ fontSize: ".83rem", color: "#94a3b8", lineHeight: 1.5 }}>{f.text}</span>
-                </div>
-              ))}
-            </div>
+
+            <SL>VOLUME TIER PRICING</SL>
+            <CI>First 10,000 claims — $0.55 / claim</CI>
+            <CI>Claims 10,001–50,000 — $0.45 / claim</CI>
+            <CI>Claims 50,001+ — $0.35 / claim</CI>
+
+            <Div />
+
+            <SL>INTEGRATIONS</SL>
+            <CI>Data delivery to your CRM</CI>
+            <CI>Approved claim data pushed automatically</CI>
+
+            <Div />
+
+            <SL>SUPPORT</SL>
+            <CI>Manual review with committed turnaround</CI>
+            <CI>Priority support</CI>
+            <CI>Annual agreement with defined terms</CI>
+
+            <Div />
+
+            <SL>COMPETITIVE INTELLIGENCE DASHBOARD</SL>
+            <CI>Top competitor products</CI>
+            <CI>Competitor by category</CI>
+            <CI>Competitor brand trend</CI>
+            <CI>Competitor detection rate</CI>
+            <CI>Top competitors by campaign</CI>
           </div>
         </div>
 
-        {/* Single centered CTA below both cards */}
-        <div className="rv td2" style={{ textAlign: "center", marginTop: "2rem" }}>
+        {/* CTA */}
+        <div className="rv td2" style={{ textAlign: "center", marginBottom: "1.25rem" }}>
           <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
             style={{ fontSize: "1rem", padding: ".875rem 2.5rem", display: "inline-flex" }}>
             Book a Demo <ArrowRight size={16} />
           </a>
         </div>
+
+        {/* Footer note */}
+        <div className="rv td3" style={{ textAlign: "center" }}>
+          <p style={{ fontSize: ".8rem", color: "#475569" }}>
+            All plans include Canadian data residency and PIPEDA compliance.
+          </p>
+        </div>
+
       </div>
     </section>
   );
