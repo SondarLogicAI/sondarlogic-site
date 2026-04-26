@@ -228,7 +228,7 @@ function Hero() {
 
         <p className="fu d2" style={{ color: "rgba(255,255,255,.5)", fontSize: "1.05rem",
           lineHeight: 1.75, maxWidth: 560, margin: "0 auto 2.5rem" }}>
-          Our Vision AI validates claims instantly, extracts full basket intelligence,
+          Our validation engine processes claims instantly, extracts full basket intelligence,
           and maps retailer performance across Canada. Zero setup fees. Zero hidden costs.
         </p>
 
@@ -276,7 +276,7 @@ function Workflow() {
     {
       icon: <ScanSearch size={22} strokeWidth={1.75} color={CYAN_D} />,
       num: "02", title: "Confidence Filter",
-      bullets: ["AI accuracy scoring", "Instant fraud & Photoshop detection"],
+      bullets: ["Automated accuracy scoring", "Instant fraud & Photoshop detection"],
     },
     {
       icon: <ShoppingCart size={22} strokeWidth={1.75} color={CYAN_D} />,
@@ -358,75 +358,140 @@ function Workflow() {
 
 /* Dashboard mockup for Deep Basket */
 function BasketMockup() {
-  const bars = [85, 62, 40, 55, 100, 78, 30, 45, 22];
-  const provs = ["BC","AB","SK","MB","ON","QC","NB","NS","NL"];
+  const T = CYAN_D, B = "#378add", P = "#7f77dd";
   return (
-    <div style={{ background: S900, borderRadius: "1.125rem", padding: "1.5rem",
-      border: "1px solid rgba(255,255,255,.07)",
-      boxShadow: "0 24px 64px rgba(0,0,0,.28)" }}>
-      <div style={{ display: "flex", justifyContent: "space-between",
-        alignItems: "center", marginBottom: "1.25rem" }}>
-        <span style={{ fontSize: ".68rem", fontWeight: 700, color: CYAN,
-          letterSpacing: ".1em" }}>COMMAND CENTER</span>
-        <div style={{ display: "flex", alignItems: "center", gap: ".4rem" }}>
-          <div style={{ width: 6, height: 6, borderRadius: "50%",
-            background: "#22c55e", animation: "pdot 2s infinite" }} />
-          <span style={{ fontSize: ".62rem", color: "#22c55e", fontWeight: 600 }}>LIVE</span>
+    <div style={{ background: "#fff", border: "0.5px solid rgba(0,0,0,0.09)", borderRadius: 14,
+      padding: "1.25rem", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: ".875rem" }}>
+        <span style={{ fontSize: ".62rem", fontWeight: 700, color: T, letterSpacing: ".08em" }}>CAMPAIGN INTELLIGENCE</span>
+        <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+          <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", animation: "pdot 2s infinite" }} />
+          <span style={{ fontSize: ".58rem", color: "#22c55e", fontWeight: 600 }}>LIVE</span>
         </div>
       </div>
       {/* KPIs */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
-        gap: ".6rem", marginBottom: "1.25rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: ".4rem", marginBottom: ".875rem" }}>
         {[
-          { l: "Claims Today",  v: "4,217" },
-          { l: "CAD Disbursed", v: "$186K"  },
-          { l: "Fraud Blocked", v: "$31.4K" },
+          { l: "Claims",    v: "1,000",  c: T       },
+          { l: "Value",     v: "$20K",   c: "#1d1d1f" },
+          { l: "Approval",  v: "91%",    c: T       },
+          { l: "Competitor",v: "12%",    c: "#1d1d1f" },
         ].map((k, i) => (
-          <div key={i} style={{ background: S800, borderRadius: ".6rem",
-            padding: ".75rem", border: "1px solid rgba(255,255,255,.05)" }}>
-            <div style={{ fontSize: ".56rem", color: "#475569",
-              letterSpacing: ".06em", marginBottom: ".3rem" }}>{k.l}</div>
-            <div style={{ fontSize: "1.05rem", fontWeight: 800,
-              color: "#fff", letterSpacing: "-.03em", lineHeight: 1 }}>{k.v}</div>
+          <div key={i} style={{ background: "#f5f5f7", borderRadius: 8, padding: ".45rem .5rem" }}>
+            <div style={{ fontSize: ".5rem", color: "#86868b", marginBottom: 2, letterSpacing: ".02em" }}>{k.l}</div>
+            <div style={{ fontSize: ".9rem", fontWeight: 600, color: k.c, letterSpacing: "-.02em", lineHeight: 1 }}>{k.v}</div>
           </div>
         ))}
       </div>
-      {/* Bar chart */}
-      <div style={{ background: S800, borderRadius: ".6rem", padding: ".875rem",
-        border: "1px solid rgba(255,255,255,.05)", marginBottom: ".75rem" }}>
-        <div style={{ fontSize: ".56rem", color: "#475569",
-          letterSpacing: ".08em", marginBottom: ".6rem" }}>PROVINCIAL PAYOUT VOLUME</div>
-        <div style={{ display: "flex", gap: "3px", alignItems: "flex-end", height: 50 }}>
-          {bars.map((h, i) => (
-            <div key={i} style={{ flex: 1, display: "flex",
-              flexDirection: "column", alignItems: "center", gap: "3px" }}>
-              <div style={{ width: "100%", height: `${h * .5}%`,
-                background: `linear-gradient(to top, ${CYAN_D}, ${BLUE})`,
-                borderRadius: "2px 2px 0 0", opacity: .85 }} />
-              <span style={{ fontSize: ".42rem", color: "#334155" }}>{provs[i]}</span>
+      {/* Campaign breakdown */}
+      <div style={{ marginBottom: ".75rem" }}>
+        <div style={{ fontSize: ".56rem", color: "#86868b", letterSpacing: ".06em", marginBottom: ".45rem" }}>CAMPAIGN BREAKDOWN</div>
+        {[
+          { l: "Campaign A", v: 622, pct: 100, c: B },
+          { l: "Campaign B", v: 272, pct: 43.7, c: T },
+          { l: "Campaign C", v: 106, pct: 17.0, c: P },
+        ].map((c, i) => (
+          <div key={i} style={{ marginBottom: i < 2 ? ".38rem" : 0 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: ".15rem" }}>
+              <span style={{ fontSize: ".6rem", color: "#1d1d1f" }}>{c.l}</span>
+              <span style={{ fontSize: ".6rem", color: "#86868b", fontWeight: 600 }}>{c.v}</span>
+            </div>
+            <div style={{ height: 5, background: "#f0f0f0", borderRadius: 3 }}>
+              <div style={{ height: "100%", width: `${c.pct}%`, background: c.c, borderRadius: 3 }} />
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Product categories */}
+      <div style={{ marginBottom: ".75rem" }}>
+        <div style={{ fontSize: ".56rem", color: "#86868b", letterSpacing: ".06em", marginBottom: ".45rem" }}>PRODUCT CATEGORIES</div>
+        {[
+          { l: "Category A", v: 421 },
+          { l: "Category B", v: 166 },
+          { l: "Category C", v: 106 },
+          { l: "Category D", v: 84  },
+          { l: "Category E", v: 35  },
+        ].map((c, i) => (
+          <div key={i} style={{ marginBottom: i < 4 ? ".3rem" : 0 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: ".12rem" }}>
+              <span style={{ fontSize: ".58rem", color: "#1d1d1f" }}>{c.l}</span>
+              <span style={{ fontSize: ".58rem", color: "#86868b" }}>{c.v}</span>
+            </div>
+            <div style={{ height: 4, background: "#f0f0f0", borderRadius: 2 }}>
+              <div style={{ height: "100%", width: `${(c.v / 421) * 100}%`, background: T, borderRadius: 2, opacity: .75 }} />
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Competitor products */}
+      <div>
+        <div style={{ fontSize: ".56rem", color: "#86868b", letterSpacing: ".06em", marginBottom: ".45rem" }}>TOP COMPETITOR PRODUCTS</div>
+        {[
+          ["Brand A — Product 1", 19],
+          ["Brand A — Product 2", 18],
+          ["Brand B — Product 1", 13],
+          ["Brand C — Product 1", 13],
+          ["Brand A — Product 3", 12],
+        ].map(([l, v], i) => (
+          <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: ".28rem 0", borderBottom: i < 4 ? "0.5px solid rgba(0,0,0,0.06)" : "none" }}>
+            <span style={{ fontSize: ".6rem", color: "#1d1d1f" }}>{l}</span>
+            <span style={{ fontSize: ".6rem", color: "#86868b", fontWeight: 600 }}>{v}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FraudMockup() {
+  const T = CYAN_D, A = "#f4a623", R = "#e24b4a";
+  return (
+    <div style={{ background: "#fff", border: "0.5px solid rgba(0,0,0,0.09)", borderRadius: 14,
+      padding: "1.25rem", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+      <div style={{ fontSize: ".62rem", fontWeight: 700, color: R, letterSpacing: ".08em", marginBottom: ".875rem" }}>CLAIM AUDIT RESULTS</div>
+      {/* Approval donut + legend */}
+      <div style={{ display: "flex", alignItems: "center", gap: "1.25rem", marginBottom: "1rem", paddingBottom: "1rem", borderBottom: "0.5px solid rgba(0,0,0,0.06)" }}>
+        <div style={{ flexShrink: 0,
+          width: 88, height: 88, borderRadius: "50%",
+          background: `conic-gradient(${T} 0% 91%, ${A} 91% 97%, ${R} 97% 100%)`,
+          display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: 58, height: 58, borderRadius: "50%", background: "#fff",
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontSize: ".9rem", fontWeight: 700, color: T, lineHeight: 1, letterSpacing: "-.02em" }}>91%</span>
+            <span style={{ fontSize: ".42rem", color: "#86868b", letterSpacing: ".02em" }}>APPROVED</span>
+          </div>
+        </div>
+        <div style={{ flex: 1 }}>
+          {[
+            { c: T, l: "Approved",         v: "91%" },
+            { c: A, l: "Pending re-upload", v: "6%"  },
+            { c: R, l: "Rejected",          v: "3%"  },
+          ].map((row, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: i < 2 ? 7 : 0 }}>
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: row.c, flexShrink: 0 }} />
+              <span style={{ fontSize: ".62rem", color: "#1d1d1f", flex: 1 }}>{row.l}</span>
+              <span style={{ fontSize: ".62rem", color: "#86868b", fontWeight: 600 }}>{row.v}</span>
             </div>
           ))}
         </div>
       </div>
-      {/* Competitor basket */}
-      <div style={{ background: S800, borderRadius: ".6rem", padding: ".875rem",
-        border: "1px solid rgba(255,255,255,.05)" }}>
-        <div style={{ fontSize: ".56rem", color: "#475569",
-          letterSpacing: ".08em", marginBottom: ".6rem" }}>COMPETITOR BASKET SHARE</div>
+      {/* Rejection reasons */}
+      <div>
+        <div style={{ fontSize: ".56rem", color: "#86868b", letterSpacing: ".06em", marginBottom: ".5rem" }}>REJECTION REASONS</div>
         {[
-          { b: "Competitor A", pct: 38 },
-          { b: "Competitor B", pct: 24 },
-          { b: "Other",        pct: 18 },
-        ].map((r, i) => (
-          <div key={i} style={{ marginBottom: i < 2 ? ".5rem" : 0 }}>
-            <div style={{ display: "flex", justifyContent: "space-between",
-              marginBottom: ".18rem" }}>
-              <span style={{ fontSize: ".6rem", color: "#94a3b8" }}>{r.b}</span>
-              <span style={{ fontSize: ".6rem", color: "#e2e8f0", fontWeight: 600 }}>{r.pct}%</span>
+          { l: "Duplicate submission", v: 10 },
+          { l: "Outside date range",   v: 8  },
+          { l: "Altered image",        v: 7  },
+          { l: "Product mismatch",     v: 5  },
+        ].map((row, i) => (
+          <div key={i} style={{ marginBottom: i < 3 ? ".4rem" : 0 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: ".15rem" }}>
+              <span style={{ fontSize: ".6rem", color: "#1d1d1f" }}>{row.l}</span>
+              <span style={{ fontSize: ".6rem", color: "#86868b", fontWeight: 600 }}>{row.v}</span>
             </div>
-            <div style={{ height: 4, background: "#334155", borderRadius: 2 }}>
-              <div style={{ height: "100%", width: `${r.pct}%`,
-                background: `linear-gradient(90deg, ${CYAN_D}, ${BLUE})`, borderRadius: 2 }} />
+            <div style={{ height: 5, background: "#f0f0f0", borderRadius: 3 }}>
+              <div style={{ height: "100%", width: `${(row.v / 10) * 100}%`, background: R, borderRadius: 3, opacity: .75 }} />
             </div>
           </div>
         ))}
@@ -435,157 +500,89 @@ function BasketMockup() {
   );
 }
 
-/* Fraud card mockup */
-function FraudMockup() {
-  return (
-    <div style={{ background: "#fff", border: "1px solid #e2e8f0",
-      borderRadius: "1.125rem", padding: "1.75rem",
-      boxShadow: "0 8px 40px rgba(0,0,0,.06)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: ".5rem", marginBottom: "1.5rem" }}>
-        <Shield size={17} color={CYAN_D} />
-        <span style={{ fontSize: ".68rem", fontWeight: 700, color: CYAN_D,
-          letterSpacing: ".08em" }}>FRAUD INTELLIGENCE LAYER</span>
-      </div>
-      {[
-        { l: "Photoshop / Canva Detection", r: "BLOCKED",  n: "1,204", ok: false },
-        { l: "Duplicate Receipt Flag",      r: "BLOCKED",  n: "842",   ok: false },
-        { l: "Date Manipulation",           r: "FLAGGED",  n: "317",   ok: null  },
-        { l: "Valid — High Confidence",     r: "CLEARED",  n: "41,887",ok: true  },
-      ].map((row, i) => (
-        <div key={i} style={{ display: "flex", justifyContent: "space-between",
-          alignItems: "center", padding: ".65rem 0",
-          borderBottom: i < 3 ? "1px solid #f1f5f9" : "none" }}>
-          <span style={{ fontSize: ".84rem", color: "#475569" }}>{row.l}</span>
-          <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }}>
-            <span style={{ fontSize: ".78rem", fontWeight: 700, color: S900 }}>{row.n}</span>
-            <span style={{
-              fontSize: ".58rem", fontWeight: 700, letterSpacing: ".06em",
-              padding: ".14rem .5rem", borderRadius: ".25rem",
-              color: row.ok === true ? "#16a34a" : row.ok === null ? "#d97706" : "#dc2626",
-              background: row.ok === true ? "#f0fdf4" : row.ok === null ? "#fffbeb" : "#fef2f2",
-            }}>{row.r}</span>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* Provincial Heatmap — grid-based with SVG Canada outline */
 function MapMockup() {
-  // Provinces with relative positions on a simplified Canada grid
-  // Grid is 10 cols × 5 rows; col/row are 0-indexed
-  const provinces = [
-    { id: "YT",  col: 1, row: 0, heat: 0.15, v: "$4K"   },
-    { id: "NT",  col: 2, row: 0, heat: 0.20, v: "$6K"   },
-    { id: "NU",  col: 4, row: 0, heat: 0.10, v: "$3K"   },
-    { id: "BC",  col: 1, row: 1, heat: 0.72, v: "$41K"  },
-    { id: "AB",  col: 2, row: 1, heat: 0.55, v: "$29K"  },
-    { id: "SK",  col: 3, row: 1, heat: 0.38, v: "$18K"  },
-    { id: "MB",  col: 4, row: 1, heat: 0.42, v: "$22K"  },
-    { id: "ON",  col: 5, row: 1, heat: 1.00, v: "$94K"  },
-    { id: "QC",  col: 6, row: 1, heat: 0.78, v: "$67K"  },
-    { id: "NB",  col: 7, row: 2, heat: 0.28, v: "$12K"  },
-    { id: "NS",  col: 8, row: 2, heat: 0.26, v: "$11K"  },
-    { id: "PE",  col: 9, row: 2, heat: 0.14, v: "$5K"   },
-    { id: "NL",  col: 8, row: 1, heat: 0.22, v: "$9K"   },
-  ];
+  const timelineData = [42,68,72,55,60,65,58,70,62,54,61,66,50,55,47,53];
+  const W = 380, H = 68, PAD = 4;
+  const pts = timelineData.map((v, i) => {
+    const x = (i / 15) * W;
+    const y = PAD + (1 - v / 90) * H;
+    return [x.toFixed(1), y.toFixed(1)];
+  });
+  const lineStr = pts.map(p => p.join(",")).join(" ");
+  const areaPath = `M ${pts[0].join(",")} L ${pts.slice(1).map(p => p.join(",")).join(" L ")} L ${pts[15][0]},${PAD + H} L ${pts[0][0]},${PAD + H} Z`;
 
-  function heatColor(h) {
-    // 0 = dark slate, 1 = bright cyan
-    const r = Math.round(13 + h * (45 - 13));
-    const g = Math.round(148 + h * (212 - 148));
-    const b = Math.round(136 + h * (191 - 136));
-    return `rgba(${r},${g},${b},${0.15 + h * 0.75})`;
-  }
-
-  const CELL = 38; // px per cell
-  const COLS = 10;
-  const ROWS = 4;
+  const B = "#378add", C2 = "#d85a30", T = CYAN_D, P = "#7f77dd", A = "#f4a623", G = "#888780";
+  const provGrad = `conic-gradient(${B} 0% 44.8%, ${C2} 44.8% 57.9%, ${T} 57.9% 68.7%, ${P} 68.7% 78.3%, ${A} 78.3% 86.1%, ${G} 86.1% 100%)`;
 
   return (
-    <div style={{ background: S900, borderRadius: "1.125rem", padding: "1.25rem",
-      border: "1px solid rgba(255,255,255,.07)", boxShadow: "0 24px 64px rgba(0,0,0,.28)" }}>
-      <div style={{ display: "flex", justifyContent: "space-between",
-        alignItems: "center", marginBottom: ".875rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: ".4rem" }}>
-          <MapPin size={13} color={CYAN} />
-          <span style={{ fontSize: ".65rem", fontWeight: 700, color: CYAN, letterSpacing: ".1em" }}>
-            PROVINCIAL PAYOUT HEATMAP
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: ".35rem" }}>
+    <div style={{ background: "#fff", border: "0.5px solid rgba(0,0,0,0.09)", borderRadius: 14,
+      padding: "1.25rem", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: ".875rem" }}>
+        <span style={{ fontSize: ".62rem", fontWeight: 700, color: "#1d1d1f", letterSpacing: ".08em" }}>MARKET INTELLIGENCE</span>
+        <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
           <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", animation: "pdot 2s infinite" }} />
           <span style={{ fontSize: ".58rem", color: "#22c55e", fontWeight: 600 }}>LIVE</span>
         </div>
       </div>
 
-      {/* Heatmap grid */}
-      <div style={{ position: "relative", height: ROWS * CELL + 8,
-        marginBottom: ".875rem", overflowX: "auto" }}>
-        {/* Grid background cells */}
-        {Array.from({ length: ROWS }, (_, row) =>
-          Array.from({ length: COLS }, (_, col) => (
-            <div key={`${row}-${col}`} style={{
-              position: "absolute",
-              left: col * CELL, top: row * CELL,
-              width: CELL - 2, height: CELL - 2,
-              borderRadius: "4px",
-              background: "rgba(255,255,255,.02)",
-              border: "1px solid rgba(255,255,255,.03)",
-            }} />
-          ))
-        )}
-        {/* Province heat cells */}
-        {provinces.map((p, i) => (
-          <div key={i} style={{
-            position: "absolute",
-            left: p.col * CELL, top: p.row * CELL,
-            width: CELL - 2, height: CELL - 2,
-            borderRadius: "4px",
-            background: heatColor(p.heat),
-            border: `1px solid rgba(45,212,191,${p.heat * 0.4 + 0.08})`,
-            display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "center", gap: "1px",
-            cursor: "default",
-            boxShadow: p.heat > 0.7 ? `0 0 ${Math.round(p.heat * 14)}px rgba(45,212,191,${p.heat * 0.35})` : "none",
-            transition: "box-shadow .2s",
-          }}>
-            <span style={{ fontSize: ".5rem", fontWeight: 800, color: "#fff",
-              letterSpacing: ".02em", textShadow: "0 1px 2px rgba(0,0,0,.5)" }}>{p.id}</span>
-            <span style={{ fontSize: ".42rem", color: "rgba(255,255,255,.6)",
-              fontWeight: 600 }}>{p.v}</span>
+      {/* Province donut + legend */}
+      <div style={{ display: "flex", gap: "1rem", marginBottom: ".875rem", paddingBottom: ".875rem", borderBottom: "0.5px solid rgba(0,0,0,0.06)" }}>
+        <div style={{ flexShrink: 0 }}>
+          <div style={{ fontSize: ".52rem", color: "#86868b", letterSpacing: ".06em", marginBottom: ".4rem" }}>BY PROVINCE</div>
+          <div style={{ width: 68, height: 68, borderRadius: "50%", background: provGrad, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: 44, height: 44, borderRadius: "50%", background: "#fff" }} />
+          </div>
+        </div>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 5 }}>
+          {[
+            { c: B,  l: "Ontario", v: "44.8%" },
+            { c: C2, l: "BC",      v: "13.1%" },
+            { c: T,  l: "Alberta", v: "10.8%" },
+            { c: P,  l: "Quebec",  v: "9.6%"  },
+            { c: G,  l: "Other",   v: "21.7%" },
+          ].map((r, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ width: 7, height: 7, borderRadius: 2, background: r.c, flexShrink: 0 }} />
+              <span style={{ fontSize: ".6rem", color: "#1d1d1f", flex: 1 }}>{r.l}</span>
+              <span style={{ fontSize: ".6rem", color: "#86868b", fontWeight: 600 }}>{r.v}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Top retail locations */}
+      <div style={{ marginBottom: ".875rem", paddingBottom: ".875rem", borderBottom: "0.5px solid rgba(0,0,0,0.06)" }}>
+        <div style={{ fontSize: ".52rem", color: "#86868b", letterSpacing: ".06em", marginBottom: ".4rem" }}>TOP RETAIL LOCATIONS</div>
+        {[
+          { l: "Location A", v: 46 },
+          { l: "Location B", v: 45 },
+          { l: "Location C", v: 42 },
+          { l: "Location D", v: 41 },
+        ].map((r, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: ".5rem", marginBottom: i < 3 ? ".35rem" : 0 }}>
+            <span style={{ fontSize: ".58rem", color: "#86868b", width: 64, flexShrink: 0 }}>{r.l}</span>
+            <div style={{ flex: 1, height: 5, background: "#f0f0f0", borderRadius: 3 }}>
+              <div style={{ height: "100%", width: `${((r.v - 38) / 8) * 100}%`, background: B, borderRadius: 3 }} />
+            </div>
+            <span style={{ fontSize: ".58rem", color: "#86868b", fontWeight: 600, width: 18, textAlign: "right" }}>{r.v}</span>
           </div>
         ))}
       </div>
 
-      {/* Legend */}
-      <div style={{ display: "flex", alignItems: "center", gap: ".5rem", marginBottom: ".875rem" }}>
-        <span style={{ fontSize: ".6rem", color: "#475569" }}>Low</span>
-        <div style={{ flex: 1, height: 4, borderRadius: 2,
-          background: `linear-gradient(90deg, rgba(13,148,136,.2), ${CYAN_D}, ${CYAN})` }} />
-        <span style={{ fontSize: ".6rem", color: "#475569" }}>High</span>
+      {/* Submission timeline — SVG */}
+      <div>
+        <div style={{ fontSize: ".52rem", color: "#86868b", letterSpacing: ".06em", marginBottom: ".4rem" }}>SUBMISSION TIMELINE — 16 WEEKS</div>
+        <svg viewBox={`0 0 ${W} ${PAD + H + 14}`} style={{ width: "100%", height: "auto" }}>
+          <path d={areaPath} fill="rgba(13,148,136,0.08)" />
+          <polyline points={lineStr} fill="none" stroke={T} strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" />
+          {pts.map((p, i) => (
+            <circle key={i} cx={p[0]} cy={p[1]} r="2" fill={T} stroke="#fff" strokeWidth="1" />
+          ))}
+          {[0, 3, 7, 11, 15].map(idx => (
+            <text key={idx} x={(idx / 15) * W} y={PAD + H + 11} textAnchor="middle" fontSize="7" fill="#86868b">W{idx + 1}</text>
+          ))}
+        </svg>
       </div>
-
-      {/* Top retailer callouts */}
-      {[
-        { name: "Canadian Tire", region: "National",     v: "$214K", trend: "+8.4%" },
-        { name: "NAPA Auto",     region: "Western",      v: "$98K",  trend: "+12%" },
-        { name: "Costco",        region: "ON & QC",      v: "$187K", trend: "+6.1%" },
-      ].map((r, i) => (
-        <div key={i} style={{ display: "flex", justifyContent: "space-between",
-          alignItems: "center", padding: ".45rem 0",
-          borderTop: "1px solid rgba(255,255,255,.04)" }}>
-          <div>
-            <span style={{ fontSize: ".75rem", color: "#e2e8f0", fontWeight: 600 }}>{r.name}</span>
-            <span style={{ fontSize: ".68rem", color: "#475569", marginLeft: ".35rem" }}>{r.region}</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
-            <span style={{ fontSize: ".78rem", fontWeight: 700, color: "#fff" }}>{r.v}</span>
-            <span style={{ fontSize: ".62rem", color: "#22c55e", fontWeight: 600 }}>{r.trend}</span>
-          </div>
-        </div>
-      ))}
     </div>
   );
 }
@@ -600,7 +597,7 @@ function CommandCenter() {
       pill: "DEEP BASKET EXTRACTION",
       title: "See every item in the cart, not just yours.",
       bullets: [
-        "Our Vision AI reads the full receipt: competitor brands, SKUs, and basket totals extracted per claim",
+        "Our validation engine reads the full receipt: competitor brands, SKUs, and basket totals extracted per claim",
         "Understand what else your customers buy alongside your product at no extra cost — it's included in your platform fee",
       ],
       visual: <BasketMockup />,
@@ -610,7 +607,7 @@ function CommandCenter() {
       pill: "FRAUD INTELLIGENCE",
       title: "Every deceptive submission blocked before payout.",
       bullets: [
-        "Our Vision AI detects Photoshop edits, Canva templates, duplicate receipts, and screenshot fraud in real time",
+        "Our system detects Photoshop edits, Canva templates, duplicate receipts, and screenshot fraud in real time",
         "$0 exception fees on rejected or flagged claims — fraud costs you nothing extra",
       ],
       visual: <FraudMockup />,
@@ -1132,11 +1129,11 @@ const ENT_FAQ = [
   { q: "Can we customize payout timing and branding?",
     a: "Yes. Through our API routing, payout schedules are completely customizable. We can trigger instant payouts the second a receipt is validated, or batch them for flexible payout schedules on your exact cadence — weekly, monthly, or custom." },
   { q: "How fast can we launch a new promotional campaign?",
-    a: "Once the Pilot Agreement is signed, we typically go live within 7–10 business days. For Enterprise MSA clients, our Vision AI is context-aware and does not require retraining on new receipt layouts for each retailer." },
+    a: "Once the Pilot Agreement is signed, we typically go live within 7–10 business days. Our validation engine is context-aware and does not require retraining on new receipt layouts for each retailer." },
   { q: "Do you offer an MSA?",
     a: "Yes, we provide standard MSAs and custom SLAs for our enterprise partners." },
-  { q: "How do you handle unclaimed funds?",
-    a: "We recapture expired promotional rewards after 90 days and credit 50% back to your next campaign budget." },
+  { q: "How does budget reconciliation work at program end?",
+    a: "Any unissued Reward Procurement Budget remaining at program close is reconciled and returned to you within 30 days. Once a digital reward is successfully transmitted to a validated consumer, that allocation is fully deployed. SondarLogic acts as a marketing fulfillment agency procuring and distributing promotional inventory on your behalf — not as a financial intermediary." },
   { q: "Can you handle 100k+ claims in a day?",
     a: "Our serverless infrastructure scales instantly to handle massive promotional spikes without processing delays." },
   { q: "What if a customer uploads a blurry receipt?",
@@ -1161,7 +1158,7 @@ function EnterpriseFAQ() {
           </h2>
           <p style={{ color: "#64748b", fontSize: ".95rem", maxWidth: 520,
             margin: "0 auto", lineHeight: 1.65 }}>
-            Rigorous security, Canadian data residency, and automated budget recovery for Tier-1 brands.
+            Rigorous security, Canadian data residency, and transparent campaign reporting for Tier-1 brands.
           </p>
         </div>
         <div className="rv td1">
@@ -1337,7 +1334,7 @@ function Footer({ setActiveView }) {
         {/* Legal disclaimer – small print */}
         <p style={{ textAlign: "center", fontSize: ".65rem", color: "#64748b",
           lineHeight: 1.6, maxWidth: 860, margin: "0 auto" }}>
-          <span style={{ fontWeight: 600 }}>Promotional Reward Policy:</span> All rebates issued via SondarLogic are classified as Promotional Rewards. These non-purchased incentives carry a standard 90-day claim period. Unclaimed funds are recaptured for promotional budget reallocation.
+          <span style={{ fontWeight: 600 }}>Promotional Reward Policy:</span> All rebates issued via SondarLogic are classified as Promotional Rewards (non-purchased incentives) procured and distributed by SondarLogic as a contracted marketing fulfillment service on behalf of the sponsoring brand. Digital Visa Gift Cards carry a twelve-month validity period from date of issuance. SondarLogic operates as a marketing automation and fulfillment agency and does not provide financial services.
         </p>
       </div>
     </footer>
@@ -1388,7 +1385,7 @@ function PrivacyPolicy({ onBack }) {
       <h2 style={lh2}>Information We Collect</h2>
       <p style={lbs}>We act as a Data Processor on behalf of our enterprise clients. We collect end-consumer data (names, email addresses, geographic location), transaction data (receipt images, purchase details), and B2B client data (billing details, usage metrics).</p>
       <h2 style={lh2}>How We Use Your Information</h2>
-      <p style={lbs}>We use collected information for claim validation via Enterprise Level Vision AI, digital payout routing, anonymized business intelligence reporting, and automated customer support updates.</p>
+      <p style={lbs}>We use collected information for claim validation via our proprietary validation engine, digital payout routing, anonymized business intelligence reporting, and automated customer support updates.</p>
       <h2 style={lh2}>Data Storage and Localization</h2>
       <p style={lbs}>All receipt data and PII are hosted on AWS servers physically located within Canada. We maintain strict data residency protocols to ensure Canadian consumer data does not cross borders unnecessarily.</p>
       <h2 style={lh2}>Data Sharing</h2>
@@ -1409,7 +1406,7 @@ function TermsOfService({ onBack }) {
       <h2 style={lh2}>Acceptance of Terms</h2>
       <p style={lbs}>By accessing or using the Sondar Logic AI platform, API, or dashboard, you agree to be bound by these Terms of Service.</p>
       <h2 style={lh2}>Service Description</h2>
-      <p style={lbs}>Sondar Logic AI provides an automated, AI-driven receipt validation and rebate disbursement engine including Enterprise Level Vision AI, fraud detection, deep basket data extraction, and API routing for digital payouts.</p>
+      <p style={lbs}>Sondar Logic AI provides an automated, proprietary receipt validation and rebate disbursement engine including automated fraud detection, deep basket data extraction, and API routing for digital payouts.</p>
       <h2 style={lh2}>Accuracy and Manual Review SLA</h2>
       <p style={lbs}>Claims scoring 95% or higher are automatically approved and routed for instant payout. Claims scoring below the threshold are routed to a human review queue with a 3 business day audit SLA.</p>
       <h2 style={lh2}>Client Obligations and Consent</h2>
