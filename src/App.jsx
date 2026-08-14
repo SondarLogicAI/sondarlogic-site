@@ -120,7 +120,7 @@ function Navbar({ audience, setAudience }) {
         height:"4rem", gap:"1.5rem" }}>
         <div style={{ fontSize:"1.05rem", fontWeight:800,
           letterSpacing:"-.03em", color:"#fff", flexShrink:0 }}>
-          Sondar <span style={{ color:CYAN }}>Logic</span>
+          Sondar <span style={{ color:CYAN }}>Logic AI</span>
         </div>
         {/* toggle */}
         <div style={{ display:"flex", background:"rgba(255,255,255,.06)",
@@ -176,7 +176,7 @@ function Hero({ audience, setAudience }) {
         { v:"Same day", l:"Visa Giftcard payout"  },
         { v:"< 8s",     l:"claim to decision"      },
         { v:"10+",      l:"data points per claim"  },
-        { v:"$0",       l:"add-on fees"            },
+        { v:"$0",       l:"exception fees ever"    },
       ],
       cta1:{ label:"Book a Demo",           href:CALENDLY,          ext:true  },
       cta2:{ label:"Email Us",              href:`mailto:${EMAIL}`, ext:false, icon:true },
@@ -188,7 +188,7 @@ function Hero({ audience, setAudience }) {
       sub:"Plug our validation and payout engine underneath your existing programs. Reduce manual review cost. Add instant Visa Giftcard payout as a premium your clients are already asking for.",
       stats:[
         { v:"< 8s",     l:"per claim validated"    },
-        { v:"$0",       l:"add-on fees"         },
+        { v:"$0",       l:"exception fees"         },
         { v:"10+",      l:"data fields returned"   },
         { v:"Same day", l:"payout execution"       },
       ],
@@ -810,7 +810,7 @@ function CommandCenter() {
       bullets:["Every receipt is read in full — competitor brands, complementary products, service line items, and total purchase value extracted per claim automatically","Understand what else your customers buy alongside your product at no extra cost — basket intelligence is included in every plan"],
       visual:<BasketMockup /> },
     { textLeft:false, pill:"FRAUD INTELLIGENCE", title:"Every deceptive submission blocked before payout.",
-      bullets:["Our system detects digitally edited images, templated submissions, duplicate receipts, and screenshot fraud in real time","Fraud protection, re-uploads, and manual review are all covered in your per claim rate — nothing billed separately"],
+      bullets:["Our system detects digitally edited images, templated submissions, duplicate receipts, and screenshot fraud in real time","$0 exception fees on rejected or flagged claims — fraud protection is included at no extra charge"],
       visual:<FraudMockup /> },
     { textLeft:true, pill:"MARKET INTELLIGENCE", title:"Know exactly where your product is selling.",
       bullets:["Track claim volume by region and location with postal code precision, updated live across all active campaigns","Understand geographic distribution, top performing markets, and submission trends — motor oil, paint, pet food, tires — every category"],
@@ -872,11 +872,11 @@ function Pricing() {
           <Pill dark>PRICING</Pill>
           <h2 style={{ fontSize:"clamp(1.7rem,3.5vw,2.5rem)", fontWeight:800,
             letterSpacing:"-.035em", color:"#fff", marginBottom:".75rem" }}>
-            Transparent pricing model. Custom quotes on request.
+            Simple Pricing. Built in Intelligence.
           </h2>
           <p style={{ color:"rgba(255,255,255,.4)", fontSize:".93rem",
             maxWidth:440, margin:"0 auto", lineHeight:1.65 }}>
-            All-inclusive per claim rate. Nothing billed separately. Book a call for a custom quote.
+            One flat rate. No exception fees. No surprises.
           </p>
         </div>
         <div className="rv td1 pcols" style={{ display:"grid",
@@ -890,10 +890,12 @@ function Pricing() {
               letterSpacing:".12em", marginBottom:".75rem" }}>SINGLE CAMPAIGN PILOT</div>
             <div style={{ marginBottom:".35rem" }}>
               <span style={{ fontSize:"2rem", fontWeight:900, color:CYAN,
-                letterSpacing:"-.04em" }}>No Platform Fee</span>
+                letterSpacing:"-.04em" }}>$500</span>
+              <span style={{ fontSize:".9rem", color:"rgba(255,255,255,.35)",
+                marginLeft:".3rem" }}>/ month</span>
             </div>
             <div style={{ fontSize:".85rem", color:CYAN, fontWeight:600,
-              marginBottom:"1.25rem" }}>Flat per claim rate · No long-term commitment</div>
+              marginBottom:"1.25rem" }}>$1.25 per processed claim</div>
             <div style={{ height:".5px", background:"rgba(255,255,255,.07)",
               marginBottom:"1rem" }} />
             {[
@@ -937,10 +939,12 @@ function Pricing() {
               marginBottom:".75rem" }}>ENTERPRISE MULTI CAMPAIGN</div>
             <div style={{ marginBottom:".35rem" }}>
               <span style={{ fontSize:"2rem", fontWeight:900, color:CYAN,
-                letterSpacing:"-.04em" }}>Monthly Platform Fee</span>
+                letterSpacing:"-.04em" }}>$1,500</span>
+              <span style={{ fontSize:".9rem", color:"rgba(255,255,255,.35)",
+                marginLeft:".3rem" }}>/ month</span>
             </div>
             <div style={{ fontSize:".85rem", color:CYAN, fontWeight:600,
-              marginBottom:"1.25rem" }}>Volume tiered per claim rate · Scales as you grow</div>
+              marginBottom:"1.25rem" }}>$0.55 – $0.95 per claim (volume tiered)</div>
             <div style={{ background:"rgba(45,212,191,.07)",
               border:"1px solid rgba(45,212,191,.18)", borderRadius:".5rem",
               padding:".4rem .75rem", marginBottom:"1rem" }}>
@@ -951,7 +955,7 @@ function Pricing() {
             {[
               "Unlimited campaigns across all brands",
               "Multiple submission forms",
-              "Rates decrease automatically as monthly volume scales",
+              "Volume tiered from $0.55 – $0.95 per claim",
               "Claim data delivered to your CRM automatically",
               "Custom dashboard panels per brand request",
               "Manual review with committed SLA",
@@ -996,9 +1000,9 @@ function WhySondarLogic() {
       body:"Every receipt contains a complete purchase picture — what else was bought, what competitor products were present, what services accompanied the sale. Legacy processors give you a yes or a no.",
       stat:"10+", statLabel:"data points per claim" },
     { icon:<Zap size={24} strokeWidth={1.75} color={CYAN}/>,
-      title:"One rate. Everything included.",
-      body:"Blurry receipts trigger automated re-upload. Duplicates caught automatically. Fraud flagged without a reviewer. Re-uploads, exception handling, and manual review are all covered in your per claim rate.",
-      stat:"$0", statLabel:"add-on fees" },
+      title:"Zero exception billing.",
+      body:"Blurry receipts trigger automated re-upload. Duplicates caught automatically. Fraud flagged without a reviewer. Every one of those is a billable event with a legacy processor.",
+      stat:"$0", statLabel:"exception fees ever" },
   ];
   return (
     <section style={{ background:S950, padding:"2.5rem 0 4rem",
@@ -1052,13 +1056,13 @@ function ProcessingPartners() {
   const capabilities = [
     { icon:<Zap size={20} strokeWidth={1.75} color={CYAN}/>,
       title:"Reduce manual review cost",
-      body:"Our validation engine automates every clean claim — receipt reading, SKU extraction, fraud detection, and duplicate blocking. Your team handles exceptions only. Your cost per claim drops as volume scales." },
+      body:"Our validation engine automates every clean claim — receipt reading, SKU extraction, fraud detection, and duplicate blocking. Your team handles exceptions only. Your cost per claim drops without changing your client billing." },
     { icon:<Banknote size={20} strokeWidth={1.75} color={CYAN}/>,
       title:"Offer instant digital payout as a premium",
       body:"Replace the paper cheque with an instant Visa Giftcard the same day a claim is approved. A premium your clients will pay more for — and a consumer experience that sets you apart from every other processor in the market." },
     { icon:<BarChart3 size={20} strokeWidth={1.75} color={CYAN}/>,
       title:"Deliver data your clients have never had",
-      body:"Basket intelligence, competitor product detection, service correlation — structured data extracted from every receipt, delivered back to your platform in real time. Insights your clients have never had access to before." },
+      body:"Basket intelligence, competitor product detection, service correlation — structured data extracted from every receipt, delivered back to your platform in real time. Your clients get insights no legacy processor has ever provided." },
   ];
   return (
     <section id="partners" style={{ background:S900, padding:"4rem 0",
@@ -1108,7 +1112,7 @@ function ProcessingPartners() {
               and a premium instant payout product your clients are already asking for.
             </p>
             <div style={{ marginTop:"1.25rem", display:"flex", gap:"1.5rem", flexWrap:"wrap" }}>
-              {[{v:"< 8s",l:"per claim validated"},{v:"$0",l:"add-on fees"},{v:"10+",l:"data fields returned"}].map((s,i) => (
+              {[{v:"< 8s",l:"per claim validated"},{v:"$0",l:"exception fees"},{v:"10+",l:"data fields returned"}].map((s,i) => (
                 <div key={i}>
                   <div style={{ fontSize:"1.4rem", fontWeight:900, color:CYAN,
                     letterSpacing:"-.04em", lineHeight:1 }}>{s.v}</div>
@@ -1293,7 +1297,7 @@ function Footer({ setActiveView }) {
           <div style={{ maxWidth:300 }}>
             <div style={{ fontSize:"1.05rem", fontWeight:800, color:"#fff",
               letterSpacing:"-.03em", marginBottom:".75rem" }}>
-              Sondar <span style={{ color:CYAN_D }}>Logic</span>
+              Sondar <span style={{ color:CYAN_D }}>Logic AI</span>
             </div>
             <p style={{ fontSize:".875rem", color:"rgba(255,255,255,.3)",
               lineHeight:1.7, marginBottom:"1.25rem" }}>
@@ -1338,7 +1342,7 @@ function Footer({ setActiveView }) {
         <div style={{ borderTop:"1px solid rgba(255,255,255,.05)",
           paddingTop:"1.25rem", textAlign:"center", marginBottom:".6rem" }}>
           <span style={{ fontSize:".76rem", color:"rgba(255,255,255,.15)" }}>
-            © 2026 Sondar Logic. Built in Burlington, Ontario.
+            © 2026 Sondar Logic AI. Built in Burlington, Ontario.
           </span>
         </div>
         <p style={{ textAlign:"center", fontSize:".65rem", color:"#475569",
@@ -1392,7 +1396,7 @@ function PrivacyPolicy({ onBack }) {
   return (
     <LegalPage title="Privacy Policy" effectiveDate="March 2026" onBack={onBack}>
       <h2 style={lh2s}>Introduction</h2>
-      <p style={lbs}>Sondar Logic, headquartered in Burlington, Ontario, provides an automated rebate validation and fulfillment platform. This Privacy Policy outlines how we collect, use, disclose, and safeguard personal information in compliance with PIPEDA.</p>
+      <p style={lbs}>Sondar Logic AI, headquartered in Burlington, Ontario, provides an automated rebate validation and fulfillment platform. This Privacy Policy outlines how we collect, use, disclose, and safeguard personal information in compliance with PIPEDA.</p>
       <h2 style={lh2s}>Information We Collect</h2>
       <p style={lbs}>We act as a Data Processor on behalf of our enterprise clients. We collect end-consumer data (names, email addresses, geographic location), transaction data (receipt images, purchase details), and B2B client data (billing details, usage metrics).</p>
       <h2 style={lh2s}>How We Use Your Information</h2>
@@ -1404,7 +1408,7 @@ function PrivacyPolicy({ onBack }) {
       <h2 style={lh2s}>Security</h2>
       <p style={lbs}>We employ AES-256 encryption at rest and TLS 1.2+ in transit.</p>
       <h2 style={lh2s}>Contact Us</h2>
-      <p style={lbs}>Sondar Logic, Burlington, Ontario. <a href={`mailto:${EMAIL}`} style={{ color:CYAN_D, textDecoration:"none" }}>{EMAIL}</a></p>
+      <p style={lbs}>Sondar Logic AI, Burlington, Ontario. <a href={`mailto:${EMAIL}`} style={{ color:CYAN_D, textDecoration:"none" }}>{EMAIL}</a></p>
     </LegalPage>
   );
 }
@@ -1413,13 +1417,13 @@ function TermsOfService({ onBack }) {
   return (
     <LegalPage title="Terms of Service" effectiveDate="March 2026" onBack={onBack}>
       <h2 style={lh2s}>Acceptance of Terms</h2>
-      <p style={lbs}>By accessing or using the Sondar Logic platform, API, or dashboard, you agree to be bound by these Terms of Service.</p>
+      <p style={lbs}>By accessing or using the Sondar Logic AI platform, API, or dashboard, you agree to be bound by these Terms of Service.</p>
       <h2 style={lh2s}>Service Description</h2>
-      <p style={lbs}>Sondar Logic provides an automated, proprietary receipt validation and rebate disbursement engine including fraud detection, basket data extraction, and API routing for digital payouts.</p>
+      <p style={lbs}>Sondar Logic AI provides an automated, proprietary receipt validation and rebate disbursement engine including fraud detection, basket data extraction, and API routing for digital payouts.</p>
       <h2 style={lh2s}>Accuracy and Manual Review</h2>
       <p style={lbs}>Claims scoring above our confidence threshold are automatically approved. Claims below threshold are routed to a human review queue with a 3 business day SLA.</p>
       <h2 style={lh2s}>Fees and Payout Funding</h2>
-      <p style={lbs}>Clients are billed a flat monthly platform license fee plus per-claim processing. All-inclusive per claim rate covers exception handling. Clients maintain sufficient payout funding with our Canadian payment partner.</p>
+      <p style={lbs}>Clients are billed a flat monthly platform license fee plus per-claim processing. No exception fees on rejected claims. Clients maintain sufficient payout funding with our Canadian payment partner.</p>
       <h2 style={lh2s}>Data Ownership</h2>
       <p style={lbs}>SondarLogic retains all IP rights to the platform. The Client retains all rights to their consumer data and basket intelligence provided via the platform.</p>
       <h2 style={lh2s}>Limitation of Liability</h2>
