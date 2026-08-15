@@ -483,12 +483,222 @@ function JourneySection() {
             How it works
           </span>
           <h2 style={{ fontSize: "clamp(1.7rem,3.4vw,2.5rem)", fontWeight: 800, color: "#fff", lineHeight: 1.12, margin: "1rem auto .8rem", maxWidth: 760, letterSpacing: "-.02em" }}>
-            One scan turns a receipt into an approved claim<br />and a customer you can market to
+            One receipt. Under 8 seconds.<br /><span className="grad-text">Ten insights. Instant payout.</span>
           </h2>
           <p style={{ fontSize: "1.05rem", color: MUTED, maxWidth: 620, margin: "0 auto 1.4rem", lineHeight: 1.55 }}>
-            A real rebate claim, running through the engine. Every field it reads becomes either a decision or a marketing signal.
+            The four steps at a glance, then the same scan running live on a real claim below.
           </p>
-          {/* scenario toggle */}
+        </div>
+
+        {/* ── 4-step overview strip ── */}
+        <div className="rv td1 journey-grid" style={{
+          display:"grid",
+          gridTemplateColumns:"1fr 28px 1fr 28px 1fr 28px 1fr",
+          alignItems:"center", gap:0, marginBottom:"3rem" }}>
+
+          {/* Step 1 — Phone scan */}
+          <div style={{ background:S800, border:"1px solid rgba(45,212,191,.25)",
+            borderRadius:"1.25rem", padding:"1.5rem", textAlign:"center",
+            minHeight:"220px", display:"flex", flexDirection:"column", alignItems:"center" }}>
+            <div style={{ fontSize:".52rem", fontWeight:700, color:CYAN,
+              letterSpacing:".12em", marginBottom:"1rem" }}>STEP 1</div>
+            {/* Phone */}
+            <div style={{ width:68, height:84, margin:"0 auto 1rem",
+              background:"#1a1f2e", borderRadius:".875rem",
+              border:"2px solid rgba(255,255,255,.15)", position:"relative",
+              display:"flex", alignItems:"center", justifyContent:"center",
+              boxShadow:"0 8px 24px rgba(0,0,0,.4)" }}>
+              {/* screen */}
+              <div style={{ width:52, height:66, background:"#f8fafc",
+                borderRadius:".5rem", overflow:"hidden", position:"relative" }}>
+                <div style={{ padding:".3rem .35rem" }}>
+                  <div style={{ fontSize:".28rem", fontWeight:800, color:"#1d1d1f",
+                    textAlign:"center", marginBottom:".15rem",
+                    letterSpacing:".08em" }}>RECEIPT</div>
+                  <div style={{ height:"0.5px", background:"#e0e0e0", marginBottom:".2rem" }} />
+                  <div style={{ fontSize:".22rem", color:"#86868b", marginBottom:".15rem" }}>
+                    Store · 100 Main St · Date: Jan 16
+                  </div>
+                  <div style={{ height:"0.5px", background:"#f0f0f0", marginBottom:".15rem" }} />
+                  {[
+                    { w:78, hi:false },
+                    { w:65, hi:false },
+                    { w:82, hi:true  },
+                    { w:60, hi:false },
+                    { w:55, hi:false, red:true },
+                  ].map((r,i) => (
+                    <div key={i} style={{ display:"flex", justifyContent:"space-between",
+                      alignItems:"center", marginBottom:".12rem",
+                      padding:".05rem .1rem", borderRadius:".1rem",
+                      background: r.hi ? "rgba(13,148,136,.1)" : r.red ? "rgba(239,68,68,.07)" : "transparent" }}>
+                      <div style={{ height:"2px", borderRadius:1, width:`${r.w}%`,
+                        background: r.hi ? CYAN_D : r.red ? "#ef4444" : "#d8d8d8" }} />
+                      <div style={{ height:"2px", borderRadius:1, width:"16%",
+                        background:"#e8e8e8", marginLeft:2 }} />
+                    </div>
+                  ))}
+                  <div style={{ height:"0.5px", background:"#e0e0e0", margin:".15rem 0 .12rem" }} />
+                  <div style={{ display:"flex", justifyContent:"space-between" }}>
+                    <div style={{ height:"2.5px", borderRadius:1, width:"35%", background:"#1d1d1f" }} />
+                    <div style={{ height:"2.5px", borderRadius:1, width:"22%", background:"#1d1d1f" }} />
+                  </div>
+                </div>
+                {/* scan beam */}
+                <div style={{ position:"absolute", left:0, right:0, height:"1.5px",
+                  background:`linear-gradient(90deg, transparent, ${CYAN}, transparent)`,
+                  animation:"scanline 2.4s ease-in-out infinite", opacity:.85 }} />
+              </div>
+              {/* home bar */}
+              <div style={{ position:"absolute", bottom:3, left:"50%",
+                transform:"translateX(-50%)", width:16, height:2,
+                borderRadius:1, background:"rgba(255,255,255,.25)" }} />
+            </div>
+            <div style={{ fontSize:".78rem", fontWeight:600, color:"#fff", marginBottom:".25rem" }}>
+              Consumer submits
+            </div>
+            <div style={{ fontSize:".7rem", color:"rgba(255,255,255,.35)", lineHeight:1.4 }}>
+              Photo of receipt
+            </div>
+          </div>
+
+          {/* arrow */}
+          <div className="jrw-arrow" style={{ display:"flex", alignItems:"center",
+            justifyContent:"center", flexDirection:"column", gap:".2rem" }}>
+            <div style={{ width:"100%", height:1,
+              background:`linear-gradient(90deg, rgba(45,212,191,.08), ${CYAN_D}, rgba(45,212,191,.08))` }} />
+          </div>
+
+          {/* Step 2 — Validated */}
+          <div style={{ background:S800, border:"1px solid rgba(45,212,191,.25)",
+            borderRadius:"1.25rem", padding:"1.5rem", textAlign:"center",
+            minHeight:"220px", display:"flex", flexDirection:"column", alignItems:"center" }}>
+            <div style={{ fontSize:".52rem", fontWeight:700, color:CYAN,
+              letterSpacing:".12em", marginBottom:"1rem" }}>STEP 2</div>
+            <div style={{ width:84, height:84, margin:"0 auto 1rem",
+              position:"relative", display:"flex", alignItems:"center", justifyContent:"center" }}>
+              <div style={{ position:"absolute", inset:0, borderRadius:"50%",
+                border:`2px solid rgba(45,212,191,.2)` }} />
+              <div style={{ position:"absolute", inset:7, borderRadius:"50%",
+                border:`1.5px solid rgba(45,212,191,.12)` }} />
+              <div style={{ width:58, height:58, borderRadius:"50%",
+                background:"radial-gradient(circle, rgba(13,148,136,.18) 0%, rgba(13,148,136,.04) 100%)",
+                border:`1.5px solid rgba(45,212,191,.35)`,
+                display:"flex", flexDirection:"column",
+                alignItems:"center", justifyContent:"center", gap:".15rem" }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke={CYAN} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span style={{ fontSize:".4rem", color:CYAN, fontWeight:800,
+                  letterSpacing:".08em" }}>APPROVED</span>
+              </div>
+              <div style={{ position:"absolute", top:2, right:2,
+                background:"rgba(34,197,94,.15)", border:"1px solid rgba(34,197,94,.3)",
+                borderRadius:".3rem", padding:".1rem .3rem",
+                fontSize:".42rem", color:"#22c55e", fontWeight:700 }}>99.9%</div>
+            </div>
+            <div style={{ fontSize:".78rem", fontWeight:600, color:"#fff", marginBottom:".25rem" }}>
+              Validated
+            </div>
+            <div style={{ fontSize:".7rem", color:"rgba(255,255,255,.35)", lineHeight:1.4 }}>
+              Under 8 seconds
+            </div>
+          </div>
+
+          {/* arrow */}
+          <div className="jrw-arrow" style={{ display:"flex", alignItems:"center",
+            justifyContent:"center" }}>
+            <div style={{ width:"100%", height:1,
+              background:`linear-gradient(90deg, rgba(45,212,191,.08), ${CYAN_D}, rgba(45,212,191,.08))` }} />
+          </div>
+
+          {/* Step 3 — Intelligence */}
+          <div style={{ background:S800, border:"1px solid rgba(45,212,191,.25)",
+            borderRadius:"1.25rem", padding:"1.5rem", textAlign:"center",
+            minHeight:"220px", display:"flex", flexDirection:"column", alignItems:"center" }}>
+            <div style={{ fontSize:".52rem", fontWeight:700, color:CYAN,
+              letterSpacing:".12em", marginBottom:"1rem" }}>STEP 3</div>
+            <div style={{ background:"#fff", borderRadius:".625rem",
+              padding:".75rem", margin:"0 auto 1rem", width:90,
+              boxShadow:"0 4px 16px rgba(0,0,0,.25)" }}>
+              {[
+                { l:"Qualifying SKU", c:CYAN_D  },
+                { l:"Basket items",   c:"#86868b" },
+                { l:"Competitor",     c:"#ef4444" },
+                { l:"Location",       c:"#86868b" },
+                { l:"Confidence",     c:"#22c55e" },
+              ].map((r,i) => (
+                <div key={i} style={{ display:"flex", alignItems:"center",
+                  gap:".35rem", marginBottom: i<4 ? ".35rem" : 0 }}>
+                  <div style={{ width:4, height:4, borderRadius:"50%",
+                    background:r.c, flexShrink:0 }} />
+                  <div style={{ height:"2.5px", borderRadius:1, flex:1,
+                    background: i===0 ? CYAN_D : "#e8e8e8" }} />
+                </div>
+              ))}
+            </div>
+            <div style={{ fontSize:".78rem", fontWeight:600, color:"#fff", marginBottom:".25rem" }}>
+              Intelligence extracted
+            </div>
+            <div style={{ fontSize:".7rem", color:"rgba(255,255,255,.35)", lineHeight:1.4 }}>
+              10+ data points captured
+            </div>
+          </div>
+
+          {/* arrow */}
+          <div className="jrw-arrow" style={{ display:"flex", alignItems:"center",
+            justifyContent:"center" }}>
+            <div style={{ width:"100%", height:1,
+              background:`linear-gradient(90deg, rgba(45,212,191,.08), ${CYAN_D}, rgba(45,212,191,.08))` }} />
+          </div>
+
+          {/* Step 4 — Reward delivered */}
+          <div style={{ background:S800, border:"1px solid rgba(45,212,191,.25)",
+            borderRadius:"1.25rem", padding:"1.5rem", textAlign:"center",
+            minHeight:"220px", display:"flex", flexDirection:"column", alignItems:"center" }}>
+            <div style={{ fontSize:".52rem", fontWeight:700, color:CYAN,
+              letterSpacing:".12em", marginBottom:"1rem" }}>STEP 4</div>
+            {/* email notification */}
+            <div style={{ background:"#f8fafc", borderRadius:".625rem",
+              padding:".625rem", margin:"0 auto 1rem", width:104,
+              boxShadow:"0 4px 16px rgba(0,0,0,.2)", textAlign:"left" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:".3rem",
+                marginBottom:".4rem", paddingBottom:".35rem",
+                borderBottom:"1px solid #e8e8e8" }}>
+                <div style={{ width:14, height:14, borderRadius:"50%", flexShrink:0,
+                  background:`linear-gradient(135deg, ${CYAN_D}, ${BLUE})`,
+                  display:"flex", alignItems:"center", justifyContent:"center" }}>
+                  <span style={{ fontSize:".35rem", color:"#fff", fontWeight:800 }}>SL</span>
+                </div>
+                <div style={{ fontSize:".42rem", color:"#1d1d1f",
+                  fontWeight:700, lineHeight:1.2 }}>Reward Ready</div>
+              </div>
+              {/* visa card */}
+              <div style={{ background:"linear-gradient(135deg,#1a1f36,#2d3561)",
+                borderRadius:".4rem", padding:".4rem .5rem" }}>
+                <div style={{ display:"flex", justifyContent:"space-between",
+                  alignItems:"center", marginBottom:".3rem" }}>
+                  <div style={{ fontSize:".35rem", color:"rgba(255,255,255,.45)",
+                    letterSpacing:".04em" }}>VISA GIFT</div>
+                  <div style={{ fontSize:".52rem", fontWeight:900, color:"#fff",
+                    fontStyle:"italic" }}>VISA</div>
+                </div>
+                <div style={{ fontSize:".62rem", fontWeight:800, color:"#fff" }}>$25 CAD</div>
+                <div style={{ fontSize:".35rem", color:"rgba(255,255,255,.4)",
+                  marginTop:".2rem", fontFamily:"monospace" }}>···· ···· ···· 4521</div>
+              </div>
+            </div>
+            <div style={{ fontSize:".78rem", fontWeight:600, color:"#fff", marginBottom:".25rem" }}>
+              Reward delivered
+            </div>
+            <div style={{ fontSize:".7rem", color:"rgba(255,255,255,.35)", lineHeight:1.4 }}>
+              Instant — same day
+            </div>
+          </div>
+        </div>
+
+        {/* scenario toggle */}
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
           <div style={{ display: "inline-flex", background: "rgba(255,255,255,.06)", border: `1px solid ${LINE}`, borderRadius: 10, padding: 4, gap: 4 }}>
             {[["oil", "Oil change"], ["pet", "Pet food"]].map(([key, label]) => (
               <button key={key} onClick={() => setMode(key)} className="sl-btn" style={{
