@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sondarlogic.com/sitemap.xml
+Sitemap: https://www.sondarlogic.com/sitemap.xml
