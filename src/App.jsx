@@ -1487,12 +1487,14 @@ export default function SondarLogicAI() {
     <>
       <style dangerouslySetInnerHTML={{__html:G}}/>
       <Navbar/>
-      <Hero/>
-      <JourneySection/>
-      <CommandCenter/>
-      <Pricing/>
-      <FAQ/>
-      <FinalCTA/>
+      <main>
+        <Hero/>
+        <JourneySection/>
+        <CommandCenter/>
+        <Pricing/>
+        <FAQ/>
+        <FinalCTA/>
+      </main>
       <Footer setActiveView={setActiveView}/>
     </>
   );
