@@ -1143,11 +1143,23 @@ const FAQ_DATA = [
     a:"Yes. If you process rebate programs for CPG brands and want to offer instant digital payouts and basket intelligence to your clients, reach out directly to partnership@sondarlogic.com." },
 ];
 
+const FAQ_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": FAQ_DATA.map(({ q, a }) => ({
+    "@type": "Question",
+    "name": q,
+    "acceptedAnswer": { "@type": "Answer", "text": a },
+  })),
+};
+
 function FAQ() {
   const [openIdx, setOpenIdx] = useState(null);
   const ref = useReveal();
   return (
     <section id="faq" style={{ background:"#fff", padding:"4rem 0" }}>
+      <script type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_SCHEMA) }} />
       <div ref={ref} style={{ maxWidth:720, margin:"0 auto", padding:"0 2rem" }}>
         <div className="rv" style={{ textAlign:"center", marginBottom:"3rem" }}>
           <Pill>FAQ</Pill>
