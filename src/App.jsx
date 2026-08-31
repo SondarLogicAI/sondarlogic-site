@@ -429,7 +429,7 @@ function BenefitCard({ Icon, title, body, children }) {
 }
 
 function JourneySection() {
-  const [mode, setMode] = useState("oil");
+  const mode = "pet";
   const [phase, setPhase] = useState("idle");   // idle | scan | done
   const [prog, setProg] = useState(0);          // 0..100
   const ref = useRef(null);
@@ -707,20 +707,6 @@ function JourneySection() {
           </div>
         </div>
 
-        {/* scenario toggle */}
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
-          <div style={{ display: "inline-flex", background: "#EEF2F6", border: "1px solid #E2E8F0", borderRadius: 10, padding: 4, gap: 4 }}>
-            {[["oil", "Oil change"], ["pet", "Pet food"]].map(([key, label]) => (
-              <button key={key} onClick={() => setMode(key)} className="sl-btn" style={{
-                padding: ".5rem 1.15rem", borderRadius: 7, border: "none", cursor: "pointer",
-                fontFamily: "'Inter',sans-serif", fontSize: ".85rem", fontWeight: 700, transition: "all .2s",
-                background: mode === key ? CYAN_D : "transparent",
-                color: mode === key ? "#fff" : "#64748B",
-              }}>{label}</button>
-            ))}
-          </div>
-        </div>
-
         {/* Scan stage */}
         <div className="sl-scan" style={{ display: "grid", gridTemplateColumns: "minmax(0,340px) 1fr", gap: 24, alignItems: "start" }}>
           {/* Receipt */}
@@ -882,21 +868,16 @@ function CommandCenter() {
       <div style={panel}>
         <div style={eyebrow}>Ready to use audiences</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-          <Audience Icon={TrendingUp} title="High value buyers" count="1,240" rule="Bought 4+ jugs, stocking up" />
-          <Audience Icon={Percent} title="Value shoppers" count="1,880" rule="Buys on promotion" />
-          <Audience Icon={Droplet} title="Due for next oil change" count="2,130" rule="~6 months since purchase" />
-          <Audience Icon={Snowflake} title="Seasonal switch" count="1,540" rule="Winter and summer oil" />
+          {VARIANTS.pet.audiences.map((a, i) => (
+            <Audience key={i} Icon={a.Icon} title={a.title} count={a.count} rule={a.rule} />
+          ))}
         </div>
       </div>
     );
   }
 
   function SellingPanel() {
-    const breakdowns = [
-      { title: "Top retailers", cols: COL_A, bars: [["Canadian Tire", "58%", 100], ["PartSource", "24%", 41], ["Walmart", "11%", 19]] },
-      { title: "Top products", cols: COL_B, bars: [["Mobil 1 Full Synthetic 5W30", "44%", 100], ["Mobil 1 Extended Performance", "29%", 66], ["Mobil 1 ESP 5W30", "17%", 39]] },
-      { title: "Top complementary products", cols: COL_C, bars: [["Oil filter", "41%", 100], ["Washer fluid", "28%", 68], ["Shop towels", "19%", 46]] },
-    ];
+    const breakdowns = VARIANTS.pet.breakdowns;
     return (
       <div style={panel}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
