@@ -1041,7 +1041,7 @@ function Pricing() {
               <span style={{ fontSize:".58rem", fontWeight:800, color:S950, background:GRN, padding:"3px 8px", borderRadius:"2rem", letterSpacing:".04em" }}>START HERE</span>
             </div>
             <div style={{ display:"flex", alignItems:"baseline", gap:".3rem" }}>
-              <span style={{ fontSize:"2.4rem", fontWeight:900, color:GRN, letterSpacing:"-.04em", lineHeight:1 }}>$1.20</span>
+              <span style={{ fontSize:"2.4rem", fontWeight:900, color:GRN, letterSpacing:"-.04em", lineHeight:1 }}>Flat rate</span>
               <span style={{ fontSize:".9rem", color:"rgba(255,255,255,.5)" }}>/ claim</span>
             </div>
             <div style={{ fontSize:".85rem", color:"#fff", fontWeight:600, marginTop:".8rem" }}>No platform fee. No setup.</div>
@@ -1060,7 +1060,7 @@ function Pricing() {
               Volume based pricing
             </div>
             <div style={{ fontSize:".85rem", color:"rgba(255,255,255,.5)", marginTop:".6rem", lineHeight:1.5 }}>
-              Your per claim rate drops as combined volume across campaigns grows.
+              For brands running more than one campaign a year.
             </div>
             <div style={{ marginTop:"1.1rem", paddingTop:"1.1rem", borderTop:"1px solid rgba(255,255,255,.08)", display:"flex", flexDirection:"column", gap:".65rem" }}>
               <div style={{ display:"flex", gap:".6rem", alignItems:"flex-start" }}>
@@ -1094,7 +1094,7 @@ function Pricing() {
 
         <div className="rv td3" style={{ textAlign:"center", marginTop:"1.5rem" }}>
           <p style={{ fontSize:".76rem", color:"#475569" }}>
-            Canadian data residency, PIPEDA compliant. Volume discounts on request.
+            Canadian data residency, PIPEDA compliant. Rates quoted per program.
           </p>
         </div>
       </div>
