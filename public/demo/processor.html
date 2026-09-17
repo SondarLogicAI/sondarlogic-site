@@ -1022,6 +1022,15 @@ $("homeBtn").addEventListener("click", ()=>{
 });
 
 selectScenario("clean");
+
+// Land on the walkthrough rather than the title card. These pages are opened
+// from a link in a reply, by someone who already asked to see it, so a Start
+// button is a click that buys nothing. The title screen is still one press of
+// the title button away.
+$("titleScreen").classList.add("hidden");
+hideAllOverlays();
+showSlides();
+selectScenario("clean");
 </script>
 </body>
 </html>
