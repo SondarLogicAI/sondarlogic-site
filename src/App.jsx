@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { PAGES, PAGE_KEYS, RELATED_LABEL, pageSchema } from "./pages.js";
+import { PAGES, PAGE_KEYS, CONTENT_KEYS, RELATED_LABEL, pageSchema } from "./pages.js";
 import {
   ArrowRight, Upload, ScanSearch, ShoppingCart,
   Mail, Zap, Database,
@@ -1339,8 +1339,8 @@ function Footer({ navigate }) {
     { h:"LEGAL", links:[
       { l:"Privacy Policy",   action:"privacy" },
       { l:"Terms of Service", action:"terms"   },
-      { l:"PIPEDA Compliance"                  },
-      { l:"Security (SOC 2)"                   },
+      { l:"PIPEDA Compliance", action:"pipeda-compliance" },
+      { l:"Security",          action:"security"          },
     ]},
   ];
   const lkBase = { color:"#475569", textDecoration:"none", fontSize:".84rem",
@@ -1428,7 +1428,7 @@ const ch2s = { fontSize:"clamp(1.3rem,2.6vw,1.75rem)", fontWeight:800, color:S90
 
 function ContentPage({ pageKey, navigate }) {
   const p = PAGES[pageKey];
-  const others = PAGE_KEYS.filter(k => k !== pageKey);
+  const others = p.related || CONTENT_KEYS.filter(k => k !== pageKey);
   const go = (view) => (e) => { e.preventDefault(); navigate(view); };
   return (
     <div style={{ minHeight:"100vh", background:"#fff" }}>
@@ -1505,7 +1505,7 @@ function ContentPage({ pageKey, navigate }) {
             color:"#94a3b8", marginBottom:".9rem" }}>RELATED</div>
           <div style={{ display:"flex", flexWrap:"wrap", gap:".5rem" }}>
             {others.map(k => (
-              <a key={k} href={PAGES[k].path} onClick={go(k)}
+              <a key={k} href={VIEW_PATH[k]} onClick={go(k)}
                 style={{ fontSize:".84rem", color:"#475569", textDecoration:"none",
                   background:"#f8fafc", border:"1px solid #e2e8f0",
                   borderRadius:"2rem", padding:".4rem .9rem" }}>

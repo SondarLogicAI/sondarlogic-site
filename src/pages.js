@@ -388,9 +388,167 @@ export const PAGES = {
       },
     ],
   },
+
+  "pipeda-compliance": {
+    path: "/pipeda-compliance",
+    utility: true,
+    pill: "PIPEDA",
+    title: "PIPEDA Compliance and Canadian Data Residency | SondarLogic",
+    description:
+      "How SondarLogic handles claimant personal information under PIPEDA: consent, purpose limitation, Canadian data residency, sub processors, retention and the brand's rights as the controlling organisation.",
+    h1: "PIPEDA compliance and Canadian data residency",
+    lede:
+      "Rebate claims carry personal information. A name, an email address, a location, and a receipt that can show a great deal more than the one product the claim is about. PIPEDA governs how that information is handled in Canada, and this page sets out what SondarLogic does with it.",
+    sections: [
+      {
+        h2: "Who holds what role",
+        paras: [
+          "PIPEDA places the accountability on the organisation that collects the information for its own purposes. For a rebate programme that is the brand running the promotion. SondarLogic processes claims on that brand's behalf and under its instructions, which makes us a service provider rather than the accountable organisation.",
+          "That distinction decides everything else on this page. We do not decide what a programme collects, we do not use claim data for our own purposes, and we do not carry it from one client to another.",
+        ],
+      },
+      {
+        h2: "Consent and purpose",
+        paras: [
+          "A claimant submits a receipt in order to be paid. That is the purpose they consented to, and the submission portal states it at the point of collection in the brand's own words.",
+          "Information collected for a claim is used to decide that claim, to pay it, and to report on the programme to the brand. Any wider marketing use of a claimant's contact details is the brand's decision to make, on the brand's own consent language, and not something that happens by default because a claim was processed.",
+        ],
+      },
+      {
+        h2: "Canadian data residency",
+        paras: [
+          "All receipt images and all claimant personal information are processed and stored on servers physically located in Canada. This is not a preference or a default that can drift. It is how the platform is configured.",
+          "It matters for two reasons. Some brands have a procurement requirement that personal information does not leave the country, and a programme that fails that test is dead before it is evaluated on anything else. And a claimant's information staying in the jurisdiction whose law protects it is simply the right answer.",
+        ],
+      },
+      {
+        h2: "What we do not do",
+        list: [
+          "We do not sell, rent or trade personal information, in any form, to anyone.",
+          "We do not use one client's claim data to inform another client's programme.",
+          "We do not require a brand to hand over its existing customer or claimant records. Claims come from the claimant.",
+          "We do not receive, hold or transmit money on anyone's behalf. Rewards are funded and released from the client's own account.",
+        ],
+      },
+      {
+        h2: "Sub processors, retention and access",
+        paras: [
+          "A small number of vetted sub processors are involved in hosting and reward delivery. Each is bound by a written confidentiality agreement, and the current list is provided to any client who asks for it during onboarding.",
+          "Retention is set per programme. Claim records are kept as long as the brand needs them for audit and dispute handling and then disposed of. A claimant who wants to know what is held about them, or wants it corrected or deleted, is directed to the brand as the accountable organisation, and we action the request on the brand's instruction.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Is claimant data stored in Canada?",
+        a: "Yes. All receipt images and claimant personal information are processed and stored on servers physically located in Canada.",
+      },
+      {
+        q: "Is SondarLogic a data controller or a processor?",
+        a: "A processor. In PIPEDA terms the brand running the promotion is the accountable organisation, and SondarLogic processes claims on its behalf and under its instructions.",
+      },
+      {
+        q: "Do you use claim data for your own purposes?",
+        a: "No. Claim data belongs to the brand. It is used to decide and pay the claim and to report on that programme, and it is never carried across to another client or sold.",
+      },
+      {
+        q: "Do we have to send you our customer list to run a programme?",
+        a: "No, and you should not. Claims arrive from the claimant through the submission portal. A brand never needs to transfer its own customer or claimant records to get a programme running.",
+      },
+      {
+        q: "How does a claimant request access to or deletion of their data?",
+        a: "Through the brand, which is the accountable organisation under PIPEDA. SondarLogic actions the request on the brand's instruction and confirms once it is done.",
+      },
+      {
+        q: "How long is claim data retained?",
+        a: "It is set per programme, based on how long the brand needs the records for audit and dispute handling, and disposed of after that.",
+      },
+    ],
+    related: ["security", "receipt-validation", "rebate-processing", "privacy", "terms"],
+  },
+
+  security: {
+    path: "/security",
+    utility: true,
+    pill: "SECURITY",
+    title: "Security and Infrastructure | SondarLogic",
+    description:
+      "How SondarLogic secures rebate claim data: AES-256 encryption at rest, TLS 1.2 or higher in transit, SOC 2 Type II certified Canadian hosting, and a plain statement of what has and has not been independently audited.",
+    h1: "Security and infrastructure",
+    lede:
+      "A rebate programme hands a processor receipt images and claimant contact details. This page states plainly how that is protected, and is deliberate about the difference between what is certified and what is merely asserted.",
+    sections: [
+      {
+        h2: "Encryption and transport",
+        list: [
+          "AES-256 encryption for all data at rest, including receipt images.",
+          "TLS 1.2 or higher for all data in transit, with no unencrypted fallback.",
+          "Access to production data is limited to named accounts and logged.",
+          "Every claim decision is retained with its reason and a full audit trail.",
+        ],
+        paras: [
+          "The audit trail is worth a line of its own. Every decision the engine reaches is stored with the rule it applied and the evidence it applied it to, which is what lets a disputed rejection be answered months later without reopening the whole file.",
+        ],
+      },
+      {
+        h2: "What is certified, and what is not",
+        paras: [
+          "The platform runs on SOC 2 Type II certified infrastructure, hosted in Canada. That certification belongs to the infrastructure provider and covers the hosting layer.",
+          "SondarLogic has not completed its own SOC 2 Type II audit as an organisation. We say so here rather than leaving it to be discovered in a security questionnaire, because the distinction is exactly the one an enterprise security reviewer is paid to find, and a vendor who blurs it has told you something about itself before you have read a single control.",
+          "For a brand whose procurement requires a vendor level report, that is a real gap and it should be weighed. For most rebate programmes, what actually matters is where the data sits, how it is encrypted, who can reach it and how long it is kept, and those are answered above and on the PIPEDA page.",
+        ],
+      },
+      {
+        h2: "Data residency and isolation",
+        paras: [
+          "All claimant personal information and all receipt images are processed and stored in Canada. Client programmes are isolated from one another, and no client's claim data is used to inform another client's programme.",
+          "SondarLogic never receives, holds or transmits funds. Rewards are funded and released from the client's own account, so there is no payment float and no stored payment credential to protect.",
+        ],
+      },
+      {
+        h2: "Fraud controls",
+        paras: [
+          "Duplicate submissions, altered images, templated claims and screenshots of other people's claims are caught before payment rather than found in a reconciliation months later.",
+          "We describe what the controls catch and not how they decide. A published method is a method somebody works around, and the people most interested in reading a page like this are not all procurement officers.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Is SondarLogic SOC 2 certified?",
+        a: "The infrastructure the platform runs on is SOC 2 Type II certified. SondarLogic has not completed its own organisation level SOC 2 Type II audit. If your procurement requires a vendor level report, raise it early so it can be addressed in the pilot agreement.",
+      },
+      {
+        q: "How is data encrypted?",
+        a: "AES-256 at rest, including receipt images, and TLS 1.2 or higher in transit with no unencrypted fallback.",
+      },
+      {
+        q: "Where is the data hosted?",
+        a: "On servers physically located in Canada. Receipt images and claimant personal information never leave the country.",
+      },
+      {
+        q: "Do you hold payment credentials or funds?",
+        a: "No. Rewards are funded and released from the client's own account. SondarLogic never receives, holds or transmits money, so there is no float and no stored payment instrument.",
+      },
+      {
+        q: "Is one client's data visible to another?",
+        a: "No. Programmes are isolated, and claim data from one client is never used to inform another client's programme or reporting.",
+      },
+      {
+        q: "Do you have a Master Service Agreement?",
+        a: "Yes. There is a standard, pre vetted MSA so legal reviews it once rather than negotiating from scratch per programme.",
+      },
+    ],
+    related: ["pipeda-compliance", "receipt-validation", "rebate-processing", "privacy", "terms"],
+  },
 };
 
 export const PAGE_KEYS = Object.keys(PAGES);
+
+/* The six marketing pages. The compliance pages are routed and indexed the
+   same way but are kept out of the marketing cross link strip, because a
+   security page in the related list of the automotive page is noise. */
+export const CONTENT_KEYS = PAGE_KEYS.filter(k => !PAGES[k].utility);
 
 /* Cross links at the foot of every content page. A crawler that lands on
    one of these should be able to reach all of the others and the homepage,
@@ -402,6 +560,10 @@ const RELATED_LABEL = {
   "automotive-rebates": "Automotive rebate programs",
   "cpg-rebates":        "CPG rebate and cashback programs",
   "paint-rebates":      "Paint and home improvement rebates",
+  "pipeda-compliance":  "PIPEDA and data residency",
+  "security":           "Security and infrastructure",
+  privacy:              "Privacy Policy",
+  terms:                "Terms of Service",
 };
 
 export function pageSchema(key, site = "https://www.sondarlogic.com") {
