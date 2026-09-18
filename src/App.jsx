@@ -130,6 +130,7 @@ function Navbar() {
             { l:"Features",     id:"features"     },
             { l:"Pricing",      id:"pricing"      },
             { l:"FAQ",          id:"faq"          },
+      { l:"Who Built It", id:"about"        },
           ].map(n => (
             <a key={n.l} href={`#${n.id}`}
               style={{ color:"rgba(255,255,255,.55)", textDecoration:"none",
@@ -704,7 +705,7 @@ function JourneySection() {
               Paid instantly
             </div>
             <div style={{ fontSize:".84rem", color:"#64748B", lineHeight:1.45 }}>
-              A Visa gift card, same day — no cheque, no wait
+              A Visa gift card, same day. No cheque, no wait
             </div>
           </div>
         </div>
@@ -954,7 +955,7 @@ function CommandCenter() {
 
   const rows = [
     { textLeft: false, pill: "READY TO USE AUDIENCES", title: "Every claim becomes a customer you can market to.",
-      bullets: ["Each validated receipt becomes a named customer, sorted into segments you can push straight to your CRM — high value, deal seekers, due for a repeat, seasonal.", "Not a raw data dump. Ready to activate audiences, with competitor and complementary products captured for cross sell."],
+      bullets: ["Each validated receipt becomes a named customer, sorted into segments you can push straight to your CRM. High value, deal seekers, due for a repeat, seasonal.", "Not a raw data dump. Ready to activate audiences, with competitor and complementary products captured for cross sell."],
       visual: <AudiencePanel /> },
     { textLeft: true, pill: "BASKET & CAMPAIGN INTELLIGENCE", title: "See every item in the purchase, not just yours.",
       bullets: ["Top retailers, products, and complementary buys across every campaign, with competitor brands and basket value read from each receipt.", "Submissions climb the week a campaign runs, so you can line volume up against the marketing you planned."],
@@ -1117,13 +1118,13 @@ const FAQ_DATA = [
   { q:"How fast can we launch a new promotional campaign?",
     a:"Once the Pilot Agreement is signed, we typically go live within 7–10 business days. Our validation engine is context-aware and does not require retraining for each new product category or receipt format." },
   { q:"How does budget reconciliation work at program end?",
-    a:"Any unissued Reward Procurement Budget remaining at program close is reconciled and returned to you within 30 days. Once a digital reward is successfully transmitted to a validated consumer, that allocation is fully deployed. SondarLogic acts as a marketing fulfillment agency procuring and distributing promotional inventory on your behalf — not as a financial intermediary." },
+    a:"Any unissued Reward Procurement Budget remaining at program close is reconciled and returned to you within 30 days. Once a digital reward is successfully transmitted to a validated consumer, that allocation is fully deployed. SondarLogic acts as a marketing fulfillment agency procuring and distributing promotional inventory on your behalf, not as a financial intermediary." },
   { q:"Can you handle large claim volumes during peak promotions?",
     a:"Our infrastructure scales to handle significant volume spikes without processing delays. Claims are queued and processed in order with no manual bottlenecks on compliant submissions." },
   { q:"What if a customer uploads a blurry or unreadable receipt?",
     a:"We never auto-deny. Our system sends a branded, automated re-upload request ensuring a positive consumer experience while maintaining program integrity." },
   { q:"What data do I get back besides my own SKU?",
-    a:"Full line-item extraction feeds directly into a live dashboard — total receipt values, regional distribution, top performing locations, basket intelligence, and competitor product detection across all submissions." },
+    a:"Full line-item extraction feeds directly into a live dashboard, with total receipt values, regional distribution, top performing locations, basket intelligence, and competitor product detection across all submissions." },
   { q:"Is the submission portal white-labeled?",
     a:"Yes. The entire consumer journey from submission portal to the Visa Giftcard delivery email is fully branded to your guidelines." },
   { q:"Do you offer a partner program for rebate processors?",
@@ -1191,6 +1192,79 @@ function FAQ() {
   );
 }
 
+/* ─── WHO BUILT IT ────────────────────────────────────────────
+   The trust block. Two jobs: give a search engine a heading with a term
+   someone actually types, and give a brand manager a reason to believe the
+   claim data argument the rest of the page makes. The background is stated
+   as employment history, which is what it is. It does not imply any of
+   those companies is a client. */
+const TRUST = [
+  { t:"Data stays in Canada",
+    d:"All claimant information and receipt images are processed and stored in Canada, under PIPEDA." },
+  { t:"SOC 2 Type II infrastructure",
+    d:"AES-256 encryption on everything at rest and in transit, with every decision retained and auditable." },
+  { t:"The brand owns the claim data",
+    d:"You keep all of it, including everything on the receipt besides your own product." },
+  { t:"A person reviews the exceptions",
+    d:"Nothing is auto denied. Anything the engine will not call on its own goes to our team." },
+];
+
+function WhoBuiltIt() {
+  const ref = useReveal();
+  return (
+    <section id="about" style={{ background:"#f8fafc", padding:"4.5rem 0",
+      borderTop:"1px solid #eef2f7" }}>
+      <div ref={ref} style={{ maxWidth:820, margin:"0 auto", padding:"0 2rem" }}>
+        <div className="rv" style={{ textAlign:"center", marginBottom:"2rem" }}>
+          <Pill>WHO BUILT IT</Pill>
+          <h2 style={{ fontSize:"clamp(1.7rem,3.4vw,2.4rem)", fontWeight:800,
+            letterSpacing:"-.035em", color:S900, lineHeight:1.15,
+            marginBottom:".75rem" }}>
+            Rebate processing built by someone who ran rebate programs
+          </h2>
+        </div>
+        <div className="rv td1" style={{ maxWidth:660, margin:"0 auto 2.75rem" }}>
+          <p style={{ color:"#475569", fontSize:".98rem", lineHeight:1.8,
+            marginBottom:"1.1rem" }}>
+            Ahmed Rehman spent close to ten years in brand and shopper marketing
+            at Colgate, Hill's Pet Nutrition and Nestle Purina. Most of that time
+            involved running consumer rebate and cashback programs from the brand
+            side. Briefing a processor, waiting weeks on a file, and getting back a
+            spreadsheet that said approved or rejected and very little else.
+          </p>
+          <p style={{ color:"#475569", fontSize:".98rem", lineHeight:1.8 }}>
+            SondarLogic is built around what was missing from that file. Every claim
+            comes back with the decision, the reason behind it, the full basket the
+            consumer actually bought, and where and when they bought it. That is the
+            part a brand manager can act on, and it is the part a processor has never
+            had much reason to hand over.
+          </p>
+        </div>
+        <div className="rv td2" style={{ display:"grid",
+          gridTemplateColumns:"repeat(auto-fit, minmax(260px, 1fr))", gap:"1rem" }}>
+          {TRUST.map((x,i) => (
+            <div key={i} style={{ background:"#fff", border:"1px solid #e2e8f0",
+              borderRadius:".75rem", padding:"1.15rem 1.25rem" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:".5rem",
+                marginBottom:".45rem" }}>
+                <BadgeCheck size={16} color={CYAN_D} style={{ flexShrink:0 }}/>
+                <span style={{ fontSize:".92rem", fontWeight:700, color:S900,
+                  letterSpacing:"-.01em" }}>{x.t}</span>
+              </div>
+              <p style={{ color:"#64748b", fontSize:".85rem", lineHeight:1.65 }}>{x.d}</p>
+            </div>
+          ))}
+        </div>
+        <p className="rv td3" style={{ textAlign:"center", color:"#94a3b8",
+          fontSize:".85rem", lineHeight:1.7, marginTop:"1.75rem" }}>
+          Live in 7 to 10 business days from a signed pilot agreement, on a standard
+          MSA your legal team reviews once.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 /* ─── FINAL CTA ───────────────────────────────────────────── */
 function FinalCTA() {
   const ref = useReveal();
@@ -1212,7 +1286,7 @@ function FinalCTA() {
         </h2>
         <p className="rv td2" style={{ color:"rgba(255,255,255,.45)", fontSize:"1rem",
           lineHeight:1.7, marginBottom:"2.5rem" }}>
-          From motor oil to pet food to paint — every receipt your consumers submit
+          From motor oil to pet food to paint, every receipt your consumers submit
           contains data your team has never had access to.
           And now they get paid the same day.
         </p>
@@ -1246,6 +1320,7 @@ function Footer({ navigate }) {
       { l:"Features",     id:"features"     },
       { l:"Pricing",      id:"pricing"      },
       { l:"FAQ",          id:"faq"          },
+      { l:"Who Built It", id:"about"        },
     ]},
     { h:"SOLUTIONS", links:[
       { l:"Automotive Rebates"             },
@@ -1279,7 +1354,7 @@ function Footer({ navigate }) {
             <p style={{ fontSize:".875rem", color:"rgba(255,255,255,.3)",
               lineHeight:1.7, marginBottom:"1.25rem" }}>
               Instant rebate processing for Canadian consumer programs.
-              Motor oil to pet food to paint — every category, every channel.
+              Motor oil to pet food to paint. Every category, every channel.
             </p>
             <a href={`mailto:${EMAIL}`} style={{ color:CYAN, fontSize:".875rem",
               fontWeight:500, textDecoration:"none" }}>{EMAIL}</a>
@@ -1521,6 +1596,7 @@ export default function SondarLogicAI() {
         <CommandCenter/>
         <Pricing/>
         <FAQ/>
+        <WhoBuiltIt/>
         <FinalCTA/>
       </main>
       <Footer navigate={navigate}/>
