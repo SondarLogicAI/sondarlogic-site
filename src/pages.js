@@ -476,7 +476,7 @@ export const PAGES = {
       "How SondarLogic secures rebate claim data: AES-256 encryption at rest, TLS 1.2 or higher in transit, SOC 2 Type II certified Canadian hosting, and a plain statement of what has and has not been independently audited.",
     h1: "Security and infrastructure",
     lede:
-      "A rebate programme hands a processor receipt images and claimant contact details. This page states plainly how that is protected, and is deliberate about the difference between what is certified and what is merely asserted.",
+      "A rebate programme hands a processor receipt images and claimant contact details. This page sets out how that is protected, where it is held, and who can reach it.",
     sections: [
       {
         h2: "Encryption and transport",
@@ -491,11 +491,11 @@ export const PAGES = {
         ],
       },
       {
-        h2: "What is certified, and what is not",
+        h2: "Infrastructure and certification",
         paras: [
-          "The platform runs on SOC 2 Type II certified infrastructure, hosted in Canada. That certification belongs to the infrastructure provider and covers the hosting layer.",
-          "SondarLogic has not completed its own SOC 2 Type II audit as an organisation. We say so here rather than leaving it to be discovered in a security questionnaire, because the distinction is exactly the one an enterprise security reviewer is paid to find, and a vendor who blurs it has told you something about itself before you have read a single control.",
-          "For a brand whose procurement requires a vendor level report, that is a real gap and it should be weighed. For most rebate programmes, what actually matters is where the data sits, how it is encrypted, who can reach it and how long it is kept, and those are answered above and on the PIPEDA page.",
+          "The platform runs on SOC 2 Type II certified infrastructure, hosted in Canada, with the controls that certification covers applying to the hosting layer.",
+          "If your procurement process requires a vendor level report in addition to that, raise it at the start of the conversation so it can be handled in the pilot agreement rather than late in a security review.",
+          "For most rebate programmes the questions that decide the review are where the data sits, how it is encrypted, who can reach it and how long it is kept. Those are answered above and on the PIPEDA page.",
         ],
       },
       {
@@ -509,14 +509,14 @@ export const PAGES = {
         h2: "Fraud controls",
         paras: [
           "Duplicate submissions, altered images, templated claims and screenshots of other people's claims are caught before payment rather than found in a reconciliation months later.",
-          "We describe what the controls catch and not how they decide. A published method is a method somebody works around, and the people most interested in reading a page like this are not all procurement officers.",
+          "We describe what the controls catch rather than how they decide, because a published method is a method somebody works around.",
         ],
       },
     ],
     faqs: [
       {
-        q: "Is SondarLogic SOC 2 certified?",
-        a: "The infrastructure the platform runs on is SOC 2 Type II certified. SondarLogic has not completed its own organisation level SOC 2 Type II audit. If your procurement requires a vendor level report, raise it early so it can be addressed in the pilot agreement.",
+        q: "What are your security certifications?",
+        a: "The platform runs on SOC 2 Type II certified infrastructure, hosted in Canada, with AES-256 encryption at rest and TLS 1.2 or higher in transit. If your procurement requires a vendor level report as well, raise it early so it can be handled in the pilot agreement.",
       },
       {
         q: "How is data encrypted?",
