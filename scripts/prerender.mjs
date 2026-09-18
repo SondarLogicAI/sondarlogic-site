@@ -9,6 +9,7 @@
 // legal pages existed only as React state and /privacy returned a 404.
 // The `view` values here must match VIEW_PATH in src/App.jsx.
 import { build } from 'vite'
+import { PAGES } from '../src/pages.js'
 import react from '@vitejs/plugin-react'
 import { readFileSync, writeFileSync, rmSync, mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -39,6 +40,18 @@ const ROUTES = [
       'The terms covering use of the SondarLogic rebate validation platform, API and dashboard, including manual review, payout funding and data ownership.',
   },
 ]
+
+// The explainer and vertical pages. Titles and descriptions live with the
+// copy in src/pages.js so a new page needs one edit, not two.
+for (const [key, page] of Object.entries(PAGES)) {
+  ROUTES.push({
+    view: key,
+    out: `${key}/index.html`,
+    url: `${SITE}${page.path}`,
+    title: page.title,
+    description: page.description,
+  })
+}
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const ssrOutDir = 'ssr-tmp'

@@ -1,4 +1,52 @@
+# The demo pages are sales artefacts, not content. Everything else is
+# meant to be read, indexed and quoted, including by assistants. The named
+# agents below are listed explicitly so there is no ambiguity about it.
+
 User-agent: *
+Allow: /
+Disallow: /demo/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /demo/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /demo/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /demo/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /demo/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /demo/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /demo/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /demo/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /demo/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /demo/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /demo/
+
+User-agent: Bingbot
 Allow: /
 Disallow: /demo/
 

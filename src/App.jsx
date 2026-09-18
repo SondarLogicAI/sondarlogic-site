@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { PAGES, PAGE_KEYS, RELATED_LABEL, pageSchema } from "./pages.js";
 import {
   ArrowRight, Upload, ScanSearch, ShoppingCart,
   Mail, Zap, Database,
@@ -130,7 +131,7 @@ function Navbar() {
             { l:"Features",     id:"features"     },
             { l:"Pricing",      id:"pricing"      },
             { l:"FAQ",          id:"faq"          },
-      { l:"Who Built It", id:"about"        },
+            { l:"Who Built It", id:"about"        },
           ].map(n => (
             <a key={n.l} href={`#${n.id}`}
               style={{ color:"rgba(255,255,255,.55)", textDecoration:"none",
@@ -1323,9 +1324,14 @@ function Footer({ navigate }) {
       { l:"Who Built It", id:"about"        },
     ]},
     { h:"SOLUTIONS", links:[
-      { l:"Automotive Rebates"             },
-      { l:"CPG Promotions"                 },
-      { l:"Paint & Home Improvement"       },
+      { l:"Automotive Rebates",       action:"automotive-rebates" },
+      { l:"CPG Promotions",           action:"cpg-rebates"        },
+      { l:"Paint & Home Improvement", action:"paint-rebates"      },
+    ]},
+    { h:"LEARN", links:[
+      { l:"Rebate Processing",  action:"rebate-processing"  },
+      { l:"Instant vs Mail In", action:"instant-rebates"    },
+      { l:"Receipt Validation", action:"receipt-validation" },
     ]},
     { h:"SUPPORT", links:[
       { l:"Contact Sales", href:`mailto:${EMAIL}` },
@@ -1408,6 +1414,142 @@ function Footer({ navigate }) {
         </p>
       </div>
     </footer>
+  );
+}
+
+/* ─── CONTENT PAGES ───────────────────────────────────────────
+   One renderer for every entry in PAGES. The homepage is a pitch and
+   reads like one; these are written to answer a question somebody typed,
+   which is what gets a page surfaced and quoted. Plain inline styles like
+   the rest of the site, and the same type scale as the light sections. */
+const cbs = { color:"#475569", fontSize:".97rem", lineHeight:1.8, marginBottom:"1.1rem" };
+const ch2s = { fontSize:"clamp(1.3rem,2.6vw,1.75rem)", fontWeight:800, color:S900,
+  letterSpacing:"-.03em", marginTop:"3rem", marginBottom:"1rem", lineHeight:1.25 };
+
+function ContentPage({ pageKey, navigate }) {
+  const p = PAGES[pageKey];
+  const others = PAGE_KEYS.filter(k => k !== pageKey);
+  const go = (view) => (e) => { e.preventDefault(); navigate(view); };
+  return (
+    <div style={{ minHeight:"100vh", background:"#fff" }}>
+      {pageSchema(pageKey).map((obj, i) => (
+        <script key={i} type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(obj) }} />
+      ))}
+
+      <div style={{ position:"sticky", top:0, zIndex:200, background:S950,
+        borderBottom:"1px solid rgba(255,255,255,.07)", padding:".8rem 2rem" }}>
+        <div style={{ maxWidth:820, margin:"0 auto", display:"flex",
+          alignItems:"center", justifyContent:"space-between", gap:"1rem" }}>
+          <a href="/" onClick={go("home")} style={{ fontSize:"1.02rem", fontWeight:800,
+            letterSpacing:"-.03em", color:"#fff", textDecoration:"none" }}>
+            Sondar <span style={{ color:CYAN }}>Logic</span>
+          </a>
+          <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
+            style={{ padding:".45rem 1.1rem", fontSize:".8rem", flexShrink:0 }}>
+            Book a Demo
+          </a>
+        </div>
+      </div>
+
+      <article style={{ maxWidth:820, margin:"0 auto", padding:"3.5rem 2rem 1rem" }}>
+        <nav aria-label="Breadcrumb" style={{ fontSize:".78rem", color:"#94a3b8",
+          marginBottom:"1.25rem" }}>
+          <a href="/" onClick={go("home")} style={{ color:"#94a3b8", textDecoration:"none" }}>
+            SondarLogic
+          </a>
+          <span style={{ margin:"0 .4rem" }}>/</span>
+          <span style={{ color:"#64748b" }}>{p.h1}</span>
+        </nav>
+
+        <Pill>{p.pill}</Pill>
+        <h1 style={{ fontSize:"clamp(1.9rem,4vw,2.75rem)", fontWeight:800,
+          letterSpacing:"-.04em", color:S900, lineHeight:1.15,
+          marginBottom:"1.25rem" }}>{p.h1}</h1>
+        <p style={{ color:"#334155", fontSize:"1.05rem", lineHeight:1.75,
+          marginBottom:".5rem" }}>{p.lede}</p>
+
+        {p.sections.map((sec, i) => (
+          <section key={i}>
+            <h2 style={ch2s}>{sec.h2}</h2>
+            {(sec.paras || []).map((t, j) => <p key={j} style={cbs}>{t}</p>)}
+            {sec.list && (
+              <ul style={{ listStyle:"none", margin:"0 0 1.1rem", padding:0,
+                display:"flex", flexDirection:"column", gap:".6rem" }}>
+                {sec.list.map((t, j) => (
+                  <li key={j} style={{ display:"flex", gap:".65rem", alignItems:"flex-start" }}>
+                    <Check size={16} color={CYAN_D} style={{ flexShrink:0, marginTop:".28rem" }}/>
+                    <span style={{ color:"#475569", fontSize:".95rem", lineHeight:1.7 }}>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        ))}
+
+        <h2 style={ch2s}>Common questions</h2>
+        <div style={{ display:"flex", flexDirection:"column", gap:".9rem" }}>
+          {p.faqs.map((f, i) => (
+            <div key={i} style={{ background:"#f8fafc", border:"1px solid #e2e8f0",
+              borderRadius:".75rem", padding:"1.1rem 1.25rem" }}>
+              <h3 style={{ fontSize:".95rem", fontWeight:700, color:S900,
+                letterSpacing:"-.01em", marginBottom:".45rem" }}>{f.q}</h3>
+              <p style={{ color:"#64748b", fontSize:".9rem", lineHeight:1.7 }}>{f.a}</p>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginTop:"3rem", paddingTop:"2rem",
+          borderTop:"1px solid #f1f5f9" }}>
+          <div style={{ fontSize:".6rem", fontWeight:700, letterSpacing:".14em",
+            color:"#94a3b8", marginBottom:".9rem" }}>RELATED</div>
+          <div style={{ display:"flex", flexWrap:"wrap", gap:".5rem" }}>
+            {others.map(k => (
+              <a key={k} href={PAGES[k].path} onClick={go(k)}
+                style={{ fontSize:".84rem", color:"#475569", textDecoration:"none",
+                  background:"#f8fafc", border:"1px solid #e2e8f0",
+                  borderRadius:"2rem", padding:".4rem .9rem" }}>
+                {RELATED_LABEL[k]}
+              </a>
+            ))}
+          </div>
+        </div>
+      </article>
+
+      <section style={{ background:S950, marginTop:"3.5rem", padding:"3.5rem 2rem",
+        textAlign:"center" }}>
+        <div style={{ maxWidth:600, margin:"0 auto" }}>
+          <h2 style={{ fontSize:"clamp(1.5rem,3.5vw,2.1rem)", fontWeight:900,
+            letterSpacing:"-.04em", color:"#fff", lineHeight:1.15,
+            marginBottom:".9rem" }}>
+            Receipt in. Reward out. The same day.
+          </h2>
+          <p style={{ color:"rgba(255,255,255,.45)", fontSize:".95rem",
+            lineHeight:1.7, marginBottom:"2rem" }}>
+            See the engine decide a real claim, and see everything it hands back
+            besides the decision.
+          </p>
+          <div style={{ display:"flex", gap:"1rem", justifyContent:"center",
+            flexWrap:"wrap", alignItems:"center" }}>
+            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
+              style={{ fontSize:".95rem", padding:".8rem 2rem" }}>
+              Book a Demo <ArrowRight size={16}/>
+            </a>
+            <a href={`mailto:${EMAIL}`} style={{ color:CYAN, fontSize:".9rem",
+              fontWeight:500, textDecoration:"none",
+              borderBottom:"1px solid rgba(45,212,191,.35)", paddingBottom:"1px" }}>
+              {EMAIL}
+            </a>
+          </div>
+          <div style={{ marginTop:"2.25rem", fontSize:".78rem" }}>
+            <a href="/" onClick={go("home")} style={{ color:"rgba(255,255,255,.4)",
+              textDecoration:"none" }}>
+              ← Back to sondarlogic.com
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -1499,12 +1641,15 @@ function TermsOfService({ onBack }) {
    client hydrates on top of the matching view. Keep VIEW_PATH and the
    routes list in scripts/prerender.mjs in step with each other. */
 const VIEW_PATH = { home:"/", privacy:"/privacy", terms:"/terms" };
+PAGE_KEYS.forEach(k => { VIEW_PATH[k] = PAGES[k].path; });
+
+const PATH_VIEW = Object.fromEntries(
+  Object.entries(VIEW_PATH).map(([view, path]) => [path, view])
+);
 
 function viewFromPath(pathname) {
   const p = (pathname || "/").replace(/\/+$/, "") || "/";
-  if (p === "/privacy") return "privacy";
-  if (p === "/terms")   return "terms";
-  return "home";
+  return PATH_VIEW[p] || "home";
 }
 
 /* Set by entry-server.jsx so the server render and the first client render
@@ -1577,6 +1722,10 @@ export default function SondarLogicAI() {
     return () => { clearTimeout(t); obs.disconnect(); };
   }, [activeView]);
 
+  if (PAGES[activeView]) return (
+    <><style dangerouslySetInnerHTML={{__html:G}}/>
+      <ContentPage pageKey={activeView} navigate={navigate}/></>
+  );
   if (activeView==="privacy") return (
     <><style dangerouslySetInnerHTML={{__html:G}}/>
       <PrivacyPolicy onBack={() => navigate("home")}/></>
