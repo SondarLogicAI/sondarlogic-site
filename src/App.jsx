@@ -183,13 +183,15 @@ function Hero() {
         <div className="fu d1" style={{ display:"flex", justifyContent:"center" }}>
           <Pill dark>{c.pill}</Pill>
         </div>
+        {/* One h1 only. This used to be two stacked h1 elements purely so the
+            second could carry the gradient; a page with two h1s reads as two
+            competing topics to a crawler. The inner spans reproduce the old
+            layout exactly, block level with the same .75rem gap between them. */}
         <h1 className="hero-h1 fu d2" style={{ fontSize:"clamp(2.4rem,5vw,4rem)",
           fontWeight:900, lineHeight:1.1, letterSpacing:"-.04em",
-          color:"#fff", marginBottom:".75rem" }}>{c.h1}</h1>
-        <h1 className="hero-h1 fu d2" style={{ fontSize:"clamp(2.4rem,5vw,4rem)",
-          fontWeight:900, lineHeight:1.1, letterSpacing:"-.04em",
-          marginBottom:"1.5rem" }}>
-          <span className="grad-text">{c.accent}</span>
+          color:"#fff", marginBottom:"1.5rem" }}>
+          <span style={{ display:"block", marginBottom:".75rem" }}>{c.h1}</span>
+          <span className="grad-text" style={{ display:"block" }}>{c.accent}</span>
         </h1>
         <div className="fu d3" style={{ display:"flex", flexDirection:"column", gap:".6rem",
           alignItems:"center", maxWidth:760, margin:"0 auto 2.5rem" }}>
@@ -1237,7 +1239,7 @@ function FinalCTA() {
 }
 
 /* ─── FOOTER ──────────────────────────────────────────────── */
-function Footer({ setActiveView }) {
+function Footer({ navigate }) {
   const cols = [
     { h:"PRODUCT", links:[
       { l:"How it Works", id:"how-it-works" },
@@ -1290,13 +1292,13 @@ function Footer({ setActiveView }) {
                   marginBottom:"1rem" }}>{col.h}</div>
                 {col.links.map((lnk,j) => (
                   lnk.action
-                    ? <button key={j} onClick={() => { setActiveView(lnk.action); window.scrollTo(0,0); }}
-                        style={{ ...lkBase, background:"none", border:"none",
-                          cursor:"pointer", padding:0 }}
+                    ? <a key={j} href={VIEW_PATH[lnk.action]}
+                        onClick={e => { e.preventDefault(); navigate(lnk.action); }}
+                        style={lkBase}
                         onMouseEnter={e => e.target.style.color="#e2e8f0"}
                         onMouseLeave={e => e.target.style.color="#475569"}>
                         {lnk.l}
-                      </button>
+                      </a>
                     : lnk.id
                       ? <a key={j} href={`#${lnk.id}`} style={lkBase}
                           onClick={e => { e.preventDefault(); document.getElementById(lnk.id)?.scrollIntoView({ behavior:"smooth" }); }}
@@ -1345,12 +1347,16 @@ function LegalPage({ title, effectiveDate, children, onBack }) {
         background:"rgba(255,255,255,.96)", backdropFilter:"blur(16px)",
         borderBottom:"1px solid #f1f5f9", padding:".875rem 2rem" }}>
         <div style={{ maxWidth:800, margin:"0 auto" }}>
-          <button onClick={onBack} style={{ background:"none",
+          {/* An anchor rather than a button so a crawler that lands on
+              /privacy or /terms has a real link back to the homepage. */}
+          <a href="/" onClick={e => { e.preventDefault(); onBack(); }}
+            style={{ background:"none", display:"inline-block",
             border:"1px solid #e2e8f0", borderRadius:".5rem",
             padding:".4rem .875rem", color:"#475569", fontSize:".82rem",
-            fontWeight:600, cursor:"pointer", fontFamily:"'Inter',sans-serif" }}>
+            fontWeight:600, cursor:"pointer", textDecoration:"none",
+            fontFamily:"'Inter',sans-serif" }}>
             ← Back to Home
-          </button>
+          </a>
         </div>
       </div>
       <div style={{ maxWidth:800, margin:"0 auto", padding:"4rem 2rem 6rem" }}>
@@ -1409,9 +1415,50 @@ function TermsOfService({ onBack }) {
   );
 }
 
+/* ─── ROUTING ─────────────────────────────────────────────────
+   Privacy and Terms used to be state only, reachable from the footer
+   but with no URL of their own, so /privacy and /terms returned 404 and
+   neither page could be indexed or linked to. They are real paths now.
+   The prerender step writes each one to its own dist/<route>/index.html,
+   which Vercel serves directly, so the first paint is real HTML and the
+   client hydrates on top of the matching view. Keep VIEW_PATH and the
+   routes list in scripts/prerender.mjs in step with each other. */
+const VIEW_PATH = { home:"/", privacy:"/privacy", terms:"/terms" };
+
+function viewFromPath(pathname) {
+  const p = (pathname || "/").replace(/\/+$/, "") || "/";
+  if (p === "/privacy") return "privacy";
+  if (p === "/terms")   return "terms";
+  return "home";
+}
+
+/* Set by entry-server.jsx so the server render and the first client render
+   agree on the view. Without it every prerendered page would be the home
+   page and hydration would swap it out. */
+function initialView() {
+  if (typeof window !== "undefined") return viewFromPath(window.location.pathname);
+  return globalThis.__SL_VIEW__ || "home";
+}
+
 /* ─── ROOT ────────────────────────────────────────────────── */
 export default function SondarLogicAI() {
-  const [activeView, setActiveView] = useState("home");
+  const [activeView, setActiveView] = useState(initialView);
+
+  /* Footer links are real anchors, so a plain click would reload the page.
+     Intercept it, push the path, and swap the view. Back and forward then
+     work through popstate, and a hard load of /privacy still works because
+     that file exists on disk. */
+  const navigate = useCallback((view) => {
+    setActiveView(view);
+    try { window.history.pushState({ view }, "", VIEW_PATH[view] || "/"); } catch(_) {}
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const onPop = () => { setActiveView(viewFromPath(window.location.pathname)); window.scrollTo(0,0); };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
 
   useEffect(() => {
     const GA_ID = "G-KRCG9CCSJG";
@@ -1457,11 +1504,11 @@ export default function SondarLogicAI() {
 
   if (activeView==="privacy") return (
     <><style dangerouslySetInnerHTML={{__html:G}}/>
-      <PrivacyPolicy onBack={() => { setActiveView("home"); window.scrollTo(0,0); }}/></>
+      <PrivacyPolicy onBack={() => navigate("home")}/></>
   );
   if (activeView==="terms") return (
     <><style dangerouslySetInnerHTML={{__html:G}}/>
-      <TermsOfService onBack={() => { setActiveView("home"); window.scrollTo(0,0); }}/></>
+      <TermsOfService onBack={() => navigate("home")}/></>
   );
 
   return (
@@ -1476,7 +1523,7 @@ export default function SondarLogicAI() {
         <FAQ/>
         <FinalCTA/>
       </main>
-      <Footer setActiveView={setActiveView}/>
+      <Footer navigate={navigate}/>
     </>
   );
 }
