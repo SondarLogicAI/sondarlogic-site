@@ -1111,7 +1111,7 @@ const FAQ_DATA = [
   { q:"Do you offer a Master Service Agreement (MSA)?",
     a:"Yes. We have a standard, pre-vetted MSA designed to streamline onboarding for enterprise brands, allowing for a single legal review." },
   { q:"Where is data stored and processed?",
-    a:"All PII and receipt images are processed and stored exclusively in Canada." },
+    a:"Claim records and PII are stored in Canada and the platform runs in Canada. Receipt images are never stored at all. Reading the text off a receipt is done by a processing provider outside Canada, in the moment, without keeping the image, and we can move that step into Canada for a programme that requires it." },
   { q:"Is SondarLogic SOC2 Compliant?",
     a:"We operate on SOC2 Type II compliant infrastructure and follow industry-standard encryption (AES-256) for all data at rest and in transit." },
   { q:"Can we customize payout timing and branding?",
@@ -1201,7 +1201,7 @@ function FAQ() {
    those companies is a client. */
 const TRUST = [
   { t:"Data stays in Canada",
-    d:"All claimant information and receipt images are processed and stored in Canada, under PIPEDA." },
+    d:"Claim records are stored in Canada and the platform runs in Canada, under PIPEDA. Receipt images are never stored at all." },
   { t:"SOC 2 Type II infrastructure",
     d:"AES-256 encryption on everything at rest and in transit, with every decision retained and auditable." },
   { t:"The brand owns the claim data",

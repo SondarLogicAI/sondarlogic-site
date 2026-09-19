@@ -81,7 +81,7 @@ export const PAGES = {
       },
       {
         q: "Where is SondarLogic based?",
-        a: "Burlington, Ontario, Canada. All claimant information and receipt images are processed and stored in Canada, under PIPEDA.",
+        a: "Burlington, Ontario, Canada. Claim records are stored in Canada and the platform runs in Canada, under PIPEDA. Reading the receipt itself is done by a processing provider outside Canada, in the moment, and the image is never stored by them or by us.",
       },
     ],
   },
@@ -417,7 +417,8 @@ export const PAGES = {
       {
         h2: "Canadian data residency",
         paras: [
-          "All receipt images and all claimant personal information are processed and stored on servers physically located in Canada. This is not a preference or a default that can drift. It is how the platform is configured.",
+          "Claim records and claimant personal information are stored on servers in Canada, and the platform that decides claims runs in Canada. This is not a preference that can drift. It is how the platform is configured.",
+          "One step leaves the country and we would rather say so than have you find it. Reading the text off the receipt is done by a specialist processing provider whose service runs outside Canada. The image is sent, read in the moment, and never stored, by them or by us. PIPEDA allows this and asks that we tell you, which is what this paragraph is for. The name of that provider is in the sub processor list, and we will put the whole thing in Canada for a programme that requires it.",
           "It matters for two reasons. Some brands have a procurement requirement that personal information does not leave the country, and a programme that fails that test is dead before it is evaluated on anything else. And a claimant's information staying in the jurisdiction whose law protects it is simply the right answer.",
         ],
       },
@@ -433,7 +434,7 @@ export const PAGES = {
       {
         h2: "Sub processors, retention and access",
         paras: [
-          "A small number of vetted sub processors are involved in hosting and reward delivery. Each is bound by a written confidentiality agreement, and the current list is provided to any client who asks for it during onboarding.",
+          "A small number of vetted sub processors are involved. Hosting and the database are in Canada. Reading the text off a receipt is done by Anthropic, whose service runs outside Canada, in the moment and without storing the image. Reward delivery, where we handle it, is done by a gift card provider drawing on the brand's own account. Each is bound by a written confidentiality agreement, and the full current list with locations is provided to any client who asks for it during onboarding.",
           "Retention is set per programme. Claim records are kept as long as the brand needs them for audit and dispute handling and then disposed of. A claimant who wants to know what is held about them, or wants it corrected or deleted, is directed to the brand as the accountable organisation, and we action the request on the brand's instruction.",
         ],
       },
@@ -441,7 +442,7 @@ export const PAGES = {
     faqs: [
       {
         q: "Is claimant data stored in Canada?",
-        a: "Yes. All receipt images and claimant personal information are processed and stored on servers physically located in Canada.",
+        a: "Yes. Every claim record and all claimant personal information is stored on servers in Canada, and the platform runs in Canada. Receipt images are never stored at all, anywhere. The one step that happens outside Canada is reading the text off the receipt, which a processing provider does in the moment without keeping the image. We can move that into Canada for a programme that requires it.",
       },
       {
         q: "Is SondarLogic a data controller or a processor?",
@@ -501,7 +502,7 @@ export const PAGES = {
       {
         h2: "Data residency and isolation",
         paras: [
-          "All claimant personal information and all receipt images are processed and stored in Canada. Client programmes are isolated from one another, and no client's claim data is used to inform another client's programme.",
+          "Claim records and claimant personal information are stored in Canada and the platform runs in Canada. Receipt images are never stored anywhere. Reading the text off a receipt is done by a processing provider outside Canada, in the moment, and can be moved into Canada for a programme that requires it. Client programmes are isolated from one another, and no client's claim data is used to inform another client's programme.",
           "SondarLogic never receives, holds or transmits funds. Rewards are funded and released from the client's own account, so there is no payment float and no stored payment credential to protect.",
         ],
       },
@@ -524,7 +525,7 @@ export const PAGES = {
       },
       {
         q: "Where is the data hosted?",
-        a: "On servers physically located in Canada. Receipt images and claimant personal information never leave the country.",
+        a: "On servers in Canada, and the platform runs in Canada. Receipt images are never stored anywhere. The one step outside Canada is reading the text off the receipt, done in the moment by a processing provider that does not keep the image, and that can be moved into Canada for a programme that requires it.",
       },
       {
         q: "Do you hold payment credentials or funds?",
