@@ -1228,7 +1228,7 @@ function WhoBuiltIt() {
           <p style={{ color:"#475569", fontSize:".98rem", lineHeight:1.8,
             marginBottom:"1.1rem" }}>
             Ahmed Rehman spent close to ten years in brand and shopper marketing
-            at Colgate, Hill's Pet Nutrition and Nestle Purina. Most of that time
+            at Reckitt, Colgate and Nestle. Most of that time
             involved running consumer rebate and cashback programs from the brand
             side. Briefing a processor, waiting weeks on a file, and getting back a
             spreadsheet that said approved or rejected and very little else.
