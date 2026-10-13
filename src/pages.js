@@ -44,12 +44,12 @@ export const PAGES = {
       {
         h2: "What same day processing changes",
         paras: [
-          "SondarLogic validates a claim from a photographed receipt in under ten seconds and returns one of four outcomes. Approved, rejected, held for manual review, or a request to resubmit a clearer photo. An approved claim releases a digital Visa gift card the same day.",
+          "SondarLogic validates a claim from a photographed receipt in under ten seconds and returns one of four outcomes. Approved, rejected, held for manual review, or a request to resubmit a clearer photo. An approved claim can be paid the same day, through the payout you already run or a digital card from us.",
           "Removing the batch removes the wait, and removing the wait removes most of the support volume. Nobody emails to ask where their cheque is when the reward arrived the afternoon they claimed.",
         ],
         list: [
           "Under ten seconds from submitted receipt to a decision with a reason attached",
-          "Same day digital Visa gift card instead of a cheque printed in a batch",
+          "Same day payout, yours or a digital card from us, instead of a cheque printed in a batch",
           "Blurry or cropped photos get an automated resubmission request rather than a denial",
           "Exceptions go to a person on our team, not to the brand",
         ],
@@ -250,7 +250,7 @@ export const PAGES = {
       {
         h2: "Paying at the speed of the purchase",
         paras: [
-          "Someone who has just spent several hundred dollars on tires is a poor candidate for a two month wait. Same day payout on a digital Visa gift card lands while the purchase still feels recent, and it removes almost all of the where is my rebate support volume that a seasonal automotive programme generates.",
+          "Someone who has just spent several hundred dollars on tires is a poor candidate for a two month wait. Same day payout, through your own system or a digital card, lands while the purchase still feels recent, and it removes almost all of the where is my rebate support volume that a seasonal automotive programme generates.",
         ],
       },
     ],
@@ -384,7 +384,7 @@ export const PAGES = {
       },
       {
         q: "How quickly are contractors paid?",
-        a: "The same day the claim is approved, to a digital Visa gift card, rather than by a cheque issued in a later batch.",
+        a: "The same day the claim is approved, through your existing payout or a digital card, rather than by a cheque issued in a later batch.",
       },
     ],
   },

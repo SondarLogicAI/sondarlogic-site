@@ -159,11 +159,11 @@ function Hero() {
     h1:<>Receipt in. Reward out.</>,
     accent:"Your customers can't wait 8 weeks.",
     sub:[
-      "Instant Visa gift card payout the moment a claim is approved",
+      "A decision in seconds. Pay out the way you already do, or we send a digital card the same day",
       "Full basket intelligence on every receipt, from motor oil to pet food to paint",
     ],
     stats:[
-      { v:"Same day", l:"Visa Giftcard payout"  },
+      { v:"Same day", l:"payout, yours or ours" },
       { v:"< 8s",     l:"claim to decision"      },
       { v:"10+",      l:"data points per claim"  },
       { v:"$0",       l:"add-on fees"            },
@@ -706,7 +706,7 @@ function JourneySection() {
               Paid instantly
             </div>
             <div style={{ fontSize:".84rem", color:"#64748B", lineHeight:1.45 }}>
-              A Visa gift card, same day. No cheque, no wait
+              Through your own payout, or a digital card from us. No cheque, no wait
             </div>
           </div>
         </div>
@@ -815,7 +815,7 @@ function JourneySection() {
                 <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 10, background: "rgba(52,211,153,.08)", border: "1px solid rgba(52,211,153,.28)" }}>
                   <ThumbsUp size={22} color="#34d399" style={{ flexShrink: 0 }} />
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#334155" }}>Digital gift card</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#334155" }}>Digital payout</div>
                     <div style={{ fontSize: 15, fontWeight: 800, color: "#34d399" }}>Same day or next day</div>
                   </div>
                 </div>
@@ -1021,7 +1021,7 @@ function Pricing() {
     "Fraud detection, duplicate blocking, and automatic re-uploads",
     "Manual review of every exception, handled by our team",
     "Named customer profiles fed to your CRM for future targeting",
-    "Instant Visa Giftcard payout the day a claim clears",
+    "Works with your existing payout, or we send a digital card the day a claim clears",
   ];
   return (
     <section id="pricing" style={{ background:S950, padding:"3.5rem 0 4.5rem", borderTop:"1px solid rgba(255,255,255,.04)" }}>
@@ -1114,6 +1114,8 @@ const FAQ_DATA = [
     a:"Claim records and PII are stored in Canada and the platform runs in Canada. Receipt images are never stored at all. Reading the text off a receipt is done by a processing provider outside Canada, in the moment, without keeping the image, and we can move that step into Canada for a programme that requires it." },
   { q:"Is SondarLogic SOC2 Compliant?",
     a:"We operate on SOC2 Type II compliant infrastructure and follow industry-standard encryption (AES-256) for all data at rest and in transit." },
+  { q:"Do we have to use your payout?",
+    a:"No. SondarLogic can return only the decision, with the reason and the full receipt data, and you pay out the way you already do: bank transfer, cheque or your own card provider. If you would rather we handle it, we send a digital card the same day." },
   { q:"Can we customize payout timing and branding?",
     a:"Yes. Payout schedules are fully customizable. We can trigger instant payouts the second a receipt is validated, or batch them on a schedule that matches your program cadence." },
   { q:"How fast can we launch a new promotional campaign?",
@@ -1127,9 +1129,9 @@ const FAQ_DATA = [
   { q:"What data do I get back besides my own SKU?",
     a:"Full line-item extraction feeds directly into a live dashboard, with total receipt values, regional distribution, top performing locations, basket intelligence, and competitor product detection across all submissions." },
   { q:"Is the submission portal white-labeled?",
-    a:"Yes. The entire consumer journey from submission portal to the Visa Giftcard delivery email is fully branded to your guidelines." },
+    a:"Yes. The entire consumer journey from submission portal to the reward email is fully branded to your guidelines." },
   { q:"Do you offer a partner program for rebate processors?",
-    a:"Yes. If you process rebate programs for CPG brands and want to offer instant digital payouts and basket intelligence to your clients, reach out directly to partnership@sondarlogic.com." },
+    a:"Yes. If you process rebate programs for CPG brands and want decisions in seconds and basket intelligence for your clients, while keeping your own portal and payout, reach out directly to partnership@sondarlogic.com." },
 ];
 
 const FAQ_SCHEMA = {
