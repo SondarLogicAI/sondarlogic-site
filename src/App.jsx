@@ -169,7 +169,7 @@ function Hero() {
       { v:"$0",       l:"extra fees"             },
     ],
     cta1:{ label:"See how it works",      href:"#how-it-works",   ext:false },
-    cta2:{ label:"Book a Demo",           href:CALENDLY,          ext:true  },
+    cta2:{ label:"Try a claim yourself",  href:"/demo/claim.html", ext:false },
   };
   return (
     <section style={{ background:S950, paddingTop:"7rem", paddingBottom:"1.5rem",
