@@ -288,11 +288,11 @@ export const PAGES = {
         h2: "The economics of a small claim",
         paras: [
           "A grocery rebate is usually a few dollars. Once a processor has keyed it, reviewed it, printed a cheque and mailed it, the cost of handling the claim can approach the value of the offer.",
-          "Validating from a photographed receipt and paying to a digital card removes the postage, the printing and the data entry entirely. The claim is decided in under ten seconds and paid the same day.",
+          "Validating from a photo of the receipt and paying digitally removes the postage, the printing and the data entry entirely. The claim is decided in under ten seconds and paid the same day.",
         ],
       },
       {
-        h2: "The basket is the point",
+        h2: "What the basket shows",
         paras: [
           "A grocery receipt is a complete picture of a shopping trip. It shows the retailer, the location, the date, the total spend, and everything else in the basket alongside the promoted product.",
           "For a CPG brand that is rare and valuable. It shows which retailers the promotion is really moving product in, what else the buyer of a brand buys in the same trip, which competing brands sit in the basket next to it, and what a promotional buyer spends overall.",

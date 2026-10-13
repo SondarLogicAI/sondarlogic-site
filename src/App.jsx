@@ -166,7 +166,7 @@ function Hero() {
       { v:"Same day", l:"payout, yours or ours" },
       { v:"< 8s",     l:"claim to decision"      },
       { v:"10+",      l:"data points per claim"  },
-      { v:"$0",       l:"add-on fees"            },
+      { v:"$0",       l:"extra fees"             },
     ],
     cta1:{ label:"See how it works",      href:"#how-it-works",   ext:false },
     cta2:{ label:"Book a Demo",           href:CALENDLY,          ext:true  },
@@ -437,6 +437,7 @@ function JourneySection() {
   const [phase, setPhase] = useState("idle");   // idle | scan | done
   const [prog, setProg] = useState(0);          // 0..100
   const ref = useRef(null);
+  const stageRef = useRef(null);
   const timer = useRef(null);
   const started = useRef(false);
   const didMount = useRef(false);
@@ -457,12 +458,17 @@ function JourneySection() {
     }, 46);
   }, []);
 
-  // Trigger once on scroll into view; button replays.
+  // Trigger once, when the receipt and its details are mostly on screen,
+  // not when the section heading first appears: the scan lasts about 2
+  // seconds and used to finish before the visitor scrolled down to it.
+  // On a phone the stacked stage is taller than the screen, so filling
+  // most of the screen counts too. The button replays.
   useEffect(() => {
-    const el = ref.current; if (!el) return;
+    const el = stageRef.current; if (!el) return;
     const obs = new IntersectionObserver(es => es.forEach(e => {
-      if (e.isIntersecting && !started.current) { started.current = true; run(); }
-    }), { threshold: 0.3 });
+      const enough = e.intersectionRatio >= 0.6 || e.intersectionRect.height >= window.innerHeight * 0.7;
+      if (e.isIntersecting && enough && !started.current) { started.current = true; run(); }
+    }), { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
     obs.observe(el);
     return () => { obs.disconnect(); stopTimer(); };
   }, [run]);
@@ -712,7 +718,7 @@ function JourneySection() {
         </div>
 
         {/* Scan stage */}
-        <div className="sl-scan" style={{ display: "grid", gridTemplateColumns: "minmax(0,340px) 1fr", gap: 24, alignItems: "start" }}>
+        <div ref={stageRef} className="sl-scan" style={{ display: "grid", gridTemplateColumns: "minmax(0,340px) 1fr", gap: 24, alignItems: "start" }}>
           {/* Receipt */}
           <div>
             <div style={{ position: "relative", borderRadius: 12, boxShadow: "0 24px 60px rgba(0,0,0,.5)", overflow: "hidden", background: S800 }}>
@@ -809,7 +815,7 @@ function JourneySection() {
                   <ThumbsDown size={22} color="#f87171" style={{ flexShrink: 0 }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: "#334155" }}>Cheque in the mail</div>
-                    <div style={{ fontSize: 15, fontWeight: 800, color: "#f87171" }}>6–8 weeks</div>
+                    <div style={{ fontSize: 15, fontWeight: 800, color: "#f87171" }}>6 to 8 weeks</div>
                   </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 10, background: "rgba(52,211,153,.08)", border: "1px solid rgba(52,211,153,.28)" }}>
@@ -839,7 +845,7 @@ function JourneySection() {
             <BenefitCard Icon={ShieldCheck} title="Fraud detection" body="Catches what a reviewer would miss, and clears the messy parts before they reach you.">
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {[
-                  { Icon: RotateCcw, t: "Blurred or unreadable photos are re-submitted automatically" },
+                  { Icon: RotateCcw, t: "Blurry or unreadable photos get an automatic request for a new one" },
                   { Icon: Check, t: "Duplicates and tampering caught automatically" },
                   { Icon: UserCheck, t: "Edge cases handled by a person on our team, not yours" },
                 ].map((r, i) => (
@@ -930,7 +936,7 @@ function CommandCenter() {
 
   function ValidationPanel() {
     const rej = [["Duplicate submission", 100], ["Outside date range", 80], ["Altered image", 70], ["Product mismatch", 50]];
-    const leg = [["Approved", "94%", CYAN], ["Pending re-upload", "4%", AMBER], ["Rejected", "2%", "#f87171"]];
+    const leg = [["Approved", "94%", CYAN], ["Waiting on a new photo", "4%", AMBER], ["Rejected", "2%", "#f87171"]];
     return (
       <div style={panel}>
         <div style={eyebrow}>Claim audit</div>
@@ -962,7 +968,7 @@ function CommandCenter() {
       bullets: ["Top retailers, products, and complementary buys across every campaign, with competitor brands and basket value read from each receipt.", "Submissions climb the week a campaign runs, so you can line volume up against the marketing you planned."],
       visual: <SellingPanel /> },
     { textLeft: false, pill: "FRAUD & VALIDATION", title: "Every deceptive submission blocked before payout.",
-      bullets: ["Edited images, templated submissions, duplicate receipts, and screenshot fraud caught in real time. Blurry photos re-upload automatically.", "Edge cases go to a person on our team, and fraud, re-uploads, and manual review are all covered in your per claim rate."],
+      bullets: ["Edited images, templated submissions, duplicate receipts, and screenshot fraud caught in real time. Blurry photos get an automatic request for a new one.", "Edge cases go to a person on our team, and fraud, new photo requests and manual review are all covered in your per claim rate."],
       visual: <ValidationPanel /> },
   ];
 
@@ -1018,7 +1024,7 @@ function Pricing() {
   const GRN = "#2DD4BF";
   const included = [
     "Receipt validation, SKU extraction, and 10+ data fields per claim",
-    "Fraud detection, duplicate blocking, and automatic re-uploads",
+    "Fraud detection, duplicate blocking, and automatic new photo requests",
     "Manual review of every exception, handled by our team",
     "Named customer profiles fed to your CRM for future targeting",
     "Works with your existing payout, or we send a digital card the day a claim clears",
@@ -1059,7 +1065,7 @@ function Pricing() {
 
           {/* Multi-campaign */}
           <div style={{ display:"flex", flexDirection:"column", background:S900, border:"1px solid rgba(255,255,255,.1)", borderRadius:"1.25rem", padding:"1.9rem", boxShadow:"0 16px 48px rgba(0,0,0,.4)" }}>
-            <span style={{ fontSize:".6rem", fontWeight:700, color:"#475569", letterSpacing:".12em", marginBottom:".9rem" }}>MULTI-CAMPAIGN</span>
+            <span style={{ fontSize:".6rem", fontWeight:700, color:"#475569", letterSpacing:".12em", marginBottom:".9rem" }}>MULTIPLE CAMPAIGNS</span>
             <div style={{ fontSize:"1.7rem", fontWeight:900, color:GRN, letterSpacing:"-.03em", lineHeight:1.15 }}>
               Volume based pricing
             </div>
@@ -1073,7 +1079,7 @@ function Pricing() {
               </div>
               <div style={{ display:"flex", gap:".6rem", alignItems:"flex-start" }}>
                 <Check size={15} color={GRN} strokeWidth={3} style={{ flexShrink:0, marginTop:2 }} />
-                <span style={{ fontSize:".85rem", color:"rgba(255,255,255,.7)", lineHeight:1.5 }}>No surprise add-on charges beyond that rate</span>
+                <span style={{ fontSize:".85rem", color:"rgba(255,255,255,.7)", lineHeight:1.5 }}>No surprise extra charges beyond that rate</span>
               </div>
             </div>
             <div style={{ marginTop:"auto", paddingTop:"1.5rem" }}>
@@ -1109,26 +1115,26 @@ function Pricing() {
 /* ─── FAQ ─────────────────────────────────────────────────── */
 const FAQ_DATA = [
   { q:"Do you offer a Master Service Agreement (MSA)?",
-    a:"Yes. We have a standard, pre-vetted MSA designed to streamline onboarding for enterprise brands, allowing for a single legal review." },
+    a:"Yes. We have a standard MSA designed to streamline onboarding for enterprise brands, allowing for a single legal review." },
   { q:"Where is data stored and processed?",
     a:"Claim records and PII are stored in Canada and the platform runs in Canada. Receipt images are never stored at all. Reading the text off a receipt is done by a processing provider outside Canada, in the moment, without keeping the image, and we can move that step into Canada for a programme that requires it." },
   { q:"Is SondarLogic SOC2 Compliant?",
-    a:"We operate on SOC2 Type II compliant infrastructure and follow industry-standard encryption (AES-256) for all data at rest and in transit." },
+    a:"We operate on SOC2 Type II compliant infrastructure and use standard encryption (AES-256) for all data at rest and in transit." },
   { q:"Do we have to use your payout?",
     a:"No. SondarLogic can return only the decision, with the reason and the full receipt data, and you pay out the way you already do: bank transfer, cheque or your own card provider. If you would rather we handle it, we send a digital card the same day." },
   { q:"Can we customize payout timing and branding?",
     a:"Yes. Payout schedules are fully customizable. We can trigger instant payouts the second a receipt is validated, or batch them on a schedule that matches your program cadence." },
   { q:"How fast can we launch a new promotional campaign?",
-    a:"Once the Pilot Agreement is signed, we typically go live within 7–10 business days. Our validation engine is context-aware and does not require retraining for each new product category or receipt format." },
+    a:"Once the Pilot Agreement is signed, we typically go live within 7 to 10 business days. The validation engine does not need retraining for a new product category or receipt format." },
   { q:"How does budget reconciliation work at program end?",
     a:"Any unissued Reward Procurement Budget remaining at program close is reconciled and returned to you within 30 days. Once a digital reward is successfully transmitted to a validated consumer, that allocation is fully deployed. SondarLogic acts as a marketing fulfillment agency procuring and distributing promotional inventory on your behalf, not as a financial intermediary." },
   { q:"Can you handle large claim volumes during peak promotions?",
     a:"Our infrastructure scales to handle significant volume spikes without processing delays. Claims are queued and processed in order with no manual bottlenecks on compliant submissions." },
   { q:"What if a customer uploads a blurry or unreadable receipt?",
-    a:"We never auto-deny. Our system sends a branded, automated re-upload request ensuring a positive consumer experience while maintaining program integrity." },
+    a:"We never reject a claim for a bad photo. The customer gets a branded request for a new one, and the claim stays open." },
   { q:"What data do I get back besides my own SKU?",
-    a:"Full line-item extraction feeds directly into a live dashboard, with total receipt values, regional distribution, top performing locations, basket intelligence, and competitor product detection across all submissions." },
-  { q:"Is the submission portal white-labeled?",
+    a:"Every line on the receipt goes into a live dashboard, with total receipt values, regional distribution, top performing locations, basket intelligence, and competitor product detection across all submissions." },
+  { q:"Can the claim page carry our brand?",
     a:"Yes. The entire consumer journey from submission portal to the reward email is fully branded to your guidelines." },
   { q:"Do you offer a partner program for rebate processors?",
     a:"Yes. If you process rebate programs for CPG brands and want decisions in seconds and basket intelligence for your clients, while keeping your own portal and payout, reach out directly to partnership@sondarlogic.com." },
@@ -1238,9 +1244,8 @@ function WhoBuiltIt() {
           <p style={{ color:"#475569", fontSize:".98rem", lineHeight:1.8 }}>
             SondarLogic is built around what was missing from that file. Every claim
             comes back with the decision, the reason behind it, the full basket the
-            consumer actually bought, and where and when they bought it. That is the
-            part a brand manager can act on, and it is the part a processor has never
-            had much reason to hand over.
+            consumer actually bought, and where and when they bought it. A brand
+            manager can use that. Processors have rarely handed it over.
           </p>
         </div>
         <div className="rv td2" style={{ display:"grid",
@@ -1412,10 +1417,10 @@ function Footer({ navigate }) {
         <p style={{ textAlign:"center", fontSize:".65rem", color:"#475569",
           lineHeight:1.6, maxWidth:860, margin:"0 auto" }}>
           <span style={{ fontWeight:600 }}>Promotional Reward Policy:</span> All rebates
-          issued via SondarLogic are classified as Promotional Rewards (non-purchased incentives)
+          issued via SondarLogic are classified as Promotional Rewards (incentives the customer did not buy)
           procured and distributed by SondarLogic as a contracted marketing fulfillment service
-          on behalf of the sponsoring brand. Digital Visa Gift Cards carry a twelve-month
-          validity period from date of issuance. SondarLogic operates as a marketing automation
+          on behalf of the sponsoring brand. Digital Visa Gift Cards are valid for twelve months
+          from date of issuance. SondarLogic operates as a marketing automation
           and fulfillment agency and does not provide financial services.
         </p>
       </div>
@@ -1606,13 +1611,13 @@ function PrivacyPolicy({ onBack }) {
       <h2 style={lh2s}>Introduction</h2>
       <p style={lbs}>Sondar Logic, headquartered in Burlington, Ontario, provides an automated rebate validation and fulfillment platform. This Privacy Policy outlines how we collect, use, disclose, and safeguard personal information in compliance with PIPEDA.</p>
       <h2 style={lh2s}>Information We Collect</h2>
-      <p style={lbs}>We act as a Data Processor on behalf of our enterprise clients. We collect end-consumer data (names, email addresses, geographic location), transaction data (receipt images, purchase details), and B2B client data (billing details, usage metrics).</p>
+      <p style={lbs}>We act as a Data Processor on behalf of our enterprise clients. We collect consumer data (names, email addresses, geographic location), transaction data (receipt images, purchase details), and B2B client data (billing details, usage metrics).</p>
       <h2 style={lh2s}>How We Use Your Information</h2>
       <p style={lbs}>We use collected information for claim validation, digital payout routing, anonymized business intelligence reporting, and automated consumer support updates.</p>
       <h2 style={lh2s}>Data Storage and Localization</h2>
       <p style={lbs}>All receipt data and PII are hosted on servers physically located within Canada.</p>
       <h2 style={lh2s}>Data Sharing</h2>
-      <p style={lbs}>We do not sell, rent, or trade personal data. Data is only shared with vetted sub-processors essential to operations, all bound by strict confidentiality agreements.</p>
+      <p style={lbs}>We do not sell, rent, or trade personal data. Data is only shared with vetted subprocessors essential to operations, all bound by strict confidentiality agreements.</p>
       <h2 style={lh2s}>Security</h2>
       <p style={lbs}>We employ AES-256 encryption at rest and TLS 1.2+ in transit.</p>
       <h2 style={lh2s}>Contact Us</h2>
@@ -1631,7 +1636,7 @@ function TermsOfService({ onBack }) {
       <h2 style={lh2s}>Accuracy and Manual Review</h2>
       <p style={lbs}>Claims scoring above our confidence threshold are automatically approved. Claims below threshold are routed to a human review queue with a 3 business day SLA.</p>
       <h2 style={lh2s}>Fees and Payout Funding</h2>
-      <p style={lbs}>Clients are billed a flat monthly platform license fee plus per-claim processing. All-inclusive per claim rate covers exception handling. Clients maintain sufficient payout funding with our Canadian payment partner.</p>
+      <p style={lbs}>Clients are billed a flat monthly platform license fee plus per claim processing. The per claim rate includes exception handling. Clients maintain sufficient payout funding with our Canadian payment partner.</p>
       <h2 style={lh2s}>Data Ownership</h2>
       <p style={lbs}>SondarLogic retains all IP rights to the platform. The Client retains all rights to their consumer data and basket intelligence provided via the platform.</p>
       <h2 style={lh2s}>Limitation of Liability</h2>
