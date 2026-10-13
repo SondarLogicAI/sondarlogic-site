@@ -1299,6 +1299,10 @@ function FinalCTA() {
             style={{ fontSize:"1rem", padding:".9rem 2.25rem" }}>
             Book a Demo <ArrowRight size={17}/>
           </a>
+          <a href="/demo/claim.html" className="bo-dark"
+            style={{ fontSize:"1rem", padding:".9rem 2.25rem" }}>
+            Try a claim yourself
+          </a>
           <div style={{ display:"flex", flexDirection:"column",
             alignItems:"flex-start", gap:".3rem" }}>
             <span style={{ fontSize:".58rem", fontWeight:700,
@@ -1536,6 +1540,10 @@ function ContentPage({ pageKey, navigate }) {
             <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="bp"
               style={{ fontSize:".95rem", padding:".8rem 2rem" }}>
               Book a Demo <ArrowRight size={16}/>
+            </a>
+            <a href="/demo/claim.html" className="bo-dark"
+              style={{ fontSize:".95rem", padding:".8rem 2rem" }}>
+              Try a claim yourself
             </a>
             <a href={`mailto:${EMAIL}`} style={{ color:CYAN, fontSize:".9rem",
               fontWeight:500, textDecoration:"none",
