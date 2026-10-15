@@ -155,7 +155,7 @@ function Navbar() {
 /* ─── HERO ────────────────────────────────────────────────── */
 function Hero() {
   const c = {
-    pill:"INSTANT REBATE PROCESSING · CANADA",
+    pill:"INSTANT REBATE PROCESSING · BUILT IN CANADA",
     h1:<>Receipt in. Reward out.</>,
     accent:"Your customers can't wait 8 weeks.",
     sub:[
@@ -169,7 +169,7 @@ function Hero() {
       { v:"$0",       l:"extra fees"             },
     ],
     cta1:{ label:"See how it works",      href:"#how-it-works",   ext:false },
-    cta2:{ label:"Try a claim yourself",  href:"/demo/claim.html", ext:false },
+    cta2:{ label:"Try a claim yourself",  href:"/demo/claim.html", ext:false, strong:true },
   };
   return (
     <section style={{ background:S950, paddingTop:"7rem", paddingBottom:"1.5rem",
@@ -220,8 +220,11 @@ function Hero() {
             ? <a href={c.cta2.href} target="_blank" rel="noopener noreferrer" className="bo-dark">
                 {c.cta2.label}
               </a>
-            : <a href={c.cta2.href} className="bo-dark">
-                {c.cta2.icon && <Mail size={15}/>} {c.cta2.label}
+            : <a href={c.cta2.href} className="bo-dark"
+                style={c.cta2.strong ? { fontSize:"1rem", padding:".875rem 2rem", fontWeight:700,
+                  color:"#2DD4BF", borderColor:"#2DD4BF", background:"rgba(45,212,191,.12)",
+                  boxShadow:"0 0 22px rgba(45,212,191,.25)" } : undefined}>
+                {c.cta2.icon && <Mail size={15}/>} {c.cta2.label} {c.cta2.strong && <ArrowRight size={17}/>}
               </a>
           }
         </div>
@@ -1370,7 +1373,8 @@ function Footer({ navigate }) {
             </div>
             <p style={{ fontSize:".875rem", color:"rgba(255,255,255,.3)",
               lineHeight:1.7, marginBottom:"1.25rem" }}>
-              Instant rebate processing for Canadian consumer programs.
+              Instant rebate processing for consumer programs in any country.
+              Built in Canada.
               Motor oil to pet food to paint. Every category, every channel.
             </p>
             <a href={`mailto:${EMAIL}`} style={{ color:CYAN, fontSize:".875rem",
